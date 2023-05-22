@@ -34,9 +34,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Pull images
-        run: docker compose pull
-
       - name: Start services
         run: docker compose up --build -d
 
