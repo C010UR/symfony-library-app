@@ -20,7 +20,7 @@ jobs:
           ignore: DL3007,DL3018 # Ignore using latest on mlocati/php-extension-installer & version in apk add
 
   build-backend:
-    name: Docker build
+    name: Build backend
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,14 @@ jobs:
 
       - name: Lint code
         uses: docker://oskarstark/php-cs-fixer-ga
-
+        with:
+          args: --config=phpcs.xml.dist --allow-risky=yes
+      
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "[Github Actions] Lint with PHP CS fixer"
+        
       - name: Pull images
         run: docker compose pull
 
