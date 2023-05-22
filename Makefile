@@ -51,10 +51,10 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 
 ## —— Lint —————————————————————————————————————————————————————————————————————
 lint: ## Lint the project
-	@$(COMPOSER) run phpcs -p
+	@$(COMPOSER) run php-cs-fixer-dry
 
 lint-fix: ## Fix lint issues in the project
-	@$(COMPOSER) run phpcbf -p
+	@$(COMPOSER) run  php-cs-fixer
 
 ## —— Test —————————————————————————————————————————————————————————————————————
 test-backend: ## Test backend
