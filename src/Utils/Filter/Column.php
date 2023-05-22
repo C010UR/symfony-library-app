@@ -2,9 +2,6 @@
 
 namespace App\Utils\Filter;
 
-use DateTimeImmutable;
-use InvalidArgumentException;
-
 class Column
 {
     public const BOOLEAN_TYPE = 'boolean';
@@ -73,7 +70,7 @@ class Column
             case self::NOT_FILTERABLE_TYPE:
                 break;
             default:
-                throw new InvalidArgumentException(sprintf("Data type '%s' is not implemented.", $type));
+                throw new \InvalidArgumentException(sprintf("Data type '%s' is not implemented.", $type));
         }
 
         $this->type = $type;
@@ -155,6 +152,7 @@ class Column
             foreach ($data as $dataPoint) {
                 $result[] = self::convertDataPoint($column->getType(), $dataPoint);
             }
+
             return $result;
         } else {
             return self::convertDataPoint($column->getType(), $data);
@@ -172,7 +170,7 @@ class Column
             case self::FLOAT_TYPE:
                 return floatval($data);
             case self::DATE_TYPE:
-                return new DateTimeImmutable($data);
+                return new \DateTimeImmutable($data);
             default:
                 return $data;
         }

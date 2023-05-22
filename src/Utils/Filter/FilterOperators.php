@@ -2,8 +2,6 @@
 
 namespace App\Utils\Filter;
 
-use ReflectionClass;
-
 class FilterOperators
 {
     public const OPERATOR_EQUALS_TO = 'eq';
@@ -23,7 +21,8 @@ class FilterOperators
 
     public static function getAll(): array
     {
-        $class = new ReflectionClass(self::class);
+        $class = new \ReflectionClass(self::class);
+
         return self::labelOperators($class->getConstants());
     }
 
@@ -99,9 +98,9 @@ class FilterOperators
     private static function labelOperators(array $operators): array
     {
         $labels = [];
-        $class = new ReflectionClass(self::class);
+        $class = new \ReflectionClass(self::class);
         foreach ($class->getConstants() as $name => $value) {
-            if (substr($name, 0, 8) !== 'OPERATOR') {
+            if ('OPERATOR' !== substr($name, 0, 8)) {
                 continue;
             }
 

@@ -3,11 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use DirectoryIterator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
-use InvalidArgumentException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixturesDev extends Fixture implements FixtureGroupInterface
@@ -29,7 +27,7 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
     {
         preg_match('/(.*)\. /U', $file['filename'], $preg);
         if (empty($preg[1])) {
-            throw new InvalidArgumentException(sprintf('File %s has wrong format.', $file['filename']));
+            throw new \InvalidArgumentException(sprintf('File %s has wrong format.', $file['filename']));
         }
 
         $role = sprintf('ROLE_%s', strtoupper($preg[1]));
@@ -59,7 +57,7 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
             mkdir(sprintf('%s%s', $this->dirPublic, $this->dirUserUploads), 0777, true);
         }
 
-        foreach (new DirectoryIterator(sprintf('%s%s', $this->dirAssets, $this->dirUserUploads)) as $file) {
+        foreach (new \DirectoryIterator(sprintf('%s%s', $this->dirAssets, $this->dirUserUploads)) as $file) {
             if (!$file->isFile()) {
                 continue;
             }

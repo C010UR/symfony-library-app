@@ -7,9 +7,9 @@ use App\Utils\Filter\Exception\InvalidQueryOrderException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 
 class ErrorNormalizer implements NormalizerInterface
@@ -49,7 +49,7 @@ class ErrorNormalizer implements NormalizerInterface
 
         $exception->setStatusCode($code);
 
-        if ($this->environment !== 'dev') {
+        if ('dev' !== $this->environment) {
             return [
                 'exception' => [
                     'message' => $message,
@@ -57,6 +57,7 @@ class ErrorNormalizer implements NormalizerInterface
                 ],
             ];
         }
+
         return [
             'exception' => array_merge(['message' => $message, 'code' => $code], $exception->toArray()),
         ];

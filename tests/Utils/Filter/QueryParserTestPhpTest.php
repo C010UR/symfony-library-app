@@ -7,9 +7,7 @@ use App\Utils\Filter\Exception\InvalidQueryExpressionException;
 use App\Utils\Filter\Exception\InvalidQueryOrderException;
 use App\Utils\Filter\QueryParser;
 use Doctrine\Common\Collections\Criteria;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 
 class QueryParserTestPhpTest extends TestCase
 {
@@ -29,7 +27,7 @@ class QueryParserTestPhpTest extends TestCase
 
     public function getWrongColumns(): iterable
     {
-        yield 'columns' => [213, 'aslkdas', new ReflectionClass(InvalidArgumentException::class)];
+        yield 'columns' => [213, 'aslkdas', new \ReflectionClass(\InvalidArgumentException::class)];
     }
 
     public function getPaginations(): iterable
@@ -232,7 +230,7 @@ class QueryParserTestPhpTest extends TestCase
     {
         $queryParser = new QueryParser();
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $queryParser->setAllowedColumns([$column]);
     }
 

@@ -15,6 +15,7 @@ class ResetPasswordController extends AbstractController
     public function request(Request $request, PasswordResetService $service): JsonResponse
     {
         $service->requestResetPassword($request);
+
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 
@@ -22,6 +23,7 @@ class ResetPasswordController extends AbstractController
     public function reset(Request $request, string $token = null, PasswordResetService $service): JsonResponse
     {
         $service->resetPassword($request, $token);
+
         return new JsonResponse(null, 204);
     }
 }

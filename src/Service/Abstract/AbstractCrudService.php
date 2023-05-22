@@ -46,6 +46,7 @@ abstract class AbstractCrudService
     public function getAll(Request $request, mixed $additional = null): array
     {
         $query = HeaderUtils::parseQuery($request->getQueryString() ?? '');
+
         return $this->getRepository()->findMatchingByDeleted(
             $query['deleted'] ?? false,
             $this->getQueryParser()->parseQuery($query, true, true),
@@ -62,7 +63,7 @@ abstract class AbstractCrudService
     {
         $entity = $repository->findOneBy($criteria);
 
-        if ($entity === null) {
+        if (null === $entity) {
             $class_parts = explode('\\', $repository::class);
             $entity = preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace('Repository', '', end($class_parts)));
 

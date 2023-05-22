@@ -4,7 +4,6 @@ namespace App\Tests\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Tests\Controller\ControllerTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class LoginControllerPhpTest extends ControllerTestCase

@@ -6,8 +6,6 @@ use App\Utils\Filter\Exception\InvalidQueryExpressionException;
 use App\Utils\Filter\Exception\InvalidQueryOrderException;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Expression;
-use InvalidArgumentException;
-use Throwable;
 
 class QueryParser
 {
@@ -28,14 +26,8 @@ class QueryParser
         }
 
         foreach ($columns as $column) {
-            if (gettype($column) !== 'object' || $column::class !== Column::class) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Columns should be of type %s. %s was provided instead.',
-                        Column::class,
-                        gettype($column) === 'object' ? $column::class : gettype($column),
-                    ),
-                );
+            if ('object' !== gettype($column) || Column::class !== $column::class) {
+                throw new \InvalidArgumentException(sprintf('Columns should be of type %s. %s was provided instead.', Column::class, 'object' === gettype($column) ? $column::class : gettype($column)));
             }
         }
 
@@ -70,11 +62,11 @@ class QueryParser
 
     private function setPaginatorOptions(?int $pageSize = null, ?int $offset = null): self
     {
-        if ($pageSize !== null && $pageSize > 0) {
+        if (null !== $pageSize && $pageSize > 0) {
             $this->criteria->setMaxResults($pageSize);
         }
 
-        if ($offset !== null && $offset >= 0) {
+        if (null !== $offset && $offset >= 0) {
             $this->criteria->setMaxResults($pageSize)->setFirstResult($offset);
         }
 
@@ -86,7 +78,7 @@ class QueryParser
         foreach ($orderings as $columnName => $order) {
             $column = $this->findColumn($columnName);
 
-            if ($column === null) {
+            if (null === $column) {
                 throw new InvalidQueryOrderException(sprintf("Column '%s' is not valid.", $columnName));
             }
 
@@ -96,14 +88,8 @@ class QueryParser
 
             $order = strtoupper($order);
 
-            if ($order !== Criteria::ASC && $order !== Criteria::DESC) {
-                throw new InvalidQueryOrderException(
-                    sprintf(
-                        "Order '%s' for column '%s' is not valid. Acceptable orders are ASC and DESC.",
-                        $order,
-                        $columnName,
-                    ),
-                );
+            if (Criteria::ASC !== $order && Criteria::DESC !== $order) {
+                throw new InvalidQueryOrderException(sprintf("Order '%s' for column '%s' is not valid. Acceptable orders are ASC and DESC.", $order, $columnName));
             }
         }
 
@@ -138,15 +124,10 @@ class QueryParser
             case FilterOperators::OPERATOR_CONTAINS:
                 return Criteria::expr()->contains($column, $value);
             case FilterOperators::OPERATOR_BETWEEN:
-                if (count($value) !== 2) {
-                    throw new InvalidQueryExpressionException(
-                        sprintf(
-                            'Operator between can only accept 2 values. (Column: %s)',
-                            $column,
-                        )
-
-                    );
+                if (2 !== count($value)) {
+                    throw new InvalidQueryExpressionException(sprintf('Operator between can only accept 2 values. (Column: %s)', $column));
                 }
+
                 return Criteria::expr()->andX(
                     Criteria::expr()->gte($column, $value[0]),
                     Criteria::expr()->lte($column, $value[1]),
@@ -156,7 +137,7 @@ class QueryParser
             case FilterOperators::OPERATOR_ENDS_WITH:
                 return Criteria::expr()->endsWith($column, $value);
             default:
-                throw new InvalidArgumentException(sprintf("Operator '%s' is not implemented.", $operator));
+                throw new \InvalidArgumentException(sprintf("Operator '%s' is not implemented.", $operator));
         }
     }
 
@@ -164,19 +145,12 @@ class QueryParser
     {
         $column = $this->findColumn($columnName);
 
-        if ($column === null) {
+        if (null === $column) {
             throw new InvalidQueryExpressionException(sprintf("Column '%s' is not valid.", $columnName));
         }
 
         if (!$column->isValidOperator($operator)) {
-            throw new InvalidQueryExpressionException(
-                sprintf(
-                    "Operator '%s' for column '%s' is not valid. Acceptable values are: %s",
-                    $operator,
-                    $columnName,
-                    implode(', ', $column->getOperators()),
-                ),
-            );
+            throw new InvalidQueryExpressionException(sprintf("Operator '%s' for column '%s' is not valid. Acceptable values are: %s", $operator, $columnName, implode(', ', $column->getOperators())));
         }
 
         $isArray =
@@ -186,32 +160,14 @@ class QueryParser
 
         try {
             $value = Column::convert($column, $value, $isArray);
-        } catch (Throwable $th) {
-            throw new InvalidQueryExpressionException(
-                message: sprintf(
-                    "Invalid value in '%s' %s '%s'. Reason: %s",
-                    $column->getLabel(),
-                    $operator,
-                    $value,
-                    $th->getMessage(),
-                ),
-                previous: $th,
-            );
+        } catch (\Throwable $th) {
+            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getLabel(), $operator, $value, $th->getMessage()), previous: $th);
         }
 
         try {
             $expr = $this->parseOperator($column->getName(), $operator, $value);
-        } catch (Throwable $th) {
-            throw new InvalidQueryExpressionException(
-                message: sprintf(
-                    "Invalid value in '%s' %s '%s'. Reason: %s",
-                    $column->getName(),
-                    $operator,
-                    $value,
-                    $th->getMessage(),
-                ),
-                previous: $th,
-            );
+        } catch (\Throwable $th) {
+            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getName(), $operator, $value, $th->getMessage()), previous: $th);
         }
 
         $this->criteria->andWhere($expr);

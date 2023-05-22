@@ -13,7 +13,7 @@ class UserEntityListener
 
     private function unlink(?string $imagePath): bool
     {
-        if ($imagePath === null) {
+        if (null === $imagePath) {
             return true;
         }
 

@@ -7,7 +7,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Throwable;
 
 class RequestUtils
 {
@@ -24,7 +23,7 @@ class RequestUtils
                 'handle' => function () use ($request): array {
                     try {
                         return json_decode($request->getContent(), true);
-                    } catch (Throwable $th) {
+                    } catch (\Throwable $th) {
                         throw new NotEncodableValueException('Json is invalid.', previous: $th);
                     }
                 },
@@ -58,8 +57,6 @@ class RequestUtils
             }
         }
 
-        throw new BadRequestException(
-            sprintf("Content-Type '%s' is not supported.", $request->headers->get('content-type')),
-        );
+        throw new BadRequestException(sprintf("Content-Type '%s' is not supported.", $request->headers->get('content-type')));
     }
 }

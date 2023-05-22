@@ -20,7 +20,7 @@ class ImageSaver
 
     public function save(UploadedFile $file, string $dirPublic, string $dirUpload, string $prefix = null): string
     {
-        $tempFilename = tempnam('', 'upl') . $file->guessExtension();
+        $tempFilename = tempnam('', 'upl').$file->guessExtension();
 
         $filename = sprintf('%s-%s.webp', $prefix ? $prefix : 'image', bin2hex(random_bytes(3)));
 

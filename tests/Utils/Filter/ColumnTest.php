@@ -4,8 +4,6 @@ namespace App\Tests\Utils\Filter;
 
 use App\Utils\Filter\Column;
 use App\Utils\Filter\FilterOperators;
-use DateTimeImmutable;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class ColumnTest extends TestCase
@@ -74,8 +72,8 @@ class ColumnTest extends TestCase
             ];
         }
 
-        $dateString = (new DateTimeImmutable())->format(DateTimeImmutable::ATOM);
-        $date = new DateTimeImmutable($dateString);
+        $dateString = (new \DateTimeImmutable())->format(\DateTimeImmutable::ATOM);
+        $date = new \DateTimeImmutable($dateString);
 
         yield 'Date not array' => [
             new Column('test', 'test', Column::DATE_TYPE, false, false),
@@ -107,7 +105,7 @@ class ColumnTest extends TestCase
      */
     public function testSetTypeFail(string $type, bool $isNullable, array $expected): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         new Column('test', 'test', sprintf('%s-test', $type), true, $isNullable);
     }

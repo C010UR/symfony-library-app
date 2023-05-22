@@ -6,8 +6,6 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
-use RangeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -25,7 +23,7 @@ abstract class ControllerTestCase extends WebTestCase
     public function joinPaths(...$paths): string
     {
         if (empty($paths)) {
-            throw new InvalidArgumentException('Paths are empty.');
+            throw new \InvalidArgumentException('Paths are empty.');
         }
 
         foreach ($paths as $key => $argument) {
@@ -42,7 +40,7 @@ abstract class ControllerTestCase extends WebTestCase
     public function randomString(int $length = 64, string $keyspace = 'abcdefghijklmnopqrstuvwxyz'): string
     {
         if ($length < 1) {
-            throw new RangeException('Length must be a positive integer.');
+            throw new \RangeException('Length must be a positive integer.');
         }
 
         $pieces = [];
@@ -115,6 +113,7 @@ abstract class ControllerTestCase extends WebTestCase
     {
         $file = tempnam(sys_get_temp_dir(), 'upl');
         file_put_contents($file, file_get_contents(sprintf('%s/image.png', $this->dirAssets)));
+
         return new UploadedFile($file, 'image.png', 'image/png', test: true);
     }
 
@@ -122,6 +121,7 @@ abstract class ControllerTestCase extends WebTestCase
     {
         if (!$user) {
             $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+
             return;
         }
 
@@ -134,6 +134,7 @@ abstract class ControllerTestCase extends WebTestCase
     {
         if (!$user) {
             $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+
             return;
         }
 
@@ -141,6 +142,7 @@ abstract class ControllerTestCase extends WebTestCase
 
         if (!in_array('ROLE_ADMIN', $user->getRoles())) {
             $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+
             return;
         }
 

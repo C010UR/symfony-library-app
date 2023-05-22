@@ -5,7 +5,6 @@ namespace App\Tests\Controller;
 use App\Entity\User;
 use App\Repository\ResetPasswordRequestRepository;
 use App\Repository\UserRepository;
-use App\Tests\Controller\ControllerTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 use Symfony\Component\HttpFoundation\Response;
 
