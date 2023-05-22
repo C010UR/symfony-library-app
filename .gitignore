@@ -18,7 +18,8 @@
 /web/uploads/
 
 # Other
-supervisord.*
+supervisord.log
+supervisord.pid
 
 ###> symfony/framework-bundle ###
 /.env.local
