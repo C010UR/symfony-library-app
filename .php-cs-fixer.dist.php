@@ -18,5 +18,4 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
     ])
-    ->setFinder($finder)
-    ->setCacheFile(__DIR__ . '/var/cache/.php-cs-fixer.cache');
+    ->setFinder($finder);
