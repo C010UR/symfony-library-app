@@ -1,0 +1,15 @@
+/.github/
+/assets/
+/bin/
+/config/
+/docker/
+/docs/
+/migrations/
+/public/
+/src/
+/templates/
+/tests/
+/translations/
+/var/
+/vendor/
+/node_modules/

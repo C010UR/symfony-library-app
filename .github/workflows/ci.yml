@@ -5,8 +5,8 @@ on:
   pull_request:
 
 jobs:
-  php-lint:
-    name: Lint php code
+  php-cs-fixer-lint:
+    name: Lint PHP code
     runs-on: ubuntu-latest
     permissions: write-all
 
@@ -26,13 +26,35 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  build-backend:
-    name: Build backend
+  xo-lint:
+    name: Lint JS code
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Lint code
+        uses: stoe/xo-action@master
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "[Github Actions] Lint with PHP CS fixer"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Pull images
+        run: docker compose pull
 
       - name: Start services
         run: docker compose up --build -d
@@ -53,6 +75,3 @@ jobs:
 
       - name: Check HTTPS reachability
         run: curl -k https://localhost
-
-      - name: Run tests
-        uses: php-actions/phpunit@v3

@@ -34,25 +34,26 @@ COPY --from=php_extension_installer --link /usr/bin/install-php-extensions /usr/
 
 # persistent / runtime deps
 RUN apk add --no-cache \
-		acl \
-		fcgi \
-		file \
-		gettext \
-		git \
-		supervisor \
-		rabbitmq-c-dev \
+	acl \
+	fcgi \
+	file \
+	gettext \
+	git \
+	supervisor \
+	npm \
+	rabbitmq-c-dev \
 	;
 
 RUN set -eux; \
-    install-php-extensions \
-		apcu \
-		intl \
-		opcache \
-		zip \
-		pdo \
-		amqp \
-		redis \
-    ;
+	install-php-extensions \
+	apcu \
+	intl \
+	opcache \
+	zip \
+	pdo \
+	amqp \
+	redis \
+	;
 
 ###> recipes ###
 ###> doctrine/doctrine-bundle ###
@@ -93,10 +94,17 @@ COPY --from=composer --link /composer /usr/bin/composer
 # prevent the reinstallation of vendors at every changes in the source code
 COPY --link composer.* symfony.* ./
 RUN set -eux; \
-    if [ -f composer.json ]; then \
-		composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
-		composer clear-cache; \
-    fi
+	if [ -f composer.json ]; then \
+	composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
+	composer clear-cache; \
+	fi
+
+COPY --link package.json package-lock.json ./
+RUN set -eux; \
+	if [ -f package.json ]; then \
+	npm install; \
+	npm cache clean --force; \
+	fi
 
 # copy sources
 COPY --link  . ./
@@ -104,12 +112,14 @@ RUN rm -Rf docker/
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
-    if [ -f composer.json ]; then \
-		composer dump-autoload --classmap-authoritative --no-dev; \
-		composer dump-env prod; \
-		composer run-script --no-dev post-install-cmd; \
-		chmod +x bin/console; sync; \
-    fi
+	if [ -f composer.json ]; then \
+	composer dump-autoload --classmap-authoritative --no-dev; \
+	composer dump-env prod; \
+	composer run-script --no-dev post-install-cmd; \
+	chmod +x bin/console; sync; \
+	fi
+
+RUN npm run build
 
 # Dev image
 FROM app_php AS app_php_dev
@@ -117,16 +127,16 @@ FROM app_php AS app_php_dev
 ENV APP_ENV=dev XDEBUG_MODE=off
 VOLUME /srv/app/var/
 
+RUN set -eux; \
+	install-php-extensions \
+	xdebug \
+	;
+
 RUN rm "$PHP_INI_DIR/conf.d/app.prod.ini"; \
 	mv "$PHP_INI_DIR/php.ini" "$PHP_INI_DIR/php.ini-production"; \
 	mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 COPY --link docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
-
-RUN set -eux; \
-	install-php-extensions \
-    	xdebug \
-    ;
 
 RUN rm -f .env.local.php
 

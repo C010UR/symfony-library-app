@@ -1,5 +1,5 @@
 # Executables (local)
-DOCKER_COMP = docker-compose
+DOCKER_COMP = docker compose
 
 # Docker containers
 PHP_CONT = $(DOCKER_COMP) exec php
@@ -8,10 +8,11 @@ PHP_CONT = $(DOCKER_COMP) exec php
 PHP      = $(PHP_CONT) php
 COMPOSER = $(PHP_CONT) composer
 SYMFONY  = $(PHP_CONT) bin/console
+NPM      = $(PHP_CONT) npm
 
 # Misc
 .DEFAULT_GOAL = help
-.PHONY        : help build up start down logs sh composer vendor sf cc lint-backend lint-fix-backend lint lint-fix
+.PHONY        : help build up start down logs sh composer vendor sf cc lint lint-fix npm build-frontend load-fixtures
 
 ## —— The Symfony Docker Makefile ——————————————————————————————————————————————
 help: ## Output this help screen
@@ -19,7 +20,8 @@ help: ## Output this help screen
 
 ## —— Docker ———————————————————————————————————————————————————————————————————
 build: ## Build the Docker images
-	@$(DOCKER_COMP) build --pull --no-cache
+	@$(DOCKER_COMP) build
+#--pull --no-cache
 
 up: ## Start the docker hub in detached mode (no logs)
 	@$(DOCKER_COMP) up --detach
@@ -32,7 +34,7 @@ down: ## Stop the docker hub
 logs: ## Show live logs
 	@$(DOCKER_COMP) logs --tail=0 --follow
 
-php-sh: ## Connect to the PHP FPM container
+php: ## Connect to the PHP FPM container
 	@$(PHP_CONT) sh
 
 ## —— Composer —————————————————————————————————————————————————————————————————
@@ -44,6 +46,11 @@ vendor: ## Install vendors according to the current composer.lock file
 vendor: c=install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction
 vendor: composer
 
+## —— NPM ——————————————————————————————————————————————————————————————————————
+npm: ## Run npm, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
+	@$(eval c ?=)
+	@$(NPM) $(c)
+
 ## —— Symfony ——————————————————————————————————————————————————————————————————
 sf: ## List all Symfony commands or pass the parameter "c=" to run a given command, example: make sf c=about
 	@$(eval c ?=)
@@ -51,10 +58,12 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 
 ## —— Lint —————————————————————————————————————————————————————————————————————
 lint: ## Lint the project
-	@$(COMPOSER) run php-cs-fixer-dry
+	- @$(COMPOSER) run php-cs-fixer-dry
+	- @$(NPM) run lint
 
 lint-fix: ## Fix lint issues in the project
-	@$(COMPOSER) run  php-cs-fixer
+	- @$(COMPOSER) run  php-cs-fixer
+	- @$(NPM) run lint-fix
 
 ## —— Test —————————————————————————————————————————————————————————————————————
 test-backend: ## Test backend
@@ -63,6 +72,10 @@ test-backend: ## Test backend
 	@$(SYMFONY) doctrine:migrations:migrate --no-interaction --env=test
 	@$(SYMFONY) doctrine:fixtures:load --no-interaction --env=test --group=test
 	@$(PHP_CONT) bin/phpunit --coverage-text --coverage-html var/coverage/
+
+## ——— Frontend ————————————————————————————————————————————————————————————————
+build-frontend: ## Build frontend app
+	@$(NPM) run build
 
 ## —————————————————————————————————————————————————————————————————————————————
 cc: c=c:c ## Clear the cache

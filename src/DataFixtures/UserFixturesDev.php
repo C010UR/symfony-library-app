@@ -14,7 +14,7 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
         private UserPasswordHasherInterface $hasher,
         private string $dirPublic,
         private string $dirUserUploads,
-        private string $dirAssets,
+        private string $dirFixtures,
     ) {
     }
 
@@ -57,7 +57,7 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
             mkdir(sprintf('%s%s', $this->dirPublic, $this->dirUserUploads), 0777, true);
         }
 
-        foreach (new \DirectoryIterator(sprintf('%s%s', $this->dirAssets, $this->dirUserUploads)) as $file) {
+        foreach (new \DirectoryIterator(sprintf('%s%s', $this->dirFixtures, $this->dirUserUploads)) as $file) {
             if (!$file->isFile()) {
                 continue;
             }

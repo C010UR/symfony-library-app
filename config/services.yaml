@@ -13,7 +13,7 @@ services:
         bind:
             string $environment: '%kernel.environment%'
             string $projectDir: '%kernel.project_dir%'
-            string $dirAssets: '%kernel.project_dir%/assets'
+            string $dirFixtures: '%kernel.project_dir%/src/DataFixtures'
             string $dirPublic: '%kernel.project_dir%/public'
             string $dirBookCovers: '/uploads/book/cover'
             string $dirUserUploads: '/uploads/users'
