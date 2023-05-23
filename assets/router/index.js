@@ -73,14 +73,14 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
   to.meta.transition = resolveTransition(to, from);
 
+  if (!to.meta.roles) {
+    return null;
+  }
+
   const profile = await getProfile();
 
   if (to.name === 'Main') {
     return routeFallback(profile);
-  }
-
-  if (!to.meta.roles) {
-    return null;
   }
 
   if (!isAllowed(profile, to.meta.roles)) {

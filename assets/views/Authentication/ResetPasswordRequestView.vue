@@ -73,6 +73,7 @@ async function sendData() {
     ).href;
 
     const success = await requestResetPassword(form.email, url);
+
     if (success) {
         router.push({ name: 'ResetPasswordConfirm' });
     } else {

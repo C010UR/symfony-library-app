@@ -22,7 +22,7 @@ async function request({
   options.credentials = 'include';
 
   let parametersString = '';
-  if (parameters) {
+  if (Object.keys(parameters).length > 0) {
     parametersString = '?' + new URLSearchParams(parameters);
   }
 

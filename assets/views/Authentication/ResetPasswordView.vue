@@ -20,7 +20,7 @@
                     show-password
                 ></el-input>
             </el-form-item>
-            <el-form-item label="подтверждение пароля" prop="passwordConfirm">
+            <el-form-item label="Подтверждение пароля" prop="passwordConfirm">
                 <el-input
                     v-model="form.passwordConfirm"
                     v-on:keyup.enter="submitForm()"

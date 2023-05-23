@@ -9,6 +9,7 @@ fi
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
     if [ "$APP_ENV" != 'prod' ]; then
         composer install --prefer-dist --no-progress --no-interaction
+        npm install --include-dev
     fi
 
     if grep -q ^DATABASE_URL= .env; then
@@ -40,13 +41,11 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
     setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var
     setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var
-
-    supervisord --configuration /usr/local/etc/supervisord/supervisord.conf
-
-	# serve frontend
-	if [ "$APP_ENV" != 'prod' ]; then
-        symfony server:start -d
-    fi
 fi
+
+supervisord --configuration /usr/local/etc/supervisord/supervisord.conf
+
+# service supervisor stop
+# service supervisor start
 
 exec docker-php-entrypoint "$@"

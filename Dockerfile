@@ -102,7 +102,7 @@ RUN set -eux; \
 COPY --link package.json package-lock.json ./
 RUN set -eux; \
 	if [ -f package.json ]; then \
-	npm install; \
+	npm install --include-dev; \
 	npm cache clean --force; \
 	fi
 
@@ -124,14 +124,6 @@ FROM app_php AS app_php_dev
 
 ENV APP_ENV=dev XDEBUG_MODE=off
 VOLUME /srv/app/var/
-
-RUN apk add --no-cache \
-	bash \
-	;
-
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash
-
-RUN apk add symfony-cli
 
 RUN set -eux; \
 	install-php-extensions \
