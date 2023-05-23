@@ -10,7 +10,7 @@ export default defineConfig({
     /* eslint-disable-next-line new-cap */
     ElementPlus({
       useSource: true,
-      defaultLocale: 'en-us',
+      defaultLocale: 'ru',
     }),
     symfonyPlugin(),
   ],
@@ -26,15 +26,23 @@ export default defineConfig({
       },
     },
   },
+  root: '.',
+  base: '/build/',
+  publicDir: false,
   build: {
+    reportCompressedSize: true,
+    manifest: true,
+    emptyOutDir: true,
+    assetsDir: '',
+    outDir: './public/build',
     rollupOptions: {
       input: {
         app: './assets/app.js',
       },
       output: {
         manualChunks: {
-          other: [],
-          'views-auth': ['./src/views/Authentication'],
+          other: ['assets/api/index.js'],
+          'views-auth': ['assets/views/Authentication/index.js'],
         },
       },
     },

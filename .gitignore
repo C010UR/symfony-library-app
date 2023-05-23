@@ -20,6 +20,7 @@
 # Other
 supervisord.log
 supervisord.pid
+public/uploads
 
 ###> symfony/framework-bundle ###
 /.env.local

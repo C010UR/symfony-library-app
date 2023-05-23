@@ -23,6 +23,7 @@ public/bundles/
 tests/
 var/
 vendor/
+node-modules/
 .editorconfig
 .env.*.local
 .env.local
