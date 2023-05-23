@@ -2,7 +2,8 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import symfonyPlugin from 'vite-plugin-symfony';
 import vue from '@vitejs/plugin-vue';
-import ElementPlus from 'unplugin-element-plus/vite.mjs';
+/* eslint-disable-next-line n/file-extension-in-import */
+import ElementPlus from 'unplugin-element-plus/vite';
 
 export default defineConfig({
   plugins: [
