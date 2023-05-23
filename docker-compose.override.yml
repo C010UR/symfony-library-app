@@ -11,6 +11,7 @@ services:
       # If you develop on Mac or Windows you can remove the vendor/ directory
       #  from the bind-mount for better performance by enabling the next line:
       - /srv/app/vendor
+      - /srv/app/node_modules
     environment:
       # See https://xdebug.org/docs/all_settings#mode 
       XDEBUG_MODE: "${XDEBUG_MODE:-off}"

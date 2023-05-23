@@ -95,11 +95,12 @@ COPY --from=composer --link /composer /usr/bin/composer
 COPY --link composer.* symfony.* ./
 RUN set -eux; \
 	if [ -f composer.json ]; then \
-	composer install --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
+	composer install --no-dev --no-autoloader --no-scripts --no-progress; \
 	composer clear-cache; \
 	fi
 
 COPY --link package.json package-lock.json ./
+
 RUN set -eux; \
 	if [ -f package.json ]; then \
 	npm install --include-dev; \
@@ -137,6 +138,8 @@ RUN rm "$PHP_INI_DIR/conf.d/app.prod.ini"; \
 COPY --link docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
 RUN rm -f .env.local.php
+
+# RUN chmod 777 /node_modules/
 
 # Caddy image
 FROM caddy:2.6-alpine AS app_caddy
