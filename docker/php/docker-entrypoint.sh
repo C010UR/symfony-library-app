@@ -8,7 +8,7 @@ fi
 
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
     if [ "$APP_ENV" != 'prod' ]; then
-        composer install -no-progress --no-interaction
+        composer install --no-progress --no-interaction
         npm install --include-dev
     fi
 
