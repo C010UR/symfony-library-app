@@ -60,7 +60,7 @@ class QueryParser
         return $result;
     }
 
-    private function setPaginatorOptions(?int $pageSize = null, ?int $offset = null): self
+    private function setPaginatorOptions(int $pageSize = null, int $offset = null): self
     {
         if (null !== $pageSize && $pageSize > 0) {
             $this->criteria->setMaxResults($pageSize);
@@ -154,9 +154,9 @@ class QueryParser
         }
 
         $isArray =
-            FilterOperators::OPERATOR_IN === $operator ||
-            FilterOperators::OPERATOR_NOT_IN === $operator ||
-            FilterOperators::OPERATOR_BETWEEN === $operator;
+            FilterOperators::OPERATOR_IN === $operator
+            || FilterOperators::OPERATOR_NOT_IN === $operator
+            || FilterOperators::OPERATOR_BETWEEN === $operator;
 
         try {
             $value = Column::convert($column, $value, $isArray);
