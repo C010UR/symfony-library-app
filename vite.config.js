@@ -4,16 +4,20 @@ import symfonyPlugin from 'vite-plugin-symfony';
 import vue from '@vitejs/plugin-vue';
 /* eslint-disable-next-line n/file-extension-in-import */
 import ElementPlus from 'unplugin-element-plus/vite';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 
 export default defineConfig({
   plugins: [
+    basicSsl(),
     vue(),
     /* eslint-disable-next-line new-cap */
     ElementPlus({
       useSource: true,
       defaultLocale: 'ru',
     }),
-    symfonyPlugin(),
+    symfonyPlugin({
+      viteDevServerHostname: 'localhost',
+    }),
   ],
   resolve: {
     alias: {
@@ -27,9 +31,6 @@ export default defineConfig({
       },
     },
   },
-  root: '.',
-  base: '/build/',
-  publicDir: false,
   build: {
     reportCompressedSize: true,
     manifest: true,
@@ -46,6 +47,15 @@ export default defineConfig({
           'views-auth': ['assets/views/Authentication/index.js'],
         },
       },
+    },
+  },
+  server: {
+    host: '0.0.0.0',
+    strictPort: true,
+    port: 5173,
+    https: true,
+    watch: {
+      usePolling: true,
     },
   },
 });

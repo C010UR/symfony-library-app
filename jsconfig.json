@@ -1,3 +1,8 @@
 {
-
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6"
+  },
+  "include": ["assets/**/*"],
+  "checkJs": true,
 }

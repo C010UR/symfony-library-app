@@ -2,7 +2,7 @@ import { unref } from 'vue';
 import { popup } from '~/components/tags/index.js';
 import { useCacheResponseStore } from '~/stores/cacheResponseStore';
 
-const backendURL = import.meta.env.VITE_BACKEND_API_URL;
+const backendURL = import.meta.env.VITE_API_URL;
 
 async function request({
   url,

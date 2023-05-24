@@ -1,20 +1,36 @@
 #syntax=docker/dockerfile:1.4
 
-# The different stages of this Dockerfile are meant to be built into separate images
-# https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
-# https://docs.docker.com/compose/compose-file/#target
-
 # Builder images
-FROM composer/composer:2-bin AS composer
+FROM composer/composer:latest-bin AS composer
 
-FROM mlocati/php-extension-installer:latest AS php_extension_installer
+# Prod node image. Used to build frontend app
+FROM node:slim AS app_node
 
-# Build Caddy
-FROM caddy:2.6-builder-alpine AS app_caddy_builder
+ENV APP_ENV=prod
 
-RUN xcaddy build
+WORKDIR /srv/app
 
-# Prod image
+RUN npm install -g npm
+
+COPY --link package.json package-lock*.json ./
+RUN set -eux; npm install --include-dev --no-audit --no-progress; \
+	npm cache clean --force
+
+# Copy sources
+COPY --link . ./
+RUN rm -Rf docker/
+
+RUN npm run build
+
+CMD ["echo", "Build complete. Exiting..."]
+
+FROM app_node AS app_node_dev
+
+ENV APP_ENV=dev
+
+CMD ["npm", "run", "dev"]
+
+# Production php image
 FROM php:8.2-fpm-alpine AS app_php
 
 # Allow to use development versions of Symfony
@@ -29,10 +45,12 @@ ENV APP_ENV=prod
 
 WORKDIR /srv/app
 
-# php extensions installer: https://github.com/mlocati/docker-php-extension-installer
-COPY --from=php_extension_installer --link /usr/bin/install-php-extensions /usr/local/bin/
+# Install install-php-extensions (https://github.com/mlocati/docker-php-extension-installer)
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions \
+	/usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions
 
-# persistent / runtime deps
+# Persistent / runtime deps
 RUN apk add --no-cache \
 	acl \
 	fcgi \
@@ -40,9 +58,7 @@ RUN apk add --no-cache \
 	gettext \
 	git \
 	supervisor \
-	npm \
-	rabbitmq-c-dev \
-	;
+	rabbitmq-c-dev
 
 RUN set -eux; \
 	install-php-extensions \
@@ -52,8 +68,7 @@ RUN set -eux; \
 	zip \
 	pdo \
 	amqp \
-	redis \
-	;
+	redis
 
 ###> recipes ###
 ###> doctrine/doctrine-bundle ###
@@ -71,8 +86,11 @@ COPY --link docker/php/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
 COPY --link docker/php/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 RUN mkdir -p /var/run/php
 
+# Run supervisord to consume messages
 COPY --link docker/php/supervisord/supervisord.conf /usr/local/etc/supervisord/supervisord.conf
 RUN chmod +x /usr/local/etc/supervisord/supervisord.conf
+
+RUN supervisord --configuration /usr/local/etc/supervisord/supervisord.conf
 
 COPY --link docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
 RUN chmod +x /usr/local/bin/docker-healthcheck
@@ -89,9 +107,9 @@ CMD ["php-fpm"]
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
+# Install composer (https://hub.docker.com/_/composer)
 COPY --from=composer --link /composer /usr/bin/composer
 
-# prevent the reinstallation of vendors at every changes in the source code
 COPY --link composer.* symfony.* ./
 RUN set -eux; \
 	if [ -f composer.json ]; then \
@@ -99,17 +117,17 @@ RUN set -eux; \
 	composer clear-cache; \
 	fi
 
-COPY --link package.json package-lock.json ./
-
-RUN set -eux; \
-	if [ -f package.json ]; then \
-	npm install --include-dev; \
-	npm cache clean --force; \
-	fi
-
-# copy sources
+# Copy sources
 COPY --link  . ./
-RUN rm -Rf docker/
+RUN rm -rf docker/
+
+# Copy build from node image
+RUN if [ -d /srv/app/public/build/ ]; then \
+        rm -rf /srv/app/public/build/*; \
+    else \
+        mkdir -p /srv/app/public/build/; \
+    fi
+COPY --from=app_node --link /srv/app/public/build/* /srv/app/public/build/
 
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
@@ -120,10 +138,11 @@ RUN set -eux; \
 	chmod +x bin/console; sync; \
 	fi
 
-# Dev image
+# Dev php image
 FROM app_php AS app_php_dev
 
-ENV APP_ENV=dev XDEBUG_MODE=off
+ENV APP_ENV=dev
+ENV XDEBUG_MODE=off
 VOLUME /srv/app/var/
 
 RUN set -eux; \
@@ -139,13 +158,10 @@ COPY --link docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
 RUN rm -f .env.local.php
 
-# RUN chmod 777 /node_modules/
-
 # Caddy image
-FROM caddy:2.6-alpine AS app_caddy
+FROM caddy:latest AS app_caddy
 
-WORKDIR /srv/app
+WORKDIR /sr1/app
 
-COPY --from=app_caddy_builder --link /usr/bin/caddy /usr/bin/caddy
 COPY --from=app_php --link /srv/app/public public/
 COPY --link docker/caddy/Caddyfile /etc/caddy/Caddyfile

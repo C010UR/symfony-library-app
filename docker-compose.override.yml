@@ -2,16 +2,37 @@ version: "3.4"
 
 # Development environment override
 services:
+  ###> doctrine/doctrine-bundle ###
+  database:
+    ports:
+      - 5432:5432
+  ###< doctrine/doctrine-bundle ###
+
+  ###> symfony/mailer ###
+  mailer:
+    image: schickling/mailcatcher
+    ports:
+      - 1025:1025
+      - 1080:1080
+
+  ###< symfony/mailer ###
+
+  node:
+    build:
+      target: app_node_dev
+    volumes:
+      - ./:/srv/app
+      - /srv/app/node_modules
+    ports:
+      - 5173:5173
+
   php:
     build:
       target: app_php_dev
     volumes:
       - ./:/srv/app
       - ./docker/php/conf.d/app.dev.ini:/usr/local/etc/php/conf.d/app.dev.ini:ro
-      # If you develop on Mac or Windows you can remove the vendor/ directory
-      #  from the bind-mount for better performance by enabling the next line:
       - /srv/app/vendor
-      - /srv/app/node_modules
     environment:
       # See https://xdebug.org/docs/all_settings#mode 
       XDEBUG_MODE: "${XDEBUG_MODE:-off}"
@@ -21,21 +42,16 @@ services:
       - host.docker.internal:host-gateway
 
   caddy:
-    command: ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile", "--watch"]
+    command:
+      [
+        "caddy",
+        "run",
+        "--config",
+        "/etc/caddy/Caddyfile",
+        "--adapter",
+        "caddyfile",
+        "--watch"
+      ]
     volumes:
       - ./public:/srv/app/public:ro
       - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-
-###> doctrine/doctrine-bundle ###
-  database:
-    ports:
-      - "5432"
-###< doctrine/doctrine-bundle ###
-
-###> symfony/mailer ###
-  mailer:
-    image: schickling/mailcatcher
-    ports:
-      - 1025:1025
-      - 1080:1080
-###< symfony/mailer ###

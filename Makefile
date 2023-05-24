@@ -3,12 +3,13 @@ DOCKER_COMP = docker compose
 
 # Docker containers
 PHP_CONT = $(DOCKER_COMP) exec php
+NODE_CONT = $(DOCKER_COMP) exec node
 
 # Executables
 PHP      = $(PHP_CONT) php
 COMPOSER = $(PHP_CONT) composer
 SYMFONY  = $(PHP_CONT) bin/console
-NPM      = $(PHP_CONT) npm
+NPM      = $(NODE_CONT) npm
 
 # Misc
 .DEFAULT_GOAL = help
@@ -37,6 +38,10 @@ logs: ## Show live logs
 php: ## Connect to the PHP FPM container
 	@$(PHP_CONT) sh
 
+npm: ## Run npm, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
+	@$(eval c ?=)
+	@$(NPM) $(c)
+
 ## —— Composer —————————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
 	@$(eval c ?=)
@@ -45,11 +50,6 @@ composer: ## Run composer, pass the parameter "c=" to run a given command, examp
 vendor: ## Install vendors according to the current composer.lock file
 vendor: c=install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction
 vendor: composer
-
-## —— NPM ——————————————————————————————————————————————————————————————————————
-npm: ## Run npm, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
-	@$(eval c ?=)
-	@$(NPM) $(c)
 
 ## —— Symfony ——————————————————————————————————————————————————————————————————
 sf: ## List all Symfony commands or pass the parameter "c=" to run a given command, example: make sf c=about
@@ -81,5 +81,9 @@ build-frontend: ## Build frontend app
 cc: c=c:c ## Clear the cache
 cc: sf
 
-load-fixtures:
+install-local: ## Install dependensies for local
+	npm install --include-dev
+	composer install --ignore-platform-reqs
+
+load-fixtures: ## Load fixutres
 	@$(SYMFONY) doctrine:fixtures:load --no-interaction --group=dev
