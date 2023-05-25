@@ -17,9 +17,8 @@
 <script setup>
 import { ElDivider, ElCard } from 'element-plus';
 import { DarkSwitch } from '~/components/tags/index.js';
-import { getImageUrl } from '~/api/index.js';
 
-const image = getImageUrl('/images/logo.png');
+const image = new URL('/images/logo.png', import.meta.url).href;
 
 defineProps({
     header: {

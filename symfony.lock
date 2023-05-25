@@ -8,7 +8,7 @@
             "ref": "56eaa387b5e48ebcc7c95a893b47dfa1ad51449c"
         },
         "files": [
-            "config/packages/test/dama_doctrine_test_bundle.yaml"
+            "./config/packages/test/dama_doctrine_test_bundle.yaml"
         ]
     },
     "doctrine/annotations": {
@@ -43,7 +43,7 @@
             "ref": "1f5514cfa15b947298df4d771e694e578d4c204d"
         },
         "files": [
-            "src/DataFixtures/AppFixtures.php"
+            "./src/DataFixtures/AppFixtures.php"
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
@@ -68,7 +68,7 @@
             "ref": "be2103eb4a20942e28a6dd87736669b757132435"
         },
         "files": [
-            ".php-cs-fixer.dist.php"
+            "./.php-cs-fixer.dist.php"
         ]
     },
     "nelmio/cors-bundle": {
@@ -80,7 +80,7 @@
             "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
         },
         "files": [
-            "config/packages/nelmio_cors.yaml"
+            "./config/packages/nelmio_cors.yaml"
         ]
     },
     "pentatrion/vite-bundle": {
@@ -92,7 +92,7 @@
             "ref": "33d48a1c831b2d29641175c8320e66a9f1c9911f"
         },
         "files": [
-            "config/routes/dev/pentatrion_vite.yaml"
+            "./config/routes/dev/pentatrion_vite.yaml"
         ]
     },
     "phpunit/phpunit": {
@@ -104,9 +104,9 @@
             "ref": "a6249a6c4392e9169b87abf93225f7f9f59025e6"
         },
         "files": [
-            ".env.test",
-            "phpunit.xml.dist",
-            "tests/bootstrap.php"
+            "./.env.test",
+            "./phpunit.xml.dist",
+            "./tests/bootstrap.php"
         ]
     },
     "symfony/console": {
@@ -118,7 +118,7 @@
             "ref": "da0c8be8157600ad34f10ff0c9cc91232522e047"
         },
         "files": [
-            "bin/console"
+            "./bin/console"
         ]
     },
     "symfony/flex": {
@@ -130,7 +130,7 @@
             "ref": "146251ae39e06a95be0fe3d13c807bcf3938b172"
         },
         "files": [
-            ".env"
+            "./.env"
         ]
     },
     "symfony/framework-bundle": {
@@ -142,14 +142,14 @@
             "ref": "af47254c5e4cd543e6af3e4508298ffebbdaddd3"
         },
         "files": [
-            "config/packages/cache.yaml",
-            "config/packages/framework.yaml",
-            "config/preload.php",
-            "config/routes/framework.yaml",
-            "config/services.yaml",
-            "public/index.php",
-            "src/Controller/.gitignore",
-            "src/Kernel.php"
+            "./config/packages/cache.yaml",
+            "./config/packages/framework.yaml",
+            "./config/preload.php",
+            "./config/routes/framework.yaml",
+            "./config/services.yaml",
+            "./public/index.php",
+            "./src/Controller/.gitignore",
+            "./src/Kernel.php"
         ]
     },
     "symfony/mailer": {
@@ -182,7 +182,7 @@
             "ref": "ba1ac4e919baba5644d31b57a3284d6ba12d52ee"
         },
         "files": [
-            "config/packages/messenger.yaml"
+            "./config/packages/messenger.yaml"
         ]
     },
     "symfony/notifier": {
@@ -194,7 +194,7 @@
             "ref": "c31585e252b32fe0e1f30b1f256af553f4a06eb9"
         },
         "files": [
-            "config/packages/notifier.yaml"
+            "./config/packages/notifier.yaml"
         ]
     },
     "symfony/phpunit-bridge": {
@@ -206,10 +206,10 @@
             "ref": "819d3d2ffa4590eba0b8f4f3e5e89415ee4e45c3"
         },
         "files": [
-            ".env.test",
-            "bin/phpunit",
-            "phpunit.xml.dist",
-            "tests/bootstrap.php"
+            "./.env.test",
+            "./bin/phpunit",
+            "./phpunit.xml.dist",
+            "./tests/bootstrap.php"
         ]
     },
     "symfony/routing": {
@@ -221,8 +221,8 @@
             "ref": "e0a11b4ccb8c9e70b574ff5ad3dfdcd41dec5aa6"
         },
         "files": [
-            "config/packages/routing.yaml",
-            "config/routes.yaml"
+            "./config/packages/routing.yaml",
+            "./config/routes.yaml"
         ]
     },
     "symfony/security-bundle": {
@@ -234,7 +234,7 @@
             "ref": "8a5b112826f7d3d5b07027f93786ae11a1c7de48"
         },
         "files": [
-            "config/packages/security.yaml"
+            "./config/packages/security.yaml"
         ]
     },
     "symfony/translation": {
@@ -246,8 +246,8 @@
             "ref": "da64f5a2b6d96f5dc24914517c0350a5f91dee43"
         },
         "files": [
-            "config/packages/translation.yaml",
-            "translations/.gitignore"
+            "./config/packages/translation.yaml",
+            "./translations/.gitignore"
         ]
     },
     "symfony/twig-bundle": {
@@ -259,8 +259,8 @@
             "ref": "bb2178c57eee79e6be0b297aa96fc0c0def81387"
         },
         "files": [
-            "config/packages/twig.yaml",
-            "templates/base.html.twig"
+            "./config/packages/twig.yaml",
+            "./templates/base.html.twig"
         ]
     },
     "symfony/validator": {
@@ -272,7 +272,7 @@
             "ref": "c32cfd98f714894c4f128bb99aa2530c1227603c"
         },
         "files": [
-            "config/packages/validator.yaml"
+            "./config/packages/validator.yaml"
         ]
     },
     "symfonycasts/reset-password-bundle": {
@@ -284,7 +284,7 @@
             "ref": "97c1627c0384534997ae1047b93be517ca16de43"
         },
         "files": [
-            "config/packages/reset_password.yaml"
+            "./config/packages/reset_password.yaml"
         ]
     }
 }

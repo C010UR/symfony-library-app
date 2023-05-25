@@ -3,32 +3,30 @@
 # Builder images
 FROM composer/composer:latest-bin AS composer
 
-# Prod node image. Used to build frontend app
+# Production node image. Used to build frontend app
 FROM node:slim AS app_node
 
 ENV APP_ENV=prod
-
 WORKDIR /srv/app
 
+# Update npm if possible
 RUN npm install -g npm
 
+# Allow caching by installing npm modules before copying sources
 COPY --link package.json package-lock*.json ./
-RUN set -eux; npm install --include-dev --no-audit --no-progress; \
+RUN set -eux; npm ci --include-dev --no-audit --no-progress; \
 	npm cache clean --force
 
 # Copy sources
-COPY --link . ./
-RUN rm -Rf docker/
+COPY --link  . ./
 
+# Remove env files for prod
+RUN rm -rf assets/env/
+
+# Build
 RUN npm run build
 
 CMD ["echo", "Build complete. Exiting..."]
-
-FROM app_node AS app_node_dev
-
-ENV APP_ENV=dev
-
-CMD ["npm", "run", "dev"]
 
 # Production php image
 FROM php:8.2-fpm-alpine AS app_php
@@ -42,7 +40,6 @@ ARG SYMFONY_VERSION=""
 ENV SYMFONY_VERSION ${SYMFONY_VERSION}
 
 ENV APP_ENV=prod
-
 WORKDIR /srv/app
 
 # Install install-php-extensions (https://github.com/mlocati/docker-php-extension-installer)
@@ -79,10 +76,12 @@ RUN apk add --no-cache --virtual .pgsql-deps postgresql-dev; \
 ###< doctrine/doctrine-bundle ###
 ###< recipes ###
 
+# Copy php config
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY --link docker/php/conf.d/app.ini $PHP_INI_DIR/conf.d/
 COPY --link docker/php/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
 
+# Copy php-fpm config
 COPY --link docker/php/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 RUN mkdir -p /var/run/php
 
@@ -92,11 +91,13 @@ RUN chmod +x /usr/local/etc/supervisord/supervisord.conf
 
 RUN supervisord --configuration /usr/local/etc/supervisord/supervisord.conf
 
+# Copy php healthcheck
 COPY --link docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
 RUN chmod +x /usr/local/bin/docker-healthcheck
 
 HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["docker-healthcheck"]
 
+# Copy entrypoint
 COPY --link docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
@@ -110,6 +111,7 @@ ENV PATH="${PATH}:/root/.composer/vendor/bin"
 # Install composer (https://hub.docker.com/_/composer)
 COPY --from=composer --link /composer /usr/bin/composer
 
+# Allow caching by installing composer vendor before copying sources
 COPY --link composer.* symfony.* ./
 RUN set -eux; \
 	if [ -f composer.json ]; then \
@@ -121,14 +123,11 @@ RUN set -eux; \
 COPY --link  . ./
 RUN rm -rf docker/
 
-# Copy build from node image
-RUN if [ -d /srv/app/public/build/ ]; then \
-        rm -rf /srv/app/public/build/*; \
-    else \
-        mkdir -p /srv/app/public/build/; \
-    fi
-COPY --from=app_node --link /srv/app/public/build/* /srv/app/public/build/
+# Copy built frontend app
+RUN rm -rf public/build
+COPY --from=app_node --link /srv/app/public/build public/build
 
+# Other composer things
 RUN set -eux; \
 	mkdir -p var/cache var/log; \
 	if [ -f composer.json ]; then \
@@ -138,18 +137,20 @@ RUN set -eux; \
 	chmod +x bin/console; sync; \
 	fi
 
-# Dev php image
+# Development php image
 FROM app_php AS app_php_dev
 
 ENV APP_ENV=dev
 ENV XDEBUG_MODE=off
 VOLUME /srv/app/var/
 
+# Persistent / runtime deps
 RUN set -eux; \
 	install-php-extensions \
 	xdebug \
 	;
 
+# Delete production php config and install deveopment php config
 RUN rm "$PHP_INI_DIR/conf.d/app.prod.ini"; \
 	mv "$PHP_INI_DIR/php.ini" "$PHP_INI_DIR/php.ini-production"; \
 	mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
@@ -161,7 +162,7 @@ RUN rm -f .env.local.php
 # Caddy image
 FROM caddy:latest AS app_caddy
 
-WORKDIR /sr1/app
+WORKDIR /srv/app
 
 COPY --from=app_php --link /srv/app/public public/
 COPY --link docker/caddy/Caddyfile /etc/caddy/Caddyfile

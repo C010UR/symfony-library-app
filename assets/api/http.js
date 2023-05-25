@@ -2,8 +2,6 @@ import { unref } from 'vue';
 import { popup } from '~/components/tags/index.js';
 import { useCacheResponseStore } from '~/stores/cacheResponseStore';
 
-const backendURL = import.meta.env.VITE_API_URL;
-
 async function request({
   url,
   options = {},
@@ -35,10 +33,7 @@ async function request({
   let response = null;
 
   try {
-    response = await fetch(
-      `${backendURL}${unref(url)}${parametersString}`,
-      options,
-    );
+    response = await fetch(`${url}${parametersString}`, options);
   } catch {}
 
   const data = parseResponse(response, suppressPopup);
@@ -60,6 +55,10 @@ async function parseResponse(response, suppressPopup = false) {
   }
 
   const data = response.status === 204 ? {} : await response.json();
+
+  // if (response.status == 401 || response.status == 403) {
+  //   cache.$reset();
+  // }
 
   if (!response.ok) {
     _popup(
@@ -89,12 +88,4 @@ function createFormData(data) {
   return formData;
 }
 
-function getImageUrl(path) {
-  if (!path) {
-    return null;
-  }
-
-  return `${backendURL}${path}`;
-}
-
-export { backendURL, request, getImageUrl, createFormData };
+export { request, createFormData };

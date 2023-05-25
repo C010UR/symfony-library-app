@@ -17,15 +17,6 @@ services:
 
   ###< symfony/mailer ###
 
-  node:
-    build:
-      target: app_node_dev
-    volumes:
-      - ./:/srv/app
-      - /srv/app/node_modules
-    ports:
-      - 5173:5173
-
   php:
     build:
       target: app_php_dev

@@ -3,20 +3,18 @@ DOCKER_COMP = docker compose
 
 # Docker containers
 PHP_CONT = $(DOCKER_COMP) exec php
-NODE_CONT = $(DOCKER_COMP) exec node
 
 # Executables
 PHP      = $(PHP_CONT) php
 COMPOSER = $(PHP_CONT) composer
 SYMFONY  = $(PHP_CONT) bin/console
-NPM      = $(NODE_CONT) npm
 
 # Misc
 .DEFAULT_GOAL = help
 .PHONY        : help build up start down logs sh composer vendor sf cc lint lint-fix npm build-frontend load-fixtures
 
-## —— The Symfony Docker Makefile ——————————————————————————————————————————————
-help: ## Output this help screen
+## ——  Makefile ————————————————————————————————————————————————————————————————
+help: ## Output this help message
 	@grep -E '(^[a-zA-Z0-9\./_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m\n/'
 
 ## —— Docker ———————————————————————————————————————————————————————————————————
@@ -27,7 +25,10 @@ build: ## Build the Docker images
 up: ## Start the docker hub in detached mode (no logs)
 	@$(DOCKER_COMP) up --detach
 
-start: build up ## Build and start the containers
+start: build up ## Build and start the containers for dev
+
+serve: ## Build and start the containers for staging
+	@$(DOCKER_COMP) -f docker-compose.yml up --build --detach
 
 down: ## Stop the docker hub
 	@$(DOCKER_COMP) down --remove-orphans
@@ -37,10 +38,6 @@ logs: ## Show live logs
 
 php: ## Connect to the PHP FPM container
 	@$(PHP_CONT) sh
-
-npm: ## Run npm, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
-	@$(eval c ?=)
-	@$(NPM) $(c)
 
 ## —— Composer —————————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
@@ -59,29 +56,25 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 ## —— Lint —————————————————————————————————————————————————————————————————————
 lint: ## Lint the project
 	- @$(COMPOSER) run php-cs-fixer-dry
-	- @$(NPM) run lint
+	- npm run lint
 
 lint-fix: ## Fix lint issues in the project
 	- @$(COMPOSER) run  php-cs-fixer
-	- @$(NPM) run lint-fix
+	- npm run lint-fix
 
 ## —— Test —————————————————————————————————————————————————————————————————————
-test-backend: ## Test backend
+test: ## Run tests
 	- @$(SYMFONY) doctrine:database:drop --force --env=test
 	@$(SYMFONY) doctrine:database:create --env=test
 	@$(SYMFONY) doctrine:migrations:migrate --no-interaction --env=test
 	@$(SYMFONY) doctrine:fixtures:load --no-interaction --env=test --group=test
 	@$(PHP_CONT) bin/phpunit --coverage-text --coverage-html var/coverage/
 
-## ——— Frontend ————————————————————————————————————————————————————————————————
-build-frontend: ## Build frontend app
-	@$(NPM) run build
-
 ## —————————————————————————————————————————————————————————————————————————————
 cc: c=c:c ## Clear the cache
 cc: sf
 
-install-local: ## Install dependensies for local
+install: ## Install dependencies for the host (npm and composer are required)
 	npm install --include-dev
 	composer install --ignore-platform-reqs
 

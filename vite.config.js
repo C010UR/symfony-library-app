@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { defineConfig, splitVendorChunkPlugin } from 'vite';
 import symfonyPlugin from 'vite-plugin-symfony';
 import vue from '@vitejs/plugin-vue';
 /* eslint-disable-next-line n/file-extension-in-import */
@@ -8,16 +8,17 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 
 export default defineConfig({
   plugins: [
-    basicSsl(),
+    basicSsl(), // https://vitejs.dev/config/server-options.html#server-https
     vue(),
+    splitVendorChunkPlugin(), // https://vitejs.dev/guide/build.html#chunking-strategy
     /* eslint-disable-next-line new-cap */
     ElementPlus({
       useSource: true,
       defaultLocale: 'ru',
-    }),
+    }), // https://element-plus.org/en-US/guide/theming.html#by-scss-variables
     symfonyPlugin({
       viteDevServerHostname: 'localhost',
-    }),
+    }), // https://github.com/lhapaipai/vite-plugin-symfony & https://github.com/lhapaipai/vite-bundle
   ],
   resolve: {
     alias: {
@@ -33,10 +34,7 @@ export default defineConfig({
   },
   build: {
     reportCompressedSize: true,
-    manifest: true,
     emptyOutDir: true,
-    assetsDir: '',
-    outDir: './public/build',
     rollupOptions: {
       input: {
         app: './assets/app.js',
@@ -50,12 +48,6 @@ export default defineConfig({
     },
   },
   server: {
-    host: '0.0.0.0',
-    strictPort: true,
-    port: 5173,
     https: true,
-    watch: {
-      usePolling: true,
-    },
   },
 });
