@@ -3,7 +3,7 @@
         <el-card class="container" shadow="hover">
             <div v-if="header" class="header">
                 <h1 style="text">
-                    <img :src="image" alt="Logo" class="logo" />
+                    <img src="/images/logo.png" alt="Logo" class="logo" />
                     {{ header }}
                 </h1>
                 <dark-switch style="margin-right: 0; margin-left: auto" />
@@ -17,8 +17,6 @@
 <script setup>
 import { ElDivider, ElCard } from 'element-plus';
 import { DarkSwitch } from '~/components/tags/index.js';
-
-const image = new URL('/images/logo.png', import.meta.url).href;
 
 defineProps({
     header: {

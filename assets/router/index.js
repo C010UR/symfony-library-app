@@ -2,15 +2,15 @@ import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { ElLoading } from 'element-plus';
 import { resolveTransition } from './transition-resolver.js';
-import { isAllowed, routeFallback } from './path-resolve.js';
+import { isAllowed, routeFallback } from './permissions-resolver.js';
 import {
   LoginView,
-  ResetPasswordRequestView,
+  RequestPasswordResetView,
+  RequestPasswordResetConfirmView,
   ResetPasswordView,
-  ResetPasswordConfirmView,
   NotFoundView,
 } from '~/views/index.js';
-import { getProfile } from '~/api/index.js';
+import { useGetProfile } from '~/use/index.js';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -32,7 +32,7 @@ const router = createRouter({
     {
       path: '/password-reset',
       name: 'ResetPasswordRequest',
-      component: ResetPasswordRequestView,
+      component: RequestPasswordResetView,
       meta: {
         title: 'Сброс пароля',
         transitionType: 'Auth',
@@ -40,7 +40,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/password-reset/:pathMatch(.*)',
+      path: '/password-reset/:pathMatch(.{40})',
       name: 'ResetPassword',
       component: ResetPasswordView,
       meta: {
@@ -52,7 +52,7 @@ const router = createRouter({
     {
       path: '/password-reset-confirm',
       name: 'ResetPasswordConfirm',
-      component: ResetPasswordConfirmView,
+      component: RequestPasswordResetConfirmView,
       meta: {
         title: 'Сброс пароля',
         transitionType: 'Auth',
@@ -73,15 +73,15 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
   to.meta.transition = resolveTransition(to, from);
 
-  const profile = await getProfile();
-
   if (to.name === 'Main') {
-    return routeFallback(profile);
+    return routeFallback(await useGetProfile());
   }
 
   if (!to.meta.roles) {
     return null;
   }
+
+  const profile = await useGetProfile();
 
   if (!isAllowed(profile, to.meta.roles)) {
     return routeFallback(profile);
@@ -94,7 +94,7 @@ router.beforeEach(async (to, from) => {
 });
 
 router.afterEach(async to => {
-  // Disable loading if it is present
+  // Disable fullscreen loading if it is present
   const loadingInstance = ElLoading.service({ fullscreen: true });
 
   nextTick(() => {

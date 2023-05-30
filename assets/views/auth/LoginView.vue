@@ -10,7 +10,8 @@
             <el-form-item label="Email" prop="email">
                 <el-input
                     v-model="form.email"
-                    v-on:keyup.enter="passwordInput.focus()"
+                    v-on:keyup.enter="formRef.password.focus()"
+                    :ref="firstField"
                     :disabled="disabled"
                     maxlength="254"
                     show-word-limit
@@ -22,7 +23,6 @@
                 <el-input
                     v-model="form.password"
                     v-on:keyup.enter="submitForm()"
-                    ref="passwordInput"
                     :disabled="disabled"
                     maxlength="32"
                     type="password"
@@ -38,7 +38,7 @@
                         type="primary"
                         :underline="false"
                         style="margin-right: 1rem"
-                        @click="redirectToForgotPassword()"
+                        @click="$router.push({ name: 'ResetPasswordRequest' })"
                     >
                         Забыли пароль?
                     </el-link>
@@ -61,21 +61,22 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton, ElLink } from 'element-plus';
 import { BasePage } from '~/components/pages/index.js';
-import { login } from '~/api/index.js';
+import { useLogin } from '~/use/index.js';
 
 const router = useRouter();
-const passwordInput = ref(null);
 
+const firstField = ref(null);
+const passwordInput = ref(null);
 const formRef = ref(null);
+const disabled = ref(false);
+
 const form = reactive({
     email: '',
     password: '',
 });
 
-const disabled = ref(false);
-
-async function sendData() {
-    const data = await login(form.email, form.password);
+async function fetch() {
+    const data = await useLogin(form);
 
     if (!data) {
         form.password = '';
@@ -94,16 +95,12 @@ function submitForm() {
     formRef.value.validate(isValid => {
         if (isValid) {
             disabled.value = true;
-            sendData();
+            fetch();
             return true;
         }
 
         return false;
     });
-}
-
-function redirectToForgotPassword() {
-    router.push({ name: 'ResetPasswordRequest' });
 }
 
 const rules = reactive({

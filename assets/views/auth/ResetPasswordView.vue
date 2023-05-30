@@ -10,7 +10,7 @@
             <el-form-item label="Пароль" prop="password">
                 <el-input
                     v-model="form.password"
-                    v-on:keyup.enter="passwordConfirmInput.focus()"
+                    v-on:keyup.enter="formRef.password.focus()"
                     :disabled="disabled"
                     maxlength="254"
                     show-word-limit
@@ -57,25 +57,24 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus';
 import validator from 'validator';
 import { BasePage } from '~/components/pages/index.js';
-import { resetPassword } from '~/api/index.js';
+import { useResetPassword } from '~/use/index.js';
 
 const router = useRouter();
 const route = useRoute();
 
-const passwordConfirmInput = ref(null);
-
 const formRef = ref(null);
+const disabled = ref(false);
+
 const form = reactive({
     password: '',
     passwordConfirm: '',
 });
 
-const disabled = ref(false);
-
-async function sendData() {
+async function fetch() {
     const path = route.path.split('/');
     const token = path.pop() || path.pop();
-    const success = await resetPassword(token, form.password);
+    const success = await useResetPassword({ token, password: form.password });
+
     if (!success) {
         disabled.value = false;
         return;
@@ -88,7 +87,7 @@ function submitForm() {
     formRef.value.validate(isValid => {
         if (isValid) {
             disabled.value = true;
-            sendData();
+            fetch();
             return true;
         }
 
@@ -110,7 +109,7 @@ function validatePass(rule, value, callback) {
 
 function validatePass2(rule, value, callback) {
     if (value !== form.password) {
-        callback(new Error('Пароли не совпадают!'));
+        callback(new Error('Пароли не совпадают'));
     }
 
     callback();

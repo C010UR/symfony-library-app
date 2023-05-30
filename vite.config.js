@@ -9,7 +9,13 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 export default defineConfig({
   plugins: [
     basicSsl(), // https://vitejs.dev/config/server-options.html#server-https
-    vue(),
+    vue({
+      template: {
+        transformAssetUrls: {
+          includeAbsolute: false,
+        },
+      },
+    }),
     splitVendorChunkPlugin(), // https://vitejs.dev/guide/build.html#chunking-strategy
     /* eslint-disable-next-line new-cap */
     ElementPlus({
@@ -32,6 +38,7 @@ export default defineConfig({
       },
     },
   },
+  envDir: 'assets/env',
   build: {
     reportCompressedSize: true,
     emptyOutDir: true,
@@ -41,7 +48,7 @@ export default defineConfig({
       },
       output: {
         manualChunks: {
-          other: ['assets/api/index.js'],
+          other: ['assets/use/index.js'],
           'views-auth': ['assets/views/Authentication/index.js'],
         },
       },

@@ -10,6 +10,7 @@ import '~/styles/transitions.css';
 
 const pinia = createPinia();
 
+// Update $reset to work with Function syntax
 pinia.use(({ store }) => {
   const initialState = cloneDeep(store.$state);
   store.$reset = () => store.$patch(cloneDeep(initialState));
@@ -17,17 +18,11 @@ pinia.use(({ store }) => {
 
 const app = createApp(App);
 
+// Vue store
 app.use(pinia);
+// Vue router
 app.use(router);
+// Loading animation
 app.use(ElLoading);
 
 app.mount('#app');
-
-app.config.warnHandler = (message, instance, trace) => {
-  const rules = [
-    'Component inside <Transition> renders non-element root node that cannot be animated.',
-  ];
-  if (!rules.includes(message)) {
-    console.warn('[Vue warn]: ' + message + '\n' + trace);
-  }
-};

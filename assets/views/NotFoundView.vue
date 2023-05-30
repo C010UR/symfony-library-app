@@ -3,7 +3,7 @@
         <el-empty description="Страница не была найдена!" />
         <el-button
             type="primary"
-            @click="goToStart()"
+            @click="router.push({ name: 'Main' })"
             style="float: right; margin-bottom: 2.31rem"
         >
             Вернуться на Главную страницу
@@ -17,15 +17,10 @@ import { ElEmpty, ElButton } from 'element-plus';
 import BasePage from '~/components/pages/BasePage.vue';
 
 const route = useRoute();
-const router = useRouter();
 
 let path = route.path.slice(-15);
 
 if (route.fullPath.length > 15) {
     path = '/...' + path;
-}
-
-function goToStart() {
-    router.push({ path: '/' });
 }
 </script>

@@ -31,7 +31,7 @@
                         type="primary"
                         :underline="false"
                         style="margin-right: 1rem"
-                        @click="redirectToLoginPage()"
+                        @click="$router.push({ name: 'Login' })"
                     >
                         Вернуться
                     </el-link>
@@ -53,18 +53,18 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton, ElLink } from 'element-plus';
 import { BasePage } from '~/components/pages/index.js';
-import { requestResetPassword } from '~/api/index.js';
+import { useRequestPasswordReset } from '~/use/index.js';
 
 const router = useRouter();
 
 const formRef = ref(null);
+const disabled = ref(false);
+
 const form = reactive({
     email: '',
 });
 
-const disabled = ref(false);
-
-async function sendData() {
+async function fetch() {
     const url = new URL(
         router.resolve({
             name: 'ResetPasswordRequest',
@@ -72,7 +72,10 @@ async function sendData() {
         window.location.origin,
     ).href;
 
-    const success = await requestResetPassword(form.email, url);
+    const success = await useRequestPasswordReset({
+        email: form.email,
+        link: url,
+    });
 
     if (success) {
         router.push({ name: 'ResetPasswordConfirm' });
@@ -85,16 +88,12 @@ function submitForm() {
     formRef.value.validate(isValid => {
         if (isValid) {
             disabled.value = true;
-            sendData();
+            fetch();
             return true;
         }
 
         return false;
     });
-}
-
-function redirectToLoginPage() {
-    router.push({ name: 'Login' });
 }
 
 const rules = reactive({

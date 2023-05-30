@@ -13,15 +13,12 @@ WORKDIR /srv/app
 RUN npm install -g npm
 
 # Allow caching by installing npm modules before copying sources
-COPY --link package.json package-lock*.json ./
+COPY --link package*.json ./
 RUN set -eux; npm ci --include-dev --no-audit --no-progress; \
 	npm cache clean --force
 
 # Copy sources
 COPY --link  . ./
-
-# Remove env files for prod
-RUN rm -rf assets/env/
 
 # Build
 RUN npm run build
@@ -54,7 +51,6 @@ RUN apk add --no-cache \
 	file \
 	gettext \
 	git \
-	supervisor \
 	rabbitmq-c-dev
 
 RUN set -eux; \
@@ -84,12 +80,6 @@ COPY --link docker/php/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
 # Copy php-fpm config
 COPY --link docker/php/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 RUN mkdir -p /var/run/php
-
-# Run supervisord to consume messages
-COPY --link docker/php/supervisord/supervisord.conf /usr/local/etc/supervisord/supervisord.conf
-RUN chmod +x /usr/local/etc/supervisord/supervisord.conf
-
-RUN supervisord --configuration /usr/local/etc/supervisord/supervisord.conf
 
 # Copy php healthcheck
 COPY --link docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
@@ -158,6 +148,11 @@ RUN rm "$PHP_INI_DIR/conf.d/app.prod.ini"; \
 COPY --link docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
 RUN rm -f .env.local.php
+
+# Message consumer image
+FROM app_php AS app_php_symfony_consume
+
+CMD ["/srv/app/bin/console", "messenger:consume", "async", "--env=PROD"]
 
 # Caddy image
 FROM caddy:latest AS app_caddy

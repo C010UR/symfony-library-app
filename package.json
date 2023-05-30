@@ -23,6 +23,8 @@
     "@element-plus/icons-vue": "^2.1.0",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
     "@vueuse/core": "^10.1.2",
+    "axios": "^1.4.0",
+    "axios-cache-interceptor": "^1.1.1",
     "element-plus": "^2.3.5",
     "lodash": "^4.17.21",
     "path": "^0.12.7",

@@ -12,7 +12,7 @@
         <el-button
             style="float: right; margin-bottom: 2.31rem; margin-top: 1rem"
             type="primary"
-            @click="redirectToLoginPage()"
+            @click="$router.push({ name: 'Login' })"
         >
             Войти
         </el-button>
@@ -23,10 +23,4 @@
 import { useRouter } from 'vue-router';
 import { ElButton } from 'element-plus';
 import { BasePage } from '~/components/pages/index.js';
-
-const router = useRouter();
-
-function redirectToLoginPage() {
-    router.push({ name: 'Login' });
-}
 </script>

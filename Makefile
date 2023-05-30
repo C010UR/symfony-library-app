@@ -8,6 +8,7 @@ PHP_CONT = $(DOCKER_COMP) exec php
 PHP      = $(PHP_CONT) php
 COMPOSER = $(PHP_CONT) composer
 SYMFONY  = $(PHP_CONT) bin/console
+NPM      = npm
 
 # Misc
 .DEFAULT_GOAL = help
@@ -27,7 +28,7 @@ up: ## Start the docker hub in detached mode (no logs)
 
 start: build up ## Build and start the containers for dev
 
-serve: ## Build and start the containers for staging
+serve: ## Build and start the containers in staging mode
 	@$(DOCKER_COMP) -f docker-compose.yml up --build --detach
 
 down: ## Stop the docker hub
@@ -56,11 +57,11 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 ## —— Lint —————————————————————————————————————————————————————————————————————
 lint: ## Lint the project
 	- @$(COMPOSER) run php-cs-fixer-dry
-	- npm run lint
+	- $(NPM) run lint
 
 lint-fix: ## Fix lint issues in the project
 	- @$(COMPOSER) run  php-cs-fixer
-	- npm run lint-fix
+	- $(NPM) run lint-fix
 
 ## —— Test —————————————————————————————————————————————————————————————————————
 test: ## Run tests
@@ -74,8 +75,8 @@ test: ## Run tests
 cc: c=c:c ## Clear the cache
 cc: sf
 
-install: ## Install dependencies for the host (npm and composer are required)
-	npm install --include-dev
+require-local: ## Install dependencies for the host (npm and composer are required)
+	$(NPM) install --include-dev
 	composer install --ignore-platform-reqs
 
 load-fixtures: ## Load fixutres
