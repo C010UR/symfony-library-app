@@ -87,10 +87,10 @@ class Author
             return null;
         }
 
-        $fullName = $this->lastName . ' ' . $this->firstName;
+        $fullName = $this->lastName.' '.$this->firstName;
 
         if ($this->middleName) {
-            $fullName .= ' ' . $this->middleName;
+            $fullName .= ' '.$this->middleName;
         }
 
         return $fullName;

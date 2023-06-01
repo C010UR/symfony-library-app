@@ -171,7 +171,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $name = implode('@', array_slice($address, 0, count($address) - 1));
         $length = floor(strlen($name) / 2);
 
-        return substr($name, 0, $length) . str_repeat('*', $length) . '@' . end($address);
+        return substr($name, 0, $length).str_repeat('*', $length).'@'.end($address);
     }
 
     public function format(): array
