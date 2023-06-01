@@ -4,7 +4,7 @@ This is a diploma for [Mark Laurenchikas](https://vk.com/lemurlaur)
 
 ## Project overview
 
-This project is built with [`Symfony`](https://symfony.com/), [`Vue`](https://vuejs.org/) powered by [`Vite`](https://vitejs.dev/https://vitejs.dev/) and [`Docker`](https://www.docker.com/).
+This project is built with [`Symfony`](https://symfony.com/) and [`Vue`](https://vuejs.org/) powered by [`Vite`](https://vitejs.dev/https://vitejs.dev/) and [`Docker`](https://www.docker.com/).
 
 Documentation:
 
@@ -15,7 +15,7 @@ Documentation:
 * [`Docker`](https://www.docker.com/) - to run the project.
 * [`npm`](https://www.npmjs.com/) - for syntax highlight and to run frontend in `dev` environment
 * [`Composer`](https://getcomposer.org/) - for syntax highlight
-* [`GNU Make`](https://www.gnu.org/software/make/) - to ease running commands
+* [`GNU Make`](https://www.gnu.org/software/make/) - to run some commands
 
 ## Install dependencies
 

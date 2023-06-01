@@ -1,4 +1,4 @@
-function routeFallback(profile) {
+function routeFallback(profile: UserProfile | null): { name: string } {
   if (!profile) {
     return {
       name: 'Login',
@@ -20,7 +20,7 @@ function routeFallback(profile) {
   throw new Error('User does not have valid roles.');
 }
 
-function isAllowed(profile, routeRoles) {
+function isUserHasPermissions(profile: UserProfile | null, routeRoles?: UserRole[]): boolean {
   if (!routeRoles) {
     return true;
   }
@@ -31,6 +31,7 @@ function isAllowed(profile, routeRoles) {
 
   for (const routeRole of routeRoles) {
     const found = profile.roles.find(role => role === routeRole);
+
     if (found) {
       return true;
     }
@@ -39,4 +40,4 @@ function isAllowed(profile, routeRoles) {
   return false;
 }
 
-export { routeFallback, isAllowed };
+export { routeFallback, isUserHasPermissions };

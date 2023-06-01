@@ -1,3 +1,3 @@
-export * from './notifications.js';
+export * from './notifications';
 
 export { default as DarkSwitch } from './DarkSwitch.vue';

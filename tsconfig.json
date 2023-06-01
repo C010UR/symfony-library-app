@@ -1,0 +1,43 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "./assets/env.d.ts",
+    "./assets/**/*",
+    "./assets/**/*.vue",
+    "./assets/**/*.ts",
+    "./assets/**/*.js",
+    "./assets/**/*.d.ts",
+    "./vite.config.ts"
+  ],
+  "exclude": [
+    "./assets/**/__tests__/*"
+  ],
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "allowJs": true,
+    "composite": true,
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "strict": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
+    "paths": {
+      "@/*": [
+        "assets/*"
+      ]
+    }
+  },
+  "vueCompilerOptions": {
+    "target": 3
+  }
+}

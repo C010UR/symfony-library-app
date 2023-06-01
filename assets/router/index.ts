@@ -1,16 +1,16 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { ElLoading } from 'element-plus';
-import { resolveTransition } from './transition-resolver.js';
-import { isAllowed, routeFallback } from './permissions-resolver.js';
+import { resolveTransition } from './transition-resolver';
+import { isUserHasPermissions, routeFallback } from './permissions-resolver';
 import {
   LoginView,
   RequestPasswordResetView,
   RequestPasswordResetConfirmView,
   ResetPasswordView,
   NotFoundView,
-} from '~/views/index.js';
-import { useGetProfile } from '~/use/index.js';
+} from '@/views';
+import { useGetProfile } from '@/use';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -18,6 +18,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'Main',
+      component: NotFoundView,
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: NotFoundView,
     },
     {
       path: '/login',
@@ -73,17 +79,17 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
   to.meta.transition = resolveTransition(to, from);
 
-  if (to.name === 'Main') {
+  if (to.name === 'Dashboard') {
     return routeFallback(await useGetProfile());
   }
 
   if (!to.meta.roles) {
-    return null;
+    return undefined;
   }
 
   const profile = await useGetProfile();
 
-  if (!isAllowed(profile, to.meta.roles)) {
+  if (!isUserHasPermissions(profile, to.meta.roles as UserRole[] | undefined)) {
     return routeFallback(profile);
   }
 

@@ -160,34 +160,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public static function getObfuscatedEmail(User $user): string
+    public static function getObfuscatedUserIdentifier(User $user): string
     {
         $address = explode('@', $user->getEmail());
         $name = implode('@', array_slice($address, 0, count($address) - 1));
         $length = floor(strlen($name) / 2);
 
-        return substr($name, 0, $length).str_repeat('*', $length).'@'.end($address);
+        return substr($name, 0, $length) . str_repeat('*', $length) . '@' . end($address);
     }
 
-    public static function format(User $user, bool $isAddDeleted = false, bool $isObfuscated = false): array
+    public static function format(User $user): array
     {
-        if ($isObfuscated) {
-            return [
-                'id' => $user->getId(),
-                'email' => self::getObfuscatedEmail($user),
-                'image' => $user->getImagePath(),
-                'is_deleted' => $user->isDeleted(),
-                'is_active' => $user->isActive(),
-            ];
-        } else {
-            return [
-                'id' => $user->getId(),
-                'email' => $user->getUserIdentifier(),
-                'roles' => $user->getRoles(),
-                'image' => $user->getImagePath(),
-                'is_deleted' => $user->isDeleted(),
-                'is_active' => $user->isActive(),
-            ];
-        }
+        return [
+            'email' => self::getObfuscatedUserIdentifier($user),
+            'image' => $user->getImagePath(),
+            'roles' => $user->getRoles(),
+            'is_deleted' => $user->isDeleted(),
+            'is_active' => $user->isActive(),
+        ];
     }
 }

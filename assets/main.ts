@@ -3,10 +3,10 @@ import { createPinia } from 'pinia';
 import { cloneDeep } from 'lodash';
 import { ElLoading } from 'element-plus';
 
-import App from '~/App.vue';
-import router from '~/router/index.js';
-import '~/styles/index.scss';
-import '~/styles/transitions.css';
+import App from '@/App.vue';
+import router from '@/router/index.js';
+import '@/styles/index.scss';
+import '@/styles/transitions.css';
 
 const pinia = createPinia();
 

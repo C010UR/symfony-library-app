@@ -1,136 +1,124 @@
 <template>
-    <base-page header="Сброс пароля">
-        <el-form
-            ref="formRef"
-            class="form"
-            label-position="top"
-            :model="form"
-            :rules="rules"
-        >
-            <el-form-item label="Пароль" prop="password">
-                <el-input
-                    v-model="form.password"
-                    v-on:keyup.enter="formRef.password.focus()"
-                    :disabled="disabled"
-                    maxlength="254"
-                    show-word-limit
-                    clearable
-                    style="max-width: 132ch"
-                    type="password"
-                    show-password
-                ></el-input>
-            </el-form-item>
-            <el-form-item label="Подтверждение пароля" prop="passwordConfirm">
-                <el-input
-                    v-model="form.passwordConfirm"
-                    v-on:keyup.enter="submitForm()"
-                    ref="passwordConfirmInput"
-                    :disabled="disabled"
-                    maxlength="254"
-                    show-word-limit
-                    clearable
-                    style="max-width: 132ch"
-                    type="password"
-                    show-password
-                ></el-input>
-            </el-form-item>
-            <el-form-item>
-                <div
-                    style="margin-left: auto; margin-right: 0; margin-top: 1rem"
-                >
-                    <el-button
-                        type="primary"
-                        :loading="disabled"
-                        @click="submitForm()"
-                    >
-                        Сбросить Пароль
-                    </el-button>
-                </div>
-            </el-form-item>
-        </el-form>
-    </base-page>
+  <base-page header="Сброс пароля">
+    <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="rules">
+      <el-form-item label="Пароль" prop="password">
+        <el-input
+          v-model="form.password"
+          :disabled="disabled"
+          maxlength="254"
+          show-word-limit
+          clearable
+          style="max-width: 132ch"
+          type="password"
+          show-password
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="Подтверждение пароля" prop="passwordConfirm">
+        <el-input
+          v-model="form.passwordConfirm"
+          v-on:keyup.enter="submitForm()"
+          ref="passwordConfirmInput"
+          :disabled="disabled"
+          maxlength="254"
+          show-word-limit
+          clearable
+          style="max-width: 132ch"
+          type="password"
+          show-password
+        ></el-input>
+      </el-form-item>
+      <el-form-item>
+        <div style="margin-left: auto; margin-right: 0; margin-top: 1rem">
+          <el-button type="primary" :loading="disabled" @click="submitForm()"> Сбросить Пароль </el-button>
+        </div>
+      </el-form-item>
+    </el-form>
+  </base-page>
 </template>
 
-<script setup>
-import { ref, reactive } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import validator from 'validator';
-import { BasePage } from '~/components/pages/index.js';
-import { useResetPassword } from '~/use/index.js';
+import { BasePage } from '@/components/pages';
+import { useResetPassword } from '@/use';
 
 const router = useRouter();
 const route = useRoute();
 
-const formRef = ref(null);
+const formRef = ref<FormInstance>();
 const disabled = ref(false);
 
-const form = reactive({
-    password: '',
-    passwordConfirm: '',
+const form = ref({
+  password: '',
+  passwordConfirm: '',
 });
 
 async function fetch() {
-    const path = route.path.split('/');
-    const token = path.pop() || path.pop();
-    const success = await useResetPassword({ token, password: form.password });
+  const path = route.path.split('/');
+  const token = (path.pop() || path.pop()) ?? '';
+  const data = await useResetPassword(token, form.value.password);
 
-    if (!success) {
-        disabled.value = false;
-        return;
-    }
+  if (data === null) {
+    disabled.value = false;
+    return;
+  }
 
-    router.push({ name: 'Login' });
+  router.push({ name: 'Login' });
 }
 
 function submitForm() {
-    formRef.value.validate(isValid => {
-        if (isValid) {
-            disabled.value = true;
-            fetch();
-            return true;
-        }
-
-        return false;
-    });
-}
-
-function validatePass(rule, value, callback) {
-    if (!validator.isStrongPassword(form.password, { minSymbols: 0 })) {
-        callback(new Error('Пароль недостаточно надежный'));
+  formRef.value?.validate(isValid => {
+    if (isValid) {
+      disabled.value = true;
+      fetch();
+      return true;
     }
 
-    if (form.passwordConfirm) {
-        formRef.value.validateField('passwordConfirm', () => null);
-    }
-
-    callback();
+    return false;
+  });
 }
 
-function validatePass2(rule, value, callback) {
-    if (value !== form.password) {
-        callback(new Error('Пароли не совпадают'));
-    }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function validatePass(rule: any, value: any, callback: any) {
+  if (!validator.isStrongPassword(form.value.password, { minSymbols: 0 })) {
+    callback(new Error('Пароль недостаточно надежный'));
+  }
 
-    callback();
+  if (form.value.passwordConfirm) {
+    formRef.value?.validateField('passwordConfirm', () => null);
+  }
+
+  callback();
 }
 
-const rules = reactive({
-    password: [
-        {
-            required: true,
-            message: 'Пароль не может быть пустым',
-            trigger: 'blur',
-        },
-        { validator: validatePass, trigger: ['blur', 'change'] },
-    ],
-    passwordConfirm: [
-        {
-            required: true,
-            message: 'Подтверждение пароля не может быть пустым',
-            trigger: 'blur',
-        },
-        { validator: validatePass2, trigger: ['blur', 'change'] },
-    ],
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function validatePass2(rule: any, value: any, callback: any) {
+  if (value !== form.value.password) {
+    callback(new Error('Пароли не совпадают'));
+  }
+
+  callback();
+}
+
+const rules = ref<FormRules>({
+  password: [
+    {
+      required: true,
+      message: 'Пароль не может быть пустым',
+      trigger: 'blur',
+    },
+    { validator: validatePass, trigger: ['blur', 'change'] },
+  ],
+  passwordConfirm: [
+    {
+      required: true,
+      message: 'Подтверждение пароля не может быть пустым',
+      trigger: 'blur',
+    },
+    { validator: validatePass2, trigger: ['blur', 'change'] },
+  ],
 });
 </script>

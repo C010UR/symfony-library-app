@@ -1,3 +1,3 @@
-export * from './auth/index.js';
+export * from './auth';
 
 export { default as NotFoundView } from './NotFoundView.vue';
