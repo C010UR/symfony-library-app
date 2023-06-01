@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/v1/password-reset', name: 'app_api_', format: 'json')]
-class ResetPasswordController extends AbstractController
+class PasswordResetController extends AbstractController
 {
     #[Route('', name: 'password_reset_request', methods: ['POST'])]
     public function request(Request $request, PasswordResetService $service): JsonResponse

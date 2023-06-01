@@ -1,9 +1,12 @@
 <?php
 
-namespace App\EventListener;
+namespace App\EntityListener;
 
 use App\Entity\User;
+use App\Utils\FileUtils;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Events;
 
 class UserEntityListener
 {
@@ -11,20 +14,13 @@ class UserEntityListener
     {
     }
 
-    private function unlink(?string $imagePath): bool
-    {
-        if (null === $imagePath) {
-            return true;
-        }
-
-        return @unlink(sprintf('%s%s', $this->dirPublic, $imagePath));
-    }
-
+    #[AsEntityListener(event: Events::postRemove, entity: User::class)]
     public function postRemove(User $user): void
     {
-        $this->unlink($user->getImagePath());
+        FileUtils::unlinkUpload($this->dirPublic, $user->getImagePath());
     }
 
+    #[AsEntityListener(event: Events::preUpdate, entity: User::class)]
     public function preUpdate(User $user, PreUpdateEventArgs $event): void
     {
         if ($user->isDeleted()) {
@@ -33,7 +29,7 @@ class UserEntityListener
         }
 
         if ($event->hasChangedField('imagePath')) {
-            $this->unlink($event->getOldValue('imagePath'));
+            FileUtils::unlinkUpload($this->dirPublic, $event->getOldValue('imagePath'));
         }
     }
 }

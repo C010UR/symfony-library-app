@@ -5,6 +5,7 @@ namespace App\EventListener;
 use App\Entity\User;
 use App\Security\UserChecker;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
@@ -21,6 +22,7 @@ class AuthListener
         $this->entityManager = $entityManager;
     }
 
+    #[AsEventListener(event: LoginFailureEvent::class)]
     public function onLoginFailure(LoginFailureEvent $event): void
     {
         try {
@@ -51,6 +53,7 @@ class AuthListener
         throw new UnauthorizedHttpException('-', UserChecker::MESSAGE_TOO_MANY_ATTEMPTS);
     }
 
+    #[AsEventListener(event: LoginSuccessEvent::class)]
     public function onLoginSuccess(LoginSuccessEvent $event): void
     {
         /** @var User $user */
@@ -64,6 +67,7 @@ class AuthListener
         $this->entityManager->flush();
     }
 
+    #[AsEventListener(event: CheckPassportEvent::class)]
     public function onCheckPassport(CheckPassportEvent $event): void
     {
         try {

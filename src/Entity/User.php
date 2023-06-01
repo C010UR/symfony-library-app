@@ -42,6 +42,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(options: ['default' => false])]
     private ?bool $isDeleted = false;
 
+    public function __toString(): ?string
+    {
+        return $this->getObfuscatedUserIdentifier();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -160,23 +165,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public static function getObfuscatedUserIdentifier(User $user): string
+    public function getObfuscatedUserIdentifier(): string
     {
-        $address = explode('@', $user->getEmail());
+        $address = explode('@', $this->getEmail());
         $name = implode('@', array_slice($address, 0, count($address) - 1));
         $length = floor(strlen($name) / 2);
 
-        return substr($name, 0, $length).str_repeat('*', $length).'@'.end($address);
+        return substr($name, 0, $length) . str_repeat('*', $length) . '@' . end($address);
     }
 
-    public static function format(User $user): array
+    public function format(): array
     {
         return [
-            'email' => self::getObfuscatedUserIdentifier($user),
-            'image' => $user->getImagePath(),
-            'roles' => $user->getRoles(),
-            'is_deleted' => $user->isDeleted(),
-            'is_active' => $user->isActive(),
+            'id' => $this->getId(),
+            'email' => self::getObfuscatedUserIdentifier(),
+            'image' => $this->getImagePath(),
+            'roles' => $this->getRoles(),
+            'isDeleted' => $this->isDeleted(),
+            'isActive' => $this->isActive(),
         ];
     }
 }

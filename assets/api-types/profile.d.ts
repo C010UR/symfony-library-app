@@ -1,9 +1,10 @@
 type UserRole = 'ROLE_ADMIN' | 'ROLE_USER';
 
 interface UserProfile {
+  id: number;
   email: string;
   image?: string;
   roles: UserRole[];
-  is_deleted?: boolean;
-  is_active?: boolean;
+  isDeleted: boolean;
+  isActive: boolean;
 }

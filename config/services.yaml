@@ -1,3 +1,4 @@
+---
 # This file is the entry point to configure your own services.
 # Files in the packages/ subdirectory configure your dependencies.
 
@@ -8,37 +9,21 @@ parameters:
 services:
     # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
+        autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
-            string $environment: '%kernel.environment%'
-            string $projectDir: '%kernel.project_dir%'
-            string $dirFixtures: '%kernel.project_dir%/src/DataFixtures'
-            string $dirPublic: '%kernel.project_dir%/public'
-            string $dirBookCovers: '/uploads/book/cover'
-            string $dirUserUploads: '/uploads/users'
+            string $environment: "%kernel.environment%"
+            string $projectDir: "%kernel.project_dir%"
+            string $dirFixtures: "%kernel.project_dir%/src/DataFixtures"
+            string $dirPublic: "%kernel.project_dir%/public"
+            # string $dirBookCovers: "/uploads/book/cover"
+            string $dirUserUploads: "/uploads/users"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/'
+        resource: "../src/"
         exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
-    App\EventListener\LogoutListener:
-        tags:
-            - { name: kernel.event_listener, event: Symfony\Component\Security\Http\Event\LogoutEvent, dispatcher: security.event_dispatcher.main, method: onLogout }
-    App\EventListener\AuthListener:
-        tags:
-            - { name: kernel.event_listener, event: Symfony\Component\Security\Http\Event\LoginFailureEvent, method: onLoginFailure }
-            - { name: kernel.event_listener, event: Symfony\Component\Security\Http\Event\LoginSuccessEvent, method: onLoginSuccess }
-            - { name: kernel.event_listener, event: Symfony\Component\Security\Http\Event\CheckPassportEvent, method: onCheckPassport }
-    App\EventListener\UserEntityListener:
-        tags:
-            - { name: doctrine.orm.entity_listener, event: preUpdate, entity: App\Entity\User }
-            - { name: doctrine.orm.entity_listener, event: postRemove, entity: App\Entity\User }
-    
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+            - "../src/DependencyInjection/"
+            - "../src/Entity/"
+            - "../src/Kernel.php"
