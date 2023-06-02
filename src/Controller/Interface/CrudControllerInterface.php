@@ -18,9 +18,9 @@ interface CrudControllerInterface
     public function getMeta(): JsonResponse;
 
     /**
-     * Return json of entity with id $id.
+     * Return json of entity with slug $slug.
      */
-    public function readOne(int $id): JsonResponse;
+    public function readOne(string $slug): JsonResponse;
 
     /**
      * Creates new entity using request body.

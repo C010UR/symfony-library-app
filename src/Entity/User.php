@@ -2,16 +2,19 @@
 
 namespace App\Entity;
 
+use App\Entity\Interface\EntityInterface;
 use App\Repository\UserRepository;
+use App\Utils\Utils;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email', 'Email is already taken.')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -42,9 +45,56 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(options: ['default' => false])]
     private ?bool $isDeleted = false;
 
-    public function __toString(): ?string
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $lastName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $middleName = null;
+
+    public function __toString(): string
     {
-        return $this->getObfuscatedUserIdentifier();
+        return $this->getFullName() ?? '';
+    }
+
+    public function getFullName(): ?string
+    {
+        if (!$this->getFirstName() || !$this->getLastName()) {
+            return null;
+        }
+
+        $fullName = $this->getFirstName() . ' ' . $this->getLastName();
+
+        if ($this->getMiddleName()) {
+            $fullName .= ' ' . $this->getMiddleName();
+        }
+
+        return $fullName;
+    }
+
+    public function normalizeName(): void
+    {
+        if ($this->getFirstName()) {
+            $this->setFirstName(Utils::ucwords($this->getFirstName()));
+        }
+
+        if ($this->getLastName()) {
+            $this->setLastName(Utils::ucwords($this->getLastName()));
+        }
+
+        if ($this->getMiddleName()) {
+            $this->setMiddleName(Utils::ucwords($this->getMiddleName()));
+        }
+    }
+
+    public function computeSlug(SluggerInterface $slugger): void
+    {
+        $this->slug = (string) $slugger->slug((string) $this)->lower();
     }
 
     public function getId(): ?int
@@ -165,8 +215,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getObfuscatedUserIdentifier(): string
+    public function getObfuscatedUserIdentifier(): ?string
     {
+        if (!$this->getUserIdentifier()) {
+            return null;
+        }
+
         $address = explode('@', $this->getEmail());
         $name = implode('@', array_slice($address, 0, count($address) - 1));
         $length = floor(strlen($name) / 2);
@@ -178,11 +232,64 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return [
             'id' => $this->getId(),
+            'fullName' => $this->getFullName(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
+            'middleName' => $this->getMiddleName(),
+            'slug' => $this->getSlug(),
             'email' => self::getObfuscatedUserIdentifier(),
             'image' => $this->getImagePath(),
             'roles' => $this->getRoles(),
             'isDeleted' => $this->isDeleted(),
             'isActive' => $this->isActive(),
         ];
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getMiddleName(): ?string
+    {
+        return $this->middleName;
+    }
+
+    public function setMiddleName(?string $middleName): self
+    {
+        $this->middleName = $middleName;
+
+        return $this;
     }
 }

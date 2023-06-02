@@ -61,7 +61,8 @@ RUN set -eux; \
 	zip \
 	pdo \
 	amqp \
-	redis
+	redis \
+	gd
 
 ###> recipes ###
 ###> doctrine/doctrine-bundle ###

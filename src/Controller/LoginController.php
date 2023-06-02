@@ -13,7 +13,10 @@ class LoginController extends AbstractController
     #[Route('/login', name: 'login', methods: ['POST'])]
     public function login(): JsonResponse
     {
-        return new JsonResponse(User::format($this->getUser()));
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return new JsonResponse($user->format());
     }
 
     #[Route('/logout', name: 'logout', methods: ['GET'])]
@@ -24,6 +27,9 @@ class LoginController extends AbstractController
     #[Route('/profile', name: 'profile', methods: ['GET'])]
     public function profile(): JsonResponse
     {
-        return new JsonResponse(User::format($this->getUser()));
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return new JsonResponse($user->format());
     }
 }

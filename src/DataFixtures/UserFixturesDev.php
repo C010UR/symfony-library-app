@@ -32,8 +32,10 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
 
         $role = sprintf('ROLE_%s', strtoupper($preg[1]));
 
+        $name = explode(' ', preg_replace('/(.*)\. /U', '', pathinfo($file['filename'], PATHINFO_FILENAME)));
+
         $email = $this->createEmail(
-            str_replace(' ', '.', preg_replace('/(.*)\. /U', '', pathinfo($file['filename'], PATHINFO_FILENAME))),
+            implode('.', $name),
         );
 
         $filename = sprintf('%s/user-%s.%s', $this->dirUserUploads, bin2hex(random_bytes(3)), $file['extension']);
@@ -47,6 +49,18 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
         $user->setPassword($hashed);
         $user->setImagePath($filename);
         $user->setIsActive(true);
+
+        if (array_key_exists(0, $name)) {
+            $user->setFirstName($name[0]);
+        }
+
+        if (array_key_exists(1, $name)) {
+            $user->setLastName($name[1]);
+        }
+
+        if (array_key_exists(2, $name)) {
+            $user->setMiddleName($name[2]);
+        }
 
         return $user;
     }

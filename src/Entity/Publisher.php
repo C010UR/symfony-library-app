@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Interface\EntityInterface;
 use App\Repository\PublisherRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -10,7 +11,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[ORM\Entity(repositoryClass: PublisherRepository::class)]
 #[UniqueEntity('name', 'Name is already taken.')]
 #[UniqueEntity('slug', 'Slug is already taken.')]
-class Publisher
+class Publisher implements EntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -35,16 +36,17 @@ class Publisher
     #[ORM\Column(options: ['default' => false])]
     private ?bool $isDeleted = false;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imagePath = null;
+
     public function computeSlug(SluggerInterface $slugger): void
     {
-        if (!$this->slug || '-' === $this->slug) {
-            $this->slug = (string) $slugger->slug((string) $this)->lower();
-        }
+        $this->slug = (string) $slugger->slug((string) $this)->lower();
     }
 
-    public function __toString(): ?string
+    public function __toString(): string
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     public function getId(): ?int
@@ -132,8 +134,21 @@ class Publisher
             'address' => $this->getAddress(),
             'email' => $this->getEmail(),
             'website' => $this->getWebsite(),
+            'image' => $this->getImagePath(),
             'slug' => $this->getSlug(),
             'isDeleted' => $this->isDeleted(),
         ];
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function setImagePath(?string $imagePath): self
+    {
+        $this->imagePath = $imagePath;
+
+        return $this;
     }
 }

@@ -3,18 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Author;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Abstract\AbstractCrudRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Author>
- *
- * @method Author|null find($id, $lockMode = null, $lockVersion = null)
- * @method Author|null findOneBy(array $criteria, array $orderBy = null)
- * @method Author[]    findAll()
- * @method Author[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class AuthorRepository extends ServiceEntityRepository
+class AuthorRepository extends AbstractCrudRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -32,35 +25,19 @@ class AuthorRepository extends ServiceEntityRepository
 
     public function remove(Author $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->remove($entity);
+        $entity->setIsDeleted(!$entity->isDeleted());
 
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
 
-//    /**
-//     * @return Author[] Returns an array of Author objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findMatchingByDeleted(bool $isDeleted, Criteria $criteria): array
+    {
+        $query = $this->createQueryBuilder('c')
+        ->select('c')
+        ->innerJoin('c.books', 'books');
 
-//    public function findOneBySomeField($value): ?Author
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $this->findMatchingByDeletedWithQueryBuilder($query, $isDeleted, $criteria);
+    }
 }

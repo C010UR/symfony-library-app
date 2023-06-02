@@ -58,6 +58,8 @@ const form = ref({
 async function fetch() {
   const data = await useLogin(form.value.email, form.value.password);
 
+  console.log(data);
+
   if (data === null) {
     form.value.password = '';
     disabled.value = false;

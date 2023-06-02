@@ -9,7 +9,9 @@ class Column
     public const FLOAT_TYPE = 'float';
     public const STRING_TYPE = 'string';
     public const ENTITY_TYPE = 'entity';
+    public const ENTITIES_TYPE = 'entities';
     public const DATE_TYPE = 'date';
+    public const ARRAY_TYPE = 'array';
     public const NOT_FILTERABLE_TYPE = 'none';
 
     private array $operators = [];
@@ -64,10 +66,16 @@ class Column
             case self::ENTITY_TYPE:
                 $this->operators = FilterOperators::getForEntityTypes($isNullable);
                 break;
+            case self::ENTITIES_TYPE:
+                $this->operators = FilterOperators::getForEntitiesTypes($isNullable);
+                break;
             case self::DATE_TYPE:
                 $this->operators = FilterOperators::getForDateTypes($isNullable);
                 break;
             case self::NOT_FILTERABLE_TYPE:
+                break;
+            case self::ARRAY_TYPE:
+                $this->operators = FilterOperators::getForArrayTypes($isNullable);
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf("Data type '%s' is not implemented.", $type));

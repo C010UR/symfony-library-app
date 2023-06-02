@@ -3,16 +3,20 @@ import { ElMessage } from 'element-plus';
 type popupType = 'error' | 'info' | 'success' | 'warning';
 
 function popup(type: popupType, message: string, httpCode?: number): void {
-  if (httpCode) {
-    message = `HTTP ${httpCode}: ${message}`;
-  }
+  const messages = message.split('<br>');
 
-  ElMessage({
-    message,
-    type,
-    duration: 15000,
-    showClose: true,
-    grouping: true,
+  messages.forEach(msg => {
+    if (httpCode) {
+      msg = `HTTP ${httpCode}: ${msg}`;
+    }
+
+    ElMessage({
+      message: msg,
+      type,
+      duration: 15000,
+      showClose: true,
+      grouping: true,
+    });
   });
 }
 

@@ -16,7 +16,9 @@ services:
             string $projectDir: "%kernel.project_dir%"
             string $dirFixtures: "%kernel.project_dir%/src/DataFixtures"
             string $dirPublic: "%kernel.project_dir%/public"
-            # string $dirBookCovers: "/uploads/book/cover"
+            string $dirBookPublisherUploads: "/uploads/books/publishers"
+            string $dirBookAuthorUploads: "/uploads/books/authors"
+            string $dirBookCoverUploads: "/uploads/books/covers"
             string $dirUserUploads: "/uploads/users"
 
     # makes classes in src/ available to be used as services

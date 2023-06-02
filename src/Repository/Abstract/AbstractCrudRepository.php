@@ -34,7 +34,7 @@ abstract class AbstractCrudRepository extends ServiceEntityRepository
         }
 
         $result = [
-            '@meta' => [],
+            'meta' => [],
             'data' => [],
         ];
 
@@ -42,28 +42,27 @@ abstract class AbstractCrudRepository extends ServiceEntityRepository
         $offset = $criteria->getFirstResult() ?? 0;
 
         if ($criteria->getMaxResults()) {
-            $result['@meta'] = [
+            $result['meta'] = [
                 'paginated' => true,
-                'page_size' => $criteria->getMaxResults(),
+                'pageSize' => $criteria->getMaxResults(),
                 'offset' => $offset,
-                'total_count' => $count,
+                'totalCount' => $count,
             ];
 
             $data = new Paginator($query->getQuery());
         } else {
-            $result['@meta'] = [
+            $result['meta'] = [
                 'paginated' => false,
-                'page_size' => $count,
+                'pageSize' => $count,
                 'offset' => $offset,
-                'total_count' => $count,
+                'totalCount' => $count,
             ];
 
             $data = $query->getQuery()->getResult();
         }
 
         foreach ($data as $row) {
-            $class = get_class($row);
-            $result['data'][] = $class::format($row, $isDeleted);
+            $result['data'][] = $row->format();
         }
 
         return $result;

@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Interface\EntityInterface;
 use App\Repository\BookRepository;
+use App\Utils\Utils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -16,7 +18,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
     'Name is already taken.'
 )]
 #[UniqueEntity('slug', 'Slug is already taken.')]
-class Book
+class Book implements EntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -46,7 +48,13 @@ class Book
     private ?string $slug = null;
 
     #[ORM\Column(options: ['default' => false])]
-    private ?bool $isDeleted = null;
+    private ?bool $isDeleted = false;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column]
+    private ?int $pageCount = null;
 
     public function __construct()
     {
@@ -56,21 +64,29 @@ class Book
 
     public function computeSlug(SluggerInterface $slugger): void
     {
-        if (!$this->slug || '-' === $this->slug) {
-            $this->slug = (string) $slugger->slug((string) $this)->lower();
-        }
+        $this->slug = (string) $slugger->slug((string) $this)->lower();
     }
 
     public function normalizeName(): void
     {
         if ($this->getName()) {
-            $this->setName(ucwords(strtolower($this->getName())));
+            $this->setName(Utils::ucwords($this->getName()));
         }
     }
 
-    public function __toString(): ?string
+    public function __toString(): string
     {
-        return $this->getName();
+        if (!$this->getName()) {
+            return '';
+        }
+
+        $authors = '';
+
+        foreach ($this->getAuthors() as $author) {
+            $authors .= $author->getFullName() . ' ';
+        }
+
+        return $authors . $this->getName();
     }
 
     public function getId(): ?int
@@ -143,7 +159,9 @@ class Book
      */
     public function getTags(): Collection
     {
-        return $this->tags;
+        return $this->tags->filter(function (Tag $tag) {
+            return !$tag->isDeleted();
+        });
     }
 
     public function addTag(Tag $tag): self
@@ -167,7 +185,9 @@ class Book
      */
     public function getAuthors(): Collection
     {
-        return $this->authors;
+        return $this->authors->filter(function (Author $author) {
+            return !$author->isDeleted();
+        });
     }
 
     public function addAuthor(Author $author): self
@@ -198,25 +218,28 @@ class Book
         return $this;
     }
 
-    public function format(bool $isWithAuthors = false): array
+    public function format(bool $isAllFields = true): array
     {
         $result = [
             'id' => $this->getId(),
             'name' => $this->getName(),
-            'imagePath' => $this->getImagePath(),
-            'publisher' => $this->getPublisher(),
-            'datePublished' => $this->getDatePublished()->format(\DateTimeImmutable::ATOM),
+            'image' => $this->getImagePath(),
+            'slug' => $this->getSlug(),
             'isDeleted' => $this->isDeleted(),
         ];
 
-        if ($isWithAuthors) {
+        if ($isAllFields) {
             $authors = [];
 
             foreach ($this->getAuthors() as $author) {
-                $authors[] = $author->format();
+                $authors[] = $author->format(false);
             }
 
             $result['authors'] = $authors;
+            $result['publisher'] = $this->getPublisher()->format();
+            $result['datePublished'] = $this->getDatePublished()->format(\DateTimeImmutable::ATOM);
+            $result['pageCount'] = $this->getPageCount();
+            $result['description'] = $this->getDescription();
         }
 
         $tags = [];
@@ -228,5 +251,29 @@ class Book
         $result['tags'] = $tags;
 
         return $result;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPageCount(): ?int
+    {
+        return $this->pageCount;
+    }
+
+    public function setPageCount(int $pageCount): self
+    {
+        $this->pageCount = $pageCount;
+
+        return $this;
     }
 }

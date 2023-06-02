@@ -90,6 +90,27 @@ class FilterOperators
         return $isNullable ? self::withNullOperators($operators) : $operators;
     }
 
+    public static function getForEntitiesTypes(bool $isNullable = false): array
+    {
+        $operators = self::labelOperators([
+            self::OPERATOR_IN,
+            self::OPERATOR_NOT_IN
+        ]);
+
+        return $isNullable ? self::withNullOperators($operators) : $operators;
+    }
+
+    public static function getForArrayTypes(bool $isNullable = false): array
+    {
+        $operators = self::labelOperators([
+            self::OPERATOR_IN,
+            self::OPERATOR_NOT_IN,
+            self::OPERATOR_CONTAINS,
+        ]);
+
+        return $isNullable ? self::withNullOperators($operators) : $operators;
+    }
+
     private static function withNullOperators(array $operators): array
     {
         return array_merge($operators, self::labelOperators([self::OPERATOR_IS_NOT_NULL, self::OPERATOR_IS_NULL]));

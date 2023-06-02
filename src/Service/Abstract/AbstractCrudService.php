@@ -2,6 +2,7 @@
 
 namespace App\Service\Abstract;
 
+use App\Entity\Interface\EntityInterface;
 use App\Repository\Abstract\AbstractCrudRepository;
 use App\Utils\Filter\QueryParser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -59,7 +60,7 @@ abstract class AbstractCrudService
         $this->getRepository()->remove($this->find($id), true);
     }
 
-    public function findWithRepository(ServiceEntityRepository $repository, array $criteria = []): mixed
+    public function findWithRepository(ServiceEntityRepository $repository, array $criteria = []): EntityInterface
     {
         $entity = $repository->findOneBy($criteria);
 
@@ -73,8 +74,13 @@ abstract class AbstractCrudService
         return $entity;
     }
 
-    public function find(int $id): mixed
+    public function find(int $id): EntityInterface
     {
         return $this->findWithRepository($this->getRepository(), ['id' => $id]);
+    }
+
+    public function findWithSlug(string $slug): EntityInterface
+    {
+        return $this->findWithRepository($this->getRepository(), ['slug' => $slug]);
     }
 }

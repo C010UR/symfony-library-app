@@ -64,7 +64,7 @@ export async function useFetch<T>({
 
     console.log(url, res);
 
-    return res as T;
+    return (res.data as T) ?? null;
   } catch (error: AxiosError | unknown) {
     if (!isSuppressPopup) {
       if (Axios.isAxiosError(error) && error.response) {

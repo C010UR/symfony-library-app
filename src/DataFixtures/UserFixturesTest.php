@@ -10,11 +10,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixturesTest extends Fixture implements FixtureGroupInterface
 {
-    private UserPasswordHasherInterface $hasher;
-
-    public function __construct(UserPasswordHasherInterface $hasher)
+    public function __construct(private UserPasswordHasherInterface $hasher)
     {
-        $this->hasher = $hasher;
     }
 
     private function createEmail(string $name): string
@@ -42,6 +39,8 @@ class UserFixturesTest extends Fixture implements FixtureGroupInterface
             $hashed = $this->hasher->hashPassword($user, $password);
             $user->setPassword($hashed);
             $user->setIsActive($data[2]);
+            $user->setFirstName($data[0]);
+            $user->setLastName($data[0]);
 
             $manager->persist($user);
 

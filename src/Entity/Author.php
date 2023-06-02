@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Interface\EntityInterface;
 use App\Repository\AuthorRepository;
+use App\Utils\Utils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +20,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
     message: 'Name is already taken.'
 )]
 #[UniqueEntity('slug', 'Slug is already taken.')]
-class Author
+class Author implements EntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -49,6 +51,9 @@ class Author
     #[ORM\ManyToMany(targetEntity: Book::class, mappedBy: 'authors')]
     private Collection $books;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imagePath = null;
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
@@ -56,41 +61,39 @@ class Author
 
     public function computeSlug(SluggerInterface $slugger): void
     {
-        if (!$this->slug || '-' === $this->slug) {
-            $this->slug = (string) $slugger->slug((string) $this)->lower();
-        }
+        $this->slug = (string) $slugger->slug((string) $this)->lower();
     }
 
     public function normalizeName(): void
     {
         if ($this->getFirstName()) {
-            $this->setFirstName(ucfirst(strtolower($this->getFirstName())));
+            $this->setFirstName(Utils::ucwords($this->getFirstName()));
         }
 
         if ($this->getLastName()) {
-            $this->setLastName(ucfirst(strtolower($this->getLastName())));
+            $this->setLastName(Utils::ucwords($this->getLastName()));
         }
 
         if ($this->getMiddleName()) {
-            $this->setMiddleName(ucfirst(strtolower($this->getMiddleName())));
+            $this->setMiddleName(Utils::ucwords($this->getMiddleName()));
         }
     }
 
-    public function __toString(): ?string
+    public function __toString(): string
     {
-        return $this->getFullName();
+        return $this->getFullName() ?? '';
     }
 
     public function getFullName(): ?string
     {
-        if (!$this->firstName || !$this->lastName) {
+        if (!$this->getFirstName() || !$this->getLastName()) {
             return null;
         }
 
-        $fullName = $this->lastName.' '.$this->firstName;
+        $fullName = $this->getFirstName().' '.$this->getLastName();
 
-        if ($this->middleName) {
-            $fullName .= ' '.$this->middleName;
+        if ($this->getMiddleName()) {
+            $fullName .= ' '.$this->getMiddleName();
         }
 
         return $fullName;
@@ -173,16 +176,17 @@ class Author
         return $this;
     }
 
-    public function format(bool $isWithBooks = false): array
+    public function format(bool $isWithBooks = true): array
     {
         $result = [
             'id' => $this->getId(),
-            'full_name' => $this->getFullName(),
-            'first_name' => $this->getFirstName(),
-            'last_name' => $this->getLastName(),
-            'middle_name' => $this->getMiddleName(),
+            'fullName' => $this->getFullName(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
+            'middleName' => $this->getMiddleName(),
             'website' => $this->getWebsite(),
             'email' => $this->getEmail(),
+            'image' => $this->getImagePath(),
             'slug' => $this->getSlug(),
             'isDeleted' => $this->isDeleted(),
         ];
@@ -191,7 +195,7 @@ class Author
             $books = [];
 
             foreach ($this->getBooks() as $book) {
-                $books[] = $book->format();
+                $books[] = $book->format(false);
             }
 
             $result['books'] = $books;
@@ -217,7 +221,9 @@ class Author
      */
     public function getBooks(): Collection
     {
-        return $this->books;
+        return $this->books->filter(function (Book $book) {
+            return !$book->isDeleted();
+        });
     }
 
     public function addBook(Book $book): self
@@ -235,6 +241,18 @@ class Author
         if ($this->books->removeElement($book)) {
             $book->removeAuthor($this);
         }
+
+        return $this;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function setImagePath(?string $imagePath): self
+    {
+        $this->imagePath = $imagePath;
 
         return $this;
     }
