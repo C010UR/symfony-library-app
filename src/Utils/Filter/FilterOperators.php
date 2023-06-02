@@ -94,7 +94,7 @@ class FilterOperators
     {
         $operators = self::labelOperators([
             self::OPERATOR_IN,
-            self::OPERATOR_NOT_IN
+            self::OPERATOR_NOT_IN,
         ]);
 
         return $isNullable ? self::withNullOperators($operators) : $operators;

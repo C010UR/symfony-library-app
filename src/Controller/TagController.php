@@ -50,6 +50,7 @@ class TagController extends AbstractController implements CrudControllerInterfac
     public function delete(int $id): JsonResponse
     {
         $this->service->delete($id);
+
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

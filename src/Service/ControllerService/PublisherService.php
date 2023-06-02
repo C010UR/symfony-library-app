@@ -58,11 +58,10 @@ class PublisherService extends AbstractCrudService implements CrudServiceInterfa
         /** @var Publisher $publisher */
         $publisher = $this->find($id);
         $form = $this->formFactory->create(PublisherFormType::class, $publisher, [
-            'method' => 'PATCH'
+            'method' => 'PATCH',
         ]);
 
         RequestUtils::submitForm($request, $form, false);
-
 
         if ($image = $form['image']->getData()) {
             $filename = (new ImageSaver())->save(

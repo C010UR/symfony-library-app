@@ -12,7 +12,6 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,8 +31,8 @@ class BookFormType extends AbstractType
                         minMessage: 'Book name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'Book name should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('description', TextType::class, [
                 'required' => false,
@@ -44,44 +43,43 @@ class BookFormType extends AbstractType
                         minMessage: 'Book description should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'Book description should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('pageCount', IntegerType::class, [
                 'required' => true,
                 'trim' => true,
                 'constraints' => [
                     new Assert\NotBlank(message: 'Book page count cannot be empty.'),
-                    new Assert\GreaterThan(0, message: 'Book page count must be greater than {{ compared_value }}. {{ value }} was provided.')
-                ]
+                    new Assert\GreaterThan(0, message: 'Book page count must be greater than {{ compared_value }}. {{ value }} was provided.'),
+                ],
             ])
             ->add('datePublished', DateType::class, [
                 'required' => true,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'invalid_message' => 'Date is not valid.',
-                'constraints' => [new Assert\NotBlank(message: 'Published date is not specified.')]
+                'constraints' => [new Assert\NotBlank(message: 'Published date is not specified.')],
             ])
             ->add('publisher', EntityType::class, [
                 'required' => true,
                 'class' => Publisher::class,
                 'invalid_message' => 'Publisher is not valid.',
-                'constraints' => [new Assert\NotBlank(message: 'Publisher is not specified.')]
+                'constraints' => [new Assert\NotBlank(message: 'Publisher is not specified.')],
             ])
             ->add('tags', EntityType::class, [
                 'required' => true,
                 'class' => Tag::class,
                 'multiple' => true,
                 'invalid_message' => 'Tags are not valid.',
-                'constraints' => [new Assert\NotBlank(message: 'Tags are not specified.')]
-
+                'constraints' => [new Assert\NotBlank(message: 'Tags are not specified.')],
             ])
             ->add('authors', EntityType::class, [
                 'required' => true,
                 'class' => Author::class,
                 'multiple' => true,
                 'invalid_message' => 'Books are not valid.',
-                'constraints' => [new Assert\NotBlank(message: 'Authors are not specified.')]
+                'constraints' => [new Assert\NotBlank(message: 'Authors are not specified.')],
             ])
             ->add('image', FileType::class, [
                 'required' => false,

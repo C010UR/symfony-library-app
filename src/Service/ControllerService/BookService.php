@@ -27,15 +27,15 @@ class BookService extends AbstractCrudService implements CrudServiceInterface
             new Column('id', 'ID', Column::NOT_FILTERABLE_TYPE, true),
             new Column('name', 'Название', Column::STRING_TYPE, true),
             new Column('publisher', 'Издательство', Column::ENTITY_TYPE, true, data: [
-                'entity' => 'publisher'
+                'entity' => 'publisher',
             ]),
             new Column('pageCount', 'Количество страниц', Column::INTEGER_TYPE, true),
             new Column('tags', 'Жанры', Column::ENTITIES_TYPE, true, data: [
-                'entity' => 'tag'
+                'entity' => 'tag',
             ]),
             new Column('authors', 'Авторы', Column::ENTITIES_TYPE, true, data: [
-                'entity' => 'author'
-            ])
+                'entity' => 'author',
+            ]),
         ]);
 
         $this->setQueryParser($queryParser)->setRepository($repository);
@@ -68,11 +68,10 @@ class BookService extends AbstractCrudService implements CrudServiceInterface
         /** @var Book $book */
         $book = $this->find($id);
         $form = $this->formFactory->create(BookFormType::class, $book, [
-            'method' => 'PATCH'
+            'method' => 'PATCH',
         ]);
 
         RequestUtils::submitForm($request, $form, false);
-
 
         if ($image = $form['image']->getData()) {
             $filename = (new ImageSaver())->save(

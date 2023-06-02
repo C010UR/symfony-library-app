@@ -22,7 +22,7 @@ class TagService extends AbstractCrudService implements CrudServiceInterface
         $queryParser = new QueryParser();
         $queryParser->setAllowedColumns([
             new Column('id', 'ID', Column::NOT_FILTERABLE_TYPE, true),
-            new Column('name', 'Название', Column::STRING_TYPE, true)
+            new Column('name', 'Название', Column::STRING_TYPE, true),
         ]);
 
         $this->setQueryParser($queryParser)->setRepository($repository);
@@ -43,7 +43,7 @@ class TagService extends AbstractCrudService implements CrudServiceInterface
     {
         $tag = $this->find($id);
         $form = $this->formFactory->create(TagFormType::class, $tag, [
-            'method' => 'PATCH'
+            'method' => 'PATCH',
         ]);
 
         RequestUtils::submitForm($request, $form, false);

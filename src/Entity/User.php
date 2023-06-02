@@ -68,10 +68,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
             return null;
         }
 
-        $fullName = $this->getFirstName() . ' ' . $this->getLastName();
+        $fullName = $this->getFirstName().' '.$this->getLastName();
 
         if ($this->getMiddleName()) {
-            $fullName .= ' ' . $this->getMiddleName();
+            $fullName .= ' '.$this->getMiddleName();
         }
 
         return $fullName;

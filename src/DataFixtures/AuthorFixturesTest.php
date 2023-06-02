@@ -13,7 +13,7 @@ class AuthorFixturesTest extends Fixture implements FixtureGroupInterface
     {
         $authors = [
             'test 1',
-            'test 2'
+            'test 2',
         ];
 
         foreach ($authors as $data) {

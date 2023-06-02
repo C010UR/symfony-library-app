@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Controller\Interface\CrudControllerInterface;
-use App\Entity\User;
 use App\Service\ControllerService\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,6 +50,7 @@ class UserController extends AbstractController implements CrudControllerInterfa
     public function delete(int $id): JsonResponse
     {
         $this->service->delete($id);
+
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

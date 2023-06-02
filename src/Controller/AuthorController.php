@@ -50,6 +50,7 @@ class AuthorController extends AbstractController implements CrudControllerInter
     public function delete(int $id): JsonResponse
     {
         $this->service->delete($id);
+
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

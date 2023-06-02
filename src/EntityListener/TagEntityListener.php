@@ -8,7 +8,6 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use App\Utils\FileUtils;
 
 #[AsEntityListener(event: Events::prePersist, entity: Tag::class)]
 #[AsEntityListener(event: Events::preUpdate, entity: Tag::class)]

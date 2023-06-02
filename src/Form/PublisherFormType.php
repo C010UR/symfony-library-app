@@ -27,8 +27,8 @@ class PublisherFormType extends AbstractType
                         minMessage: 'Publisher name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'Publisher name should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('address', TextType::class, [
                 'required' => true,
@@ -40,12 +40,12 @@ class PublisherFormType extends AbstractType
                         minMessage: 'Address should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'Address should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('website', UrlType::class, [
                 'required' => false,
-                'invalid_message' => 'Website URL is not valid.'
+                'invalid_message' => 'Website URL is not valid.',
             ])
             ->add('email', EmailType::class, [
                 'required' => false,

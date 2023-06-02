@@ -64,11 +64,10 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
         /** @var User $user */
         $user = $this->find($id);
         $form = $this->formFactory->create(UserFormType::class, $user, [
-            'method' => 'PATCH'
+            'method' => 'PATCH',
         ]);
 
         RequestUtils::submitForm($request, $form, false);
-
 
         if ($image = $form['image']->getData()) {
             $filename = (new ImageSaver())->save(

@@ -4,7 +4,7 @@ namespace App\Utils;
 
 class Utils
 {
-    const ENCODING = 'UTF-8';
+    public const ENCODING = 'UTF-8';
 
     public static function ucwords(string $string): string
     {

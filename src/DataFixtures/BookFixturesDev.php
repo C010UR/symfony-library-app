@@ -6,7 +6,6 @@ use App\Entity\Author;
 use App\Entity\Book;
 use App\Entity\Publisher;
 use App\Entity\Tag;
-use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\Collections\Criteria;
@@ -43,7 +42,7 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
 
         $book = new Book();
         $book->setName($name);
-        $book->setDatePublished(new DateTime());
+        $book->setDatePublished(new \DateTime());
         $book->setDescription(<<<TEXT
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit, purus at rutrum malesuada, massa risus sodales leo, vel efficitur nunc dui non tellus. Nam vulputate urna metus, ut maximus risus congue et. Suspendisse potenti. Vivamus tempor odio dui, sed aliquam diam hendrerit nec. Fusce vitae sem turpis. Quisque condimentum odio sapien, et blandit dui ullamcorper eget. Nullam interdum ullamcorper condimentum. Nam sagittis sem sed leo lobortis tempor. Etiam ultricies vel est vitae rhoncus. Aenean aliquam auctor libero, in vehicula tellus. Maecenas vestibulum ac augue nec ornare. Proin vitae enim id dolor finibus commodo sed non libero. Vestibulum id ex sit amet sapien consectetur consequat.
             Etiam sit amet euismod massa. Maecenas sit amet dictum nulla. In porta ligula eget suscipit pharetra. Donec eget leo feugiat, pellentesque elit in, molestie ante. Aenean consequat ullamcorper nunc, in lobortis dui malesuada sed. Aenean dapibus urna nunc, nec congue sapien luctus a. Suspendisse semper laoreet eros, semper cursus nisl viverra sit amet. In purus nisi, ullamcorper nec nisl id, ultricies mollis libero. In pretium id nulla sed mollis. Morbi non elit ipsum. Etiam nec massa eget nunc vehicula feugiat.
@@ -112,7 +111,9 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
     public function getDependencies()
     {
         return [AuthorFixturesDev::class];
+
         return [PublisherFixturesDev::class];
+
         return [TagFixturesDev::class];
     }
 }

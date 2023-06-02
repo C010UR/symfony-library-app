@@ -83,10 +83,10 @@ class Book implements EntityInterface
         $authors = '';
 
         foreach ($this->getAuthors() as $author) {
-            $authors .= $author->getFullName() . ' ';
+            $authors .= $author->getFullName().' ';
         }
 
-        return $authors . $this->getName();
+        return $authors.$this->getName();
     }
 
     public function getId(): ?int

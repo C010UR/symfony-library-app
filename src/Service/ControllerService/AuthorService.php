@@ -29,7 +29,7 @@ class AuthorService extends AbstractCrudService implements CrudServiceInterface
             new Column('lastName', 'Фамилия', Column::STRING_TYPE, true),
             new Column('middleName', 'Отчество', Column::STRING_TYPE, true, true),
             new Column('books', 'Книги', Column::ENTITIES_TYPE, true, data: [
-                'entity' => 'book'
+                'entity' => 'book',
             ]),
         ]);
 
@@ -63,11 +63,10 @@ class AuthorService extends AbstractCrudService implements CrudServiceInterface
         /** @var Author $author */
         $author = $this->find($id);
         $form = $this->formFactory->create(AuthorFormType::class, $author, [
-            'method' => 'PATCH'
+            'method' => 'PATCH',
         ]);
 
         RequestUtils::submitForm($request, $form, false);
-
 
         if ($image = $form['image']->getData()) {
             $filename = (new ImageSaver())->save(

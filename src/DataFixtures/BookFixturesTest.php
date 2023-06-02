@@ -6,7 +6,6 @@ use App\Entity\Author;
 use App\Entity\Book;
 use App\Entity\Publisher;
 use App\Entity\Tag;
-use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -18,13 +17,13 @@ class BookFixturesTest extends Fixture implements FixtureGroupInterface, Depende
     {
         $books = [
             'test 1',
-            'test 2'
+            'test 2',
         ];
 
         foreach ($books as $data) {
             $book = new Book();
             $book->setName($book);
-            $book->setDatePublished(new DateTime());
+            $book->setDatePublished(new \DateTime());
             $book->setDescription('test');
             $book->setPageCount(100);
             $book->setPublisher($manager->getRepository(Publisher::class)->first());
@@ -33,7 +32,6 @@ class BookFixturesTest extends Fixture implements FixtureGroupInterface, Depende
             foreach ($manager->getRepository(Tag::class)->findBy([]) as $tag) {
                 $book->addTag($tag);
             }
-
 
             $manager->persist($book);
 
@@ -51,7 +49,9 @@ class BookFixturesTest extends Fixture implements FixtureGroupInterface, Depende
     public function getDependencies()
     {
         return [AuthorFixturesTest::class];
+
         return [PublisherFixturesTest::class];
+
         return [TagFixturesTest::class];
     }
 }

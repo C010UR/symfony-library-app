@@ -13,7 +13,7 @@ class PublisherFixturesTest extends Fixture implements FixtureGroupInterface
     {
         $publishers = [
             'test 1',
-            'test 2'
+            'test 2',
         ];
 
         foreach ($publishers as $data) {

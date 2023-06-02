@@ -27,8 +27,8 @@ class AuthorFormType extends AbstractType
                         minMessage: 'First name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'First name should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('lastName', TextType::class, [
                 'required' => true,
@@ -40,8 +40,8 @@ class AuthorFormType extends AbstractType
                         minMessage: 'Last name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'Last name should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('middleName', TextType::class, [
                 'required' => false,
@@ -52,12 +52,12 @@ class AuthorFormType extends AbstractType
                         minMessage: 'Middle name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'Middle name should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('website', UrlType::class, [
                 'required' => false,
-                'invalid_message' => 'Website URL is not valid.'
+                'invalid_message' => 'Website URL is not valid.',
             ])
             ->add('email', EmailType::class, [
                 'required' => false,

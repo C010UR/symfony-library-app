@@ -27,8 +27,8 @@ class UserFormType extends AbstractType
                         minMessage: 'First name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'First name should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('lastName', TextType::class, [
                 'required' => true,
@@ -40,8 +40,8 @@ class UserFormType extends AbstractType
                         minMessage: 'Last name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'Last name should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('middleName', TextType::class, [
                 'required' => false,
@@ -52,14 +52,14 @@ class UserFormType extends AbstractType
                         minMessage: 'Middle name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
                         maxMessage: 'Middle name should not exceed {{ limit }} characters. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ])
             ->add('email', EmailType::class, [
                 'required' => true,
                 'trim' => true,
                 'invalid_message' => 'Email is not valid.',
-                'constraints' => [new Assert\NotBlank(message: 'Email cannot be empty.')]
+                'constraints' => [new Assert\NotBlank(message: 'Email cannot be empty.')],
             ])
             ->add('roles', CollectionType::class, [
                 'required' => true,
@@ -70,13 +70,12 @@ class UserFormType extends AbstractType
                         new Assert\Choice(
                             ['ROLE_ADMIN', 'ROLE_USER'],
                             message: "Role '{{ value }} is not a valid role. Valid roles are: {{ choices }}. {{ value }} was provided.",
-                        )
-                    ]
+                        ),
+                    ],
                 ],
                 'constraints' => [
                     new Assert\NotBlank(message: 'Roles cannot be empty.'),
-
-                ]
+                ],
             ])
             ->add('image', FileType::class, [
                 'required' => false,
@@ -85,8 +84,8 @@ class UserFormType extends AbstractType
                     new Assert\Image(
                         maxSize: '8192k',
                         maxSizeMessage: 'The image is too large. The max size of the image is {{ limit }}. {{ value }} was provided.'
-                    )
-                ]
+                    ),
+                ],
             ]);
     }
 
