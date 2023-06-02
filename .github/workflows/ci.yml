@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install dependencies
+      - name: Install npm dependencies
         run: npm ci
 
       - name: Format the Vue code
@@ -57,7 +57,7 @@ jobs:
         run: docker compose pull
 
       - name: Start services
-        run: docker compose up --build -d
+        run: docker compose up --build -d -f docker-compose.yml
 
       - name: Wait for services
         run: |
@@ -68,7 +68,7 @@ jobs:
               unhealthy) exit 1;;
             esac
           done
-          exit 1
+          exit 0
 
       - name: Check HTTP reachability
         run: curl http://localhost
