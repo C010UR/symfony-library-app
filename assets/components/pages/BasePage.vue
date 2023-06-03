@@ -18,12 +18,12 @@
 import { ElDivider, ElCard } from 'element-plus';
 import { DarkSwitch } from '@/components/tags';
 
-defineProps({
-  header: {
-    type: String,
-    required: false,
-    default: '',
-  },
+export interface Props {
+  header?: string;
+}
+
+withDefaults(defineProps<Props>(), {
+  header: 'Заголовок',
 });
 </script>
 

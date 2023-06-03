@@ -1,4 +1,6 @@
-function routeFallback(profile: UserProfile | null): { name: string } {
+import type { UserProfile, UserRole } from "@/use/api/api";
+
+function routeFallback(profile: UserProfile | undefined): { name: string } {
   if (!profile) {
     return {
       name: 'Login',
@@ -20,7 +22,7 @@ function routeFallback(profile: UserProfile | null): { name: string } {
   throw new Error('User does not have valid roles.');
 }
 
-function isUserHasPermissions(profile: UserProfile | null, routeRoles?: UserRole[]): boolean {
+function isUserHasPermissions(profile: UserProfile | undefined, routeRoles?: UserRole[]): boolean {
   if (!routeRoles) {
     return true;
   }

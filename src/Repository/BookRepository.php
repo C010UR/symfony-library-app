@@ -36,8 +36,8 @@ class BookRepository extends AbstractCrudRepository
     {
         $query = $this->createQueryBuilder('c')
             ->select('c')
-            ->innerJoin('c.tags', 'tags')
-            ->innerJoin('c.authors', 'authors')
+            ->leftJoin('c.tags', 'tags')
+            ->leftJoin('c.authors', 'authors')
             ->leftJoin('c.publisher', 'publisher');
 
         return $this->findMatchingByDeletedWithQueryBuilder($query, $isDeleted, $criteria);

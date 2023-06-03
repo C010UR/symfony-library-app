@@ -23,6 +23,7 @@ export default defineConfig({
     }),
     elementPlus({
       useSource: true,
+      defaultLocale: 'ru'
     }),
     // basicSsl(),
     splitVendorChunkPlugin(),

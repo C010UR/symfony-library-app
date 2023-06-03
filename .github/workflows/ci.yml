@@ -41,7 +41,7 @@ jobs:
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "[Github Actions] Lint with PHP CS fixer"
+          commit_message: "[Github Actions] Lint with the code"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -1,7 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { cloneDeep } from 'lodash';
-import { ElLoading } from 'element-plus';
 
 import App from '@/App.vue';
 import router from '@/router/index.js';
@@ -22,7 +21,5 @@ const app = createApp(App);
 app.use(pinia);
 // Vue router
 app.use(router);
-// Loading animation
-app.use(ElLoading);
 
 app.mount('#app');

@@ -102,9 +102,7 @@ class QueryParser
     {
         switch ($operator) {
             case FilterOperators::OPERATOR_IS_NULL:
-                return Criteria::expr()->isNull($column);
-            case FilterOperators::OPERATOR_IS_NOT_NULL:
-                return Criteria::expr()->neq($column, 'NULL');
+                return $value ? Criteria::expr()->isNull($column) : Criteria::expr()->neq($column, 'NULL');
             case FilterOperators::OPERATOR_EQUALS_TO:
                 return Criteria::expr()->eq($column, $value);
             case FilterOperators::OPERATOR_NOT_EQUALS_TO:
@@ -150,7 +148,7 @@ class QueryParser
         }
 
         if (!$column->isValidOperator($operator)) {
-            throw new InvalidQueryExpressionException(sprintf("Operator '%s' for column '%s' is not valid. Acceptable values are: %s", $operator, $columnName, implode(', ', $column->getOperators())));
+            throw new InvalidQueryExpressionException(sprintf("Operator '%s' for column '%s' is not valid. ", $operator, $columnName, implode(', ', array_keys($column->getOperators()))));
         }
 
         $isArray =
@@ -190,10 +188,10 @@ class QueryParser
     public function parseQuery(array $query, bool $parsePages = false, bool $parseOrder = false): Criteria
     {
         if ($parsePages) {
-            $this->setPaginatorOptions($query['page_size'] ?? null, $query['offset'] ?? null);
+            $this->setPaginatorOptions($query['pageSize'] ?? null, $query['offset'] ?? null);
         }
 
-        unset($query['page_size']);
+        unset($query['pageSize']);
         unset($query['offset']);
 
         if ($parseOrder && !empty($query['order'])) {

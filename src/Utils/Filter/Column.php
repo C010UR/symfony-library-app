@@ -83,6 +83,13 @@ class Column
 
         $this->type = $type;
 
+        if ($isNullable) {
+            $this->data['null'] = [
+                'true' => 'Пустое',
+                'false' => 'Не Пустое',
+            ];
+        }
+
         return $this;
     }
 
@@ -137,7 +144,7 @@ class Column
             'label' => $this->getLabel(),
             'type' => $this->getType(),
             'operators' => $this->getOperators(),
-            'is_orderable' => $this->isOrderable(),
+            'isOrderable' => $this->isOrderable(),
         ];
 
         if (!empty($this->getData())) {
@@ -149,7 +156,7 @@ class Column
 
     public function isValidOperator(string $operator): bool
     {
-        return in_array(strtolower($operator), $this->getOperators());
+        return in_array(strtolower($operator), array_keys($this->getOperators()));
     }
 
     public static function convert(Column $column, string $data, bool $isArray): mixed

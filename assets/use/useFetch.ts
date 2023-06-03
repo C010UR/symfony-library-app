@@ -1,28 +1,36 @@
 import { popup } from '@/components/tags';
 import Axios from 'axios';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { AxiosError } from 'axios';
+import type { AxiosError, Method } from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
 
 const axios = setupCache(Axios, {
   debug: console.log,
 });
 
-interface FetchParams {
+export type { Method } from 'axios';
+
+export type  ContentType = 'json' | 'form-data';
+
+export interface Params {
+  [index: string]: string | string[] | number | number[] | object | object[]
+}
+
+export interface Data {
+  [index: string]: unknown | unknown[];
+}
+
+export interface FetchParams<T> {
   url: string;
-  method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH';
-  contentType: 'json' | 'form-data';
-  params?: {
-    [index: string]: string | string[] | number | number[];
-  };
-  data?: {
-    [index: string]: unknown | unknown[];
-  };
+  method: Method;
+  contentType: ContentType;
+  params?: Params;
+  data?: T;
   isSuppressPopup?: boolean;
   isCache?: false | undefined;
 }
 
-export async function useFetch<T>({
+export async function useFetch<ReturnType, InputType = ReturnType>({
   url,
   method,
   params,
@@ -30,8 +38,10 @@ export async function useFetch<T>({
   contentType,
   isSuppressPopup = false,
   isCache = false,
-}: FetchParams): Promise<T | null> {
+}: FetchParams<InputType>): Promise<ReturnType | undefined> {
   let _contentType: string;
+
+  console.log(url);
 
   switch (contentType) {
     case 'form-data': {
@@ -64,7 +74,7 @@ export async function useFetch<T>({
 
     console.log(url, res);
 
-    return (res.data as T) ?? null;
+    return res.data as ReturnType;
   } catch (error: AxiosError | unknown) {
     if (!isSuppressPopup) {
       if (Axios.isAxiosError(error) && error.response) {
@@ -74,6 +84,6 @@ export async function useFetch<T>({
       }
     }
 
-    return null;
+    return undefined;
   }
 }

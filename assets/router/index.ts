@@ -1,6 +1,5 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import { ElLoading } from 'element-plus';
 import { resolveTransition } from './transition-resolver';
 import { isUserHasPermissions, routeFallback } from './permissions-resolver';
 import {
@@ -8,9 +7,12 @@ import {
   RequestPasswordResetView,
   RequestPasswordResetConfirmView,
   ResetPasswordView,
+  BooksView,
+  AboutUs,
   NotFoundView,
 } from '@/views';
 import { useGetProfile } from '@/use';
+import type { UserRole } from '@/use/api/api';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -18,7 +20,18 @@ const router = createRouter({
     {
       path: '/',
       name: 'Main',
-      component: NotFoundView,
+      component: BooksView,
+      meta: {
+        title: 'Библиотека'
+      }
+    },
+    {
+      path: '/about-us',
+      name: 'AboutUs',
+      component: AboutUs,
+      meta: {
+        title: 'О Нас'
+      }
     },
     {
       path: '/dashboard',
@@ -100,11 +113,8 @@ router.beforeEach(async (to, from) => {
 });
 
 router.afterEach(async to => {
-  // Disable fullscreen loading if it is present
-  const loadingInstance = ElLoading.service({ fullscreen: true });
 
   nextTick(() => {
-    loadingInstance.close();
     document.title = to.meta.title ? to.meta.title + ' :: МТЭК' : 'МТЭК';
   });
 });

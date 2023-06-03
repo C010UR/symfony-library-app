@@ -11,7 +11,6 @@ class FilterOperators
     public const OPERATOR_LESS_OR_EQUAL_TO = 'lte';
     public const OPERATOR_NOT_EQUALS_TO = 'neq';
     public const OPERATOR_IS_NULL = 'null';
-    public const OPERATOR_IS_NOT_NULL = 'not-null';
     public const OPERATOR_IN = 'in';
     public const OPERATOR_NOT_IN = 'not-in';
     public const OPERATOR_CONTAINS = 'contains';
@@ -73,7 +72,7 @@ class FilterOperators
 
     public static function getForBoolTypes(bool $isNullable = false): array
     {
-        $operators = self::labelOperators([self::OPERATOR_EQUALS_TO, self::OPERATOR_NOT_EQUALS_TO]);
+        $operators = self::labelOperators([self::OPERATOR_EQUALS_TO]);
 
         return $isNullable ? self::withNullOperators($operators) : $operators;
     }
@@ -113,29 +112,34 @@ class FilterOperators
 
     private static function withNullOperators(array $operators): array
     {
-        return array_merge($operators, self::labelOperators([self::OPERATOR_IS_NOT_NULL, self::OPERATOR_IS_NULL]));
+        return array_merge($operators, self::labelOperators([self::OPERATOR_IS_NULL]));
     }
 
     private static function labelOperators(array $operators): array
     {
-        $labels = [];
-        $class = new \ReflectionClass(self::class);
-        foreach ($class->getConstants() as $name => $value) {
-            if ('OPERATOR' !== substr($name, 0, 8)) {
-                continue;
-            }
-
-            $name = substr($name, 9);
-            $name = str_replace('_', ' ', $name);
-            $name = ucwords(strtolower($name));
-
-            $labels[$value] = $name;
-        }
+        $labels = [
+            self::OPERATOR_EQUALS_TO => 'Равняется',
+            self::OPERATOR_GREATER_THAN => 'Больше',
+            self::OPERATOR_LESS_THAN => 'Меньше',
+            self::OPERATOR_GREATER_OR_EQUAL_TO => 'Больше либо равно',
+            self::OPERATOR_LESS_OR_EQUAL_TO => 'Меньше либо равно',
+            self::OPERATOR_NOT_EQUALS_TO => 'Не равно',
+            self::OPERATOR_IS_NULL => 'Пустое',
+            self::OPERATOR_IN => 'Включает',
+            self::OPERATOR_NOT_IN => 'Не Включает',
+            self::OPERATOR_CONTAINS => 'Содержит',
+            self::OPERATOR_STARTS_WITH => 'Начинается на',
+            self::OPERATOR_ENDS_WITH => 'Заканчивается на',
+            self::OPERATOR_BETWEEN => 'Между',
+        ];
 
         $result = [];
 
         foreach ($operators as $operator) {
-            $result[$labels[$operator]] = $operator;
+            $result[$operator] = [
+                'operator' => $operator,
+                'label' => $labels[$operator]
+            ];
         }
 
         return $result;

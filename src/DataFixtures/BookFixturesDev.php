@@ -62,7 +62,7 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
                 ->matching(
                     Criteria::create()
                         ->andWhere(
-                            Criteria::expr()->contains('firstName', $author)
+                            Criteria::expr()->contains('firstName', trim($author))
                         )
                 )
                 ->first());

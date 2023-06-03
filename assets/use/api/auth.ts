@@ -1,7 +1,8 @@
 import { useFetch } from './../useFetch';
+import type { UserProfile } from './api';
 
-async function useLogin(username: string, password: string) {
-  return await useFetch<UserProfile>({
+export async function useLogin(username: string, password: string) {
+  return await useFetch<UserProfile, { username: string; password: string }>({
     url: '/api/v1/login',
     method: 'POST',
     contentType: 'json',
@@ -13,11 +14,11 @@ async function useLogin(username: string, password: string) {
   });
 }
 
-async function useLogout() {
-  return await useFetch({ url: '/api/v1/login', method: 'GET', contentType: 'json', isCache: false });
+export async function useLogout() {
+  return await useFetch({ url: '/api/v1/logout', method: 'GET', contentType: 'json', isCache: false });
 }
 
-async function useGetProfile() {
+export async function useGetProfile() {
   return await useFetch<UserProfile>({
     url: '/api/v1/profile',
     method: 'GET',
@@ -26,8 +27,8 @@ async function useGetProfile() {
   });
 }
 
-async function useRequestPasswordReset(email: string, link: string) {
-  return await useFetch({
+export async function useRequestPasswordReset(email: string, link: string) {
+  return await useFetch<string, { email: string; link: string }>({
     url: '/api/v1/password-reset',
     method: 'POST',
     contentType: 'json',
@@ -39,8 +40,8 @@ async function useRequestPasswordReset(email: string, link: string) {
   });
 }
 
-async function useResetPassword(token: string, password: string) {
-  return await useFetch({
+export async function useResetPassword(token: string, password: string) {
+  return await useFetch<string, { password: string }>({
     url: `/api/v1/password-reset/reset/${token}`,
     method: 'POST',
     contentType: 'json',
@@ -50,5 +51,3 @@ async function useResetPassword(token: string, password: string) {
     isCache: false,
   });
 }
-
-export { useLogin, useLogout, useGetProfile, useRequestPasswordReset, useResetPassword };

@@ -12,7 +12,7 @@ abstract class AbstractCrudRepository extends ServiceEntityRepository
     final protected function countByQueryBuilder(QueryBuilder $queryBuilder): int
     {
         return $queryBuilder
-            ->select(sprintf('COUNT(%s.id)', $queryBuilder->getRootAliases()[0]))
+            ->select(sprintf('COUNT(DISTINCT(c))', $queryBuilder->getRootAliases()[0]))
             ->setFirstResult(null)
             ->setMaxResults(null)
             ->resetDQLPart('orderBy')
@@ -37,6 +37,7 @@ abstract class AbstractCrudRepository extends ServiceEntityRepository
             'meta' => [],
             'data' => [],
         ];
+
 
         $count = $this->countByQueryBuilder(clone $query);
         $offset = $criteria->getFirstResult() ?? 0;
