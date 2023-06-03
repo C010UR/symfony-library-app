@@ -60,7 +60,7 @@
       </card-list-item>
     </card-list>
 
-    <data-pagination v-model="paginationParams" @change="getData()" />
+    <data-pagination v-model="paginationParams" />
   </visitor-dashboard>
 </template>
 
@@ -69,13 +69,13 @@ import { VisitorDashboard } from '@/components/pages';
 import { BaseCard, BaseImage, BaseAvatar } from '@/components/tags/base';
 import { FilterDrawer } from '@/components/tags/data/filter';
 import { ApiUrls, useGetAll, useGetMeta } from '@/use';
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, ref, reactive, watch } from 'vue';
 import { CardList, CardListItem, DataPagination } from '@/components/tags/data';
 import type { ApiMeta, BookFull } from '@/use/api/api';
 import { ElTag, ElSkeletonItem } from 'element-plus';
 
 const filterParams = reactive<FilterParams>({});
-const paginationParams = reactive<ApiMeta>({
+const paginationParams = ref<ApiMeta>({
   offset: 0,
   pageSize: 20,
   paginated: true,
@@ -87,13 +87,13 @@ const data = ref<BookFull[]>([]);
 function getParams() {
   return {
     ...filterParams,
-    offset: paginationParams.offset,
-    pageSize: paginationParams.pageSize,
+    offset: paginationParams.value.offset,
+    pageSize: paginationParams.value.pageSize,
   };
 }
 
 async function getData() {
-  console.log(getParams());
+  data.value = [];
   const _data = await useGetAll<BookFull>(ApiUrls.books, getParams());
 
   if (!_data) {
@@ -101,10 +101,10 @@ async function getData() {
   }
 
   data.value = _data.data;
-  paginationParams.offset = _data.meta.offset;
-  paginationParams.pageSize = _data.meta.pageSize;
-  paginationParams.paginated = _data.meta.paginated;
-  paginationParams.totalCount = _data.meta.totalCount;
+  paginationParams.value.offset = _data.meta.offset;
+  paginationParams.value.pageSize = _data.meta.pageSize;
+  paginationParams.value.paginated = _data.meta.paginated;
+  paginationParams.value.totalCount = _data.meta.totalCount;
 }
 
 onMounted(async () => {
@@ -118,6 +118,7 @@ watch(filterParams, async () => {
 });
 
 watch(paginationParams, async () => {
+  console.log(paginationParams);
   await getData();
 });
 </script>

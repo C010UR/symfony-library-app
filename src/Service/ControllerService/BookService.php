@@ -26,16 +26,16 @@ class BookService extends AbstractCrudService implements CrudServiceInterface
         $queryParser->setAllowedColumns([
             new Column('id', 'ID', Column::NOT_FILTERABLE_TYPE, true),
             new Column('name', 'Название', Column::STRING_TYPE, true),
-            new Column('publisher', 'Издательство', Column::ENTITY_TYPE, true, data: [
+            new Column('publisher', 'Издательство', Column::ENTITY_TYPE, false, data: [
                 'entity' => 'publisher',
             ]),
             new Column('pageCount', 'Количество страниц', Column::INTEGER_TYPE, true),
-            new Column('tags', 'Жанры', Column::ENTITIES_TYPE, true, data: [
-                'entity' => 'tag',
-            ]),
-            new Column('authors', 'Авторы', Column::ENTITIES_TYPE, true, data: [
-                'entity' => 'author',
-            ]),
+            // new Column('tags', 'Жанры', Column::ENTITIES_TYPE, false, data: [
+            //     'entity' => 'tag',
+            // ]),
+            // new Column('authors', 'Авторы', Column::ENTITIES_TYPE, false, data: [
+            //     'entity' => 'author',
+            // ]),
         ]);
 
         $this->setQueryParser($queryParser)->setRepository($repository);

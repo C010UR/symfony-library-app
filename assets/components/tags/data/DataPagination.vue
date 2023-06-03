@@ -28,18 +28,18 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
 });
 
-const emit = defineEmits(['change', 'update:modelValue']);
+const emit = defineEmits(['update:modelValue']);
 
 const handleSizeChange = (value: number) => {
   if (value === props.modelValue.pageSize) {
     return;
   }
 
-  const meta: ApiMeta = { ...props.modelValue };
-  meta.pageSize = value;
+  const meta: ApiMeta = { ...props.modelValue, pageSize: value };
+
+  console.log(meta);
 
   emit('update:modelValue', meta);
-  emit('change');
 };
 
 const handleCurrentChange = (value: number) => {
@@ -49,11 +49,9 @@ const handleCurrentChange = (value: number) => {
     return;
   }
 
-  const meta: ApiMeta = { ...props.modelValue };
-  meta.offset = offset;
+  const meta: ApiMeta = { ...props.modelValue, offset: offset };
 
   emit('update:modelValue', meta);
-  emit('change');
 };
 </script>
 

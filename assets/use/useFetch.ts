@@ -41,7 +41,7 @@ export async function useFetch<ReturnType, InputType = ReturnType>({
 }: FetchParams<InputType>): Promise<ReturnType | undefined> {
   let _contentType: string;
 
-  console.log(url);
+  console.log(`${method} ${url}`, params, data, contentType);
 
   switch (contentType) {
     case 'form-data': {
@@ -71,8 +71,6 @@ export async function useFetch<ReturnType, InputType = ReturnType>({
       responseType: 'json',
       cache: isCache,
     });
-
-    console.log(url, res);
 
     return res.data as ReturnType;
   } catch (error: AxiosError | unknown) {
