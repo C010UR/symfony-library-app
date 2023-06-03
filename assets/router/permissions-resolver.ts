@@ -1,4 +1,4 @@
-import type { UserProfile, UserRole } from "@/use/api/api";
+import type { UserProfile, UserRole } from '@/use/api/api';
 
 function routeFallback(profile: UserProfile | undefined): { name: string } {
   if (!profile) {

@@ -10,7 +10,7 @@ export const ApiUrls = {
   users: '/api/v1/users',
 } as const;
 
-export type ApiUrl = typeof ApiUrls[keyof typeof ApiUrls];
+export type ApiUrl = (typeof ApiUrls)[keyof typeof ApiUrls];
 
 export async function useGetAll<ReturnType>(url: ApiUrl, params?: Params) {
   return await useFetch<ApiCollection<ReturnType>>({
@@ -70,4 +70,3 @@ export async function useGetMeta(url: ApiUrl) {
     contentType: 'json',
   });
 }
-

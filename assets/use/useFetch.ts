@@ -10,10 +10,10 @@ const axios = setupCache(Axios, {
 
 export type { Method } from 'axios';
 
-export type  ContentType = 'json' | 'form-data';
+export type ContentType = 'json' | 'form-data';
 
 export interface Params {
-  [index: string]: string | string[] | number | number[] | object | object[]
+  [index: string]: string | string[] | number | number[] | object | object[];
 }
 
 export interface Data {

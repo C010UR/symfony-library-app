@@ -22,16 +22,16 @@ const router = createRouter({
       name: 'Main',
       component: BooksView,
       meta: {
-        title: 'Библиотека'
-      }
+        title: 'Библиотека',
+      },
     },
     {
       path: '/about-us',
       name: 'AboutUs',
       component: AboutUs,
       meta: {
-        title: 'О Нас'
-      }
+        title: 'О Нас',
+      },
     },
     {
       path: '/dashboard',
@@ -113,7 +113,6 @@ router.beforeEach(async (to, from) => {
 });
 
 router.afterEach(async to => {
-
   nextTick(() => {
     document.title = to.meta.title ? to.meta.title + ' :: МТЭК' : 'МТЭК';
   });

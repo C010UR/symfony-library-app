@@ -38,7 +38,6 @@ abstract class AbstractCrudRepository extends ServiceEntityRepository
             'data' => [],
         ];
 
-
         $count = $this->countByQueryBuilder(clone $query);
         $offset = $criteria->getFirstResult() ?? 0;
 

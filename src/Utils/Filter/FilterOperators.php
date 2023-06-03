@@ -138,7 +138,7 @@ class FilterOperators
         foreach ($operators as $operator) {
             $result[$operator] = [
                 'operator' => $operator,
-                'label' => $labels[$operator]
+                'label' => $labels[$operator],
             ];
         }
 
