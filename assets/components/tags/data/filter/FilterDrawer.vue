@@ -45,12 +45,12 @@ watch(props, (before, after) => {
 
 watch(orders, () => {
   parseOrders();
-  emit('update:modelValue', filterParams);
+  emit('update:modelValue', filterParams.value);
 });
 
 watch(filters, () => {
   parseFilters();
-  emit('update:modelValue', filterParams);
+  emit('update:modelValue', filterParams.value);
 });
 
 function parseOrders() {

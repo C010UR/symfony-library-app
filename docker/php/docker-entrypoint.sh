@@ -11,6 +11,9 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
         composer install --no-progress --no-interaction
     fi
 
+    setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var public/uploads
+    setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var public/uploads
+
     if grep -q ^DATABASE_URL= .env; then
         echo "Waiting for db to be ready..."
         ATTEMPTS_LEFT_TO_REACH_DATABASE=60
@@ -35,12 +38,9 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
         if [ "$( find ./migrations -iname '*.php' -print -quit )" ]; then
             bin/console doctrine:migrations:migrate --no-interaction
+			bin/console doctrine:fixtures:load --no-interaction --group=dev
         fi
     fi
-
-    setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var
-    setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var
-	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX /srv/app/public
 fi
 
 exec docker-php-entrypoint "$@"

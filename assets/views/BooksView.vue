@@ -69,12 +69,12 @@ import { VisitorDashboard } from '@/components/pages';
 import { BaseCard, BaseImage, BaseAvatar } from '@/components/tags/base';
 import { FilterDrawer } from '@/components/tags/data/filter';
 import { ApiUrls, useGetAll, useGetMeta } from '@/use';
-import { onMounted, ref, reactive, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { CardList, CardListItem, DataPagination } from '@/components/tags/data';
 import type { ApiMeta, BookFull } from '@/use/api/api';
 import { ElTag, ElSkeletonItem } from 'element-plus';
 
-const filterParams = reactive<FilterParams>({});
+const filterParams = ref<FilterParams>({});
 const paginationParams = ref<ApiMeta>({
   offset: 0,
   pageSize: 20,
