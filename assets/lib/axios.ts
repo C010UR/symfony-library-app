@@ -6,6 +6,5 @@ const axiosInstance = Axios.create({
 });
 
 export const axios = setupCache(axiosInstance, {
-  debug: console.log,
   storage: buildWebStorage(localStorage, 'axios-cache:'),
 });

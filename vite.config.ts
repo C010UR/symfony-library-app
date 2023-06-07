@@ -23,7 +23,7 @@ export default defineConfig({
     }),
     elementPlus({
       useSource: true,
-      defaultLocale: 'ru'
+      defaultLocale: 'ru',
     }),
     // basicSsl(),
     splitVendorChunkPlugin(),
@@ -53,8 +53,11 @@ export default defineConfig({
       },
       output: {
         manualChunks: {
-          other: ['assets/use/index.ts'],
-          'views-auth': ['assets/views/auth/index.ts'],
+          elementplus: ['element-plus', '@element-plus/icons-vue'],
+          axios: ['axios', 'axios-cache-interceptor'],
+          modules: ['lodash', 'path', 'qs', 'validator', 'vue-draggable-plus'],
+          vue: ['vue-router', 'pinia', '@vueuse/core'],
+          views: ['assets/views/index.ts'],
         },
       },
     },

@@ -1,5 +1,7 @@
 # Executables (local)
+DOCKER      = docker
 DOCKER_COMP = docker compose
+NPM         = npm
 
 # Docker containers
 PHP_CONT = $(DOCKER_COMP) exec php
@@ -8,7 +10,6 @@ PHP_CONT = $(DOCKER_COMP) exec php
 PHP      = $(PHP_CONT) php
 COMPOSER = $(PHP_CONT) composer
 SYMFONY  = $(PHP_CONT) bin/console
-NPM      = npm
 
 # Misc
 .DEFAULT_GOAL = help
@@ -39,6 +40,9 @@ logs: ## Show live logs
 
 php: ## Connect to the PHP FPM container
 	@$(PHP_CONT) sh
+
+volumes-remove: ## Remove all volumes from docker
+	@$(DOCKER) volume rm $(shell $(DOCKER) volume ls -q)
 
 ## —— Composer —————————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
@@ -82,3 +86,9 @@ require-local: ## Install dependencies for the host (npm and composer are requir
 
 load-fixtures: ## Load fixutres
 	@$(SYMFONY) doctrine:fixtures:load --no-interaction --group=dev
+
+serve-load-fixtures: load-fixtures  ## Load fixtures and copy them to caddy image
+	"rm" -rf var/temp
+	"mkdir" -p var/temp
+	@$(DOCKER_COMP) cp php:/srv/app/public/uploads var/temp
+	@$(DOCKER_COMP) cp var/temp/uploads caddy:/srv/app/public

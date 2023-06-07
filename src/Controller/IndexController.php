@@ -11,7 +11,7 @@ class IndexController extends AbstractController
     #[Route(
         '/{spaRouting}',
         name: 'index',
-        requirements: ['spaRouting' => '.*'],
+        requirements: ['spaRouting' => '^(?!uploads/).*'],
         defaults: ['spaRouting' => null],
         methods: ['GET'],
         priority: -2

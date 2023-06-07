@@ -1,76 +1,80 @@
 @use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;
 
 :root {
-  --animation-duration: 0.266s;
+    --animation-duration: 0.266s;
 }
 
 *,
 *::before,
 *::after {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--el-text-color-primary);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans',
+        'Droid Sans', 'Helvetica Neue', sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--el-text-color-primary);
 
-  -webkit-animation: gradient 15s ease infinite;
-  animation: gradient 15s ease infinite;
+    -webkit-animation: gradient 15s ease infinite;
+    animation: gradient 15s ease infinite;
 
-  background-size: 400%;
-  background-image: -webkit-linear-gradient(-45deg, var(--el-color-primary), var(--el-color-primary-light-3));
-  background-image: linear-gradient(-45deg, var(--el-color-primary), var(--el-color-primary-light-3));
+    background-size: 400%;
+    background-color: var(--el-color-primary-light-3);
+    // background-image: -webkit-linear-gradient(-45deg, var(--el-color-primary-3), var(--el-color-primary-light-5));
+    // background-image: linear-gradient(-45deg, var(--el-color-primary-3), var(--el-color-primary-light-5));
 
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+
+    overflow: hidden;
 }
 
 .dark body {
-  background-size: 400%;
-  background-image: -webkit-linear-gradient(-45deg, var(--el-color-primary-light-9), var(--el-color-primary-light-7));
-  background-image: linear-gradient(-45deg, var(--el-color-primary-light-9), var(--el-color-primary-light-7));
+    background-size: 400%;
+    background-color: var(--el-color-primary-light-5);
+    // background-image: -webkit-linear-gradient(-45deg, var(--el-color-primary-light-7), var(--el-color-primary-light-5));
+    // background-image: linear-gradient(-45deg, var(--el-color-primary-light-7), var(--el-color-primary-light-5));
 }
 
 @-webkit-keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
+    0% {
+        background-position: 0% 50%;
+    }
 
-  50% {
-    background-position: 100% 50%;
-  }
+    50% {
+        background-position: 100% 50%;
+    }
 
-  100% {
-    background-position: 0% 50%;
-  }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 @keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
+    0% {
+        background-position: 0% 50%;
+    }
 
-  50% {
-    background-position: 100% 50%;
-  }
+    50% {
+        background-position: 100% 50%;
+    }
 
-  100% {
-    background-position: 0% 50%;
-  }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 h1,
 h2,
 h3,
 h4 {
-  font-weight: bold;
+    font-weight: bold;
 }

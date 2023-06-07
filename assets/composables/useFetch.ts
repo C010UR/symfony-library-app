@@ -3,7 +3,6 @@ import Axios from 'axios';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { AxiosError, Method } from 'axios';
 import { axios } from '@/lib/axios';
-import type { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import type { RouteParams } from 'vue-router';
 
 export type { Method } from 'axios';
@@ -74,9 +73,4 @@ export async function useFetch<ReturnType, InputType = ReturnType>({
 
     return undefined;
   }
-}
-
-export interface FetchOptionsWithParams<T> extends FetchOptions<T> {
-  route: RouteLocationNormalizedLoaded;
-  router: Router;
 }

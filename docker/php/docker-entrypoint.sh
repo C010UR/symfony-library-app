@@ -9,6 +9,7 @@ fi
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
     if [ "$APP_ENV" != 'prod' ]; then
         composer install --no-progress --no-interaction
+        mkdir -p public/uploads
     fi
 
     setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var public/uploads
@@ -38,8 +39,28 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
         if [ "$( find ./migrations -iname '*.php' -print -quit )" ]; then
             bin/console doctrine:migrations:migrate --no-interaction
-			bin/console doctrine:fixtures:load --no-interaction --group=dev
         fi
+    fi
+
+    if grep -q ^RABBITMQ_URL= .env; then
+        echo "Waiting for RabbitMQ to be ready..."
+        ATTEMPTS_LEFT_TO_REACH_RABBITMQ=60
+        until [ $ATTEMPTS_LEFT_TO_REACH_RABBITMQ -eq 0 ] || RABBITMQ_ERROR=$(bin/console messenger:setup-transports 2>&1); do
+            sleep 1
+            ATTEMPTS_LEFT_TO_REACH_RABBITMQ=$((ATTEMPTS_LEFT_TO_REACH_RABBITMQ - 1))
+            echo "Still waiting for RabbitMQ to be ready... Or maybe the RabbitMQ is not reachable. $ATTEMPTS_LEFT_TO_REACH_RABBITMQ attempts left"
+        done
+
+        if [ $ATTEMPTS_LEFT_TO_REACH_RABBITMQ -eq 0 ]; then
+            echo "The RabbitMQ is not up or not reachable:"
+            echo "$RABBITMQ_ERROR"
+            exit 1
+        else
+            echo "The RabbitMQ is now ready and reachable"
+        fi
+
+        echo "Starting supervisor service"
+        supervisord --configuration /usr/local/etc/supervisord/supervisord.conf
     fi
 fi
 

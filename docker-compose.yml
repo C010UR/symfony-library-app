@@ -74,30 +74,7 @@ services:
       RABBITMQ_URL: amqp://${RABBITMQ_USER:-app}:${RABBITMQ_PASSWORD:-!ChangeMe!}@rabbitmq:5672
       REDIS_URL: redis://redis:6379
       MAILER_DSN: smtp://mailer:1025
-
-  php-symfony-consume:
-    build:
-      context: .
-      target: app_php_symfony_consume
-      args:
-        SYMFONY_VERSION: ${SYMFONY_VERSION:-}
-        STABILITY: ${STABILITY:-stable}
-    depends_on:
-      - php
-    volumes:
-      - php-socket:/var/run/php
-    restart: unless-stopped
-    healthcheck:
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 30s
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-14}&charset=${POSTGRES_CHARSET:-utf8}
-      RABBITMQ_URL: amqp://${RABBITMQ_USER:-app}:${RABBITMQ_PASSWORD:-!ChangeMe!}@rabbitmq:5672
-      REDIS_URL: redis://redis:6379
-      MAILER_DSN: smtp://mailer:1025
-
+      
   caddy:
     build:
       context: .
@@ -137,6 +114,7 @@ volumes:
   rabbitmq-log:
   redis-data:
   php-socket:
+  php-public:
   caddy-data:
   caddy-config:
 

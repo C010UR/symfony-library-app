@@ -56,7 +56,8 @@ RUN apk add --no-cache \
 	file \
 	gettext \
 	git \
-	rabbitmq-c-dev
+	rabbitmq-c-dev \
+	supervisor
 
 RUN set -eux; \
 	install-php-extensions \
@@ -77,6 +78,10 @@ RUN apk add --no-cache --virtual .pgsql-deps postgresql-dev; \
 	apk del .pgsql-deps
 ###< doctrine/doctrine-bundle ###
 ###< recipes ###
+
+# Run supervisord to consume messages
+COPY --link docker/php/supervisord/supervisord.conf /usr/local/etc/supervisord/supervisord.conf
+RUN chmod +x /usr/local/etc/supervisord/supervisord.conf
 
 # Copy php config
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
@@ -133,7 +138,8 @@ RUN set -eux; \
 	chmod +x bin/console; sync; \
 	fi
 
-RUN bin/console doctrine:fixtures:load --no-interaction --group=dev
+RUN set -eux; \
+	mkdir -p public/uploads
 
 # Development php image
 FROM app_php AS app_php_dev
@@ -156,11 +162,6 @@ RUN rm "$PHP_INI_DIR/conf.d/app.prod.ini"; \
 COPY --link docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
 RUN rm -f .env.local.php
-
-# Message consumer image
-FROM app_php AS app_php_symfony_consume
-
-CMD ["/srv/app/bin/console", "messenger:consume", "async", "--env=PROD"]
 
 # Caddy image
 FROM caddy:latest AS app_caddy
