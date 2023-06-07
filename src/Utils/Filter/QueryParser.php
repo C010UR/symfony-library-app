@@ -30,13 +30,7 @@ class QueryParser
 
         foreach ($columns as $column) {
             if ('object' !== gettype($column) || Column::class !== $column::class) {
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        'Columns should be of type %s. %s was provided instead.',
-                        Column::class,
-                        'object' === gettype($column) ? $column::class : gettype($column)
-                    )
-                );
+                throw new \InvalidArgumentException(sprintf('Columns should be of type %s. %s was provided instead.', Column::class, 'object' === gettype($column) ? $column::class : gettype($column)));
             }
         }
 
@@ -111,13 +105,7 @@ class QueryParser
             $order = strtoupper($order);
 
             if (Criteria::ASC !== $order && Criteria::DESC !== $order) {
-                throw new InvalidQueryOrderException(
-                    sprintf(
-                        "Order '%s' for column '%s' is not valid. Acceptable orders are ASC and DESC.",
-                        $order,
-                        $columnName
-                    )
-                );
+                throw new InvalidQueryOrderException(sprintf("Order '%s' for column '%s' is not valid. Acceptable orders are ASC and DESC.", $order, $columnName));
             }
 
             if ($column->isEntity()) {
@@ -159,12 +147,7 @@ class QueryParser
                 return Criteria::expr()->contains($column, $value);
             case FilterOperators::OPERATOR_BETWEEN:
                 if (2 !== count($value)) {
-                    throw new InvalidQueryExpressionException(
-                        sprintf(
-                            'Operator between can only accept 2 values. (Column: %s)',
-                            $column
-                        )
-                    );
+                    throw new InvalidQueryExpressionException(sprintf('Operator between can only accept 2 values. (Column: %s)', $column));
                 }
 
                 return Criteria::expr()->andX(
@@ -192,14 +175,7 @@ class QueryParser
         }
 
         if (!$column->isValidOperator($operator)) {
-            throw new InvalidQueryExpressionException(
-                sprintf(
-                    "Operator '%s' for column '%s' is not valid. ",
-                    $operator,
-                    $columnName,
-                    implode(', ', array_keys($column->getOperators()))
-                )
-            );
+            throw new InvalidQueryExpressionException(sprintf("Operator '%s' for column '%s' is not valid. ", $operator, $columnName, implode(', ', array_keys($column->getOperators()))));
         }
 
         $isArray =
@@ -210,31 +186,13 @@ class QueryParser
         try {
             $value = Column::convert($column, $value, $isArray);
         } catch (\Throwable $th) {
-            throw new InvalidQueryExpressionException(
-                message: sprintf(
-                    "Invalid value in '%s' %s '%s'. Reason: %s",
-                    $column->getLabel(),
-                    $operator,
-                    $value,
-                    $th->getMessage()
-                ),
-                previous: $th
-            );
+            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getLabel(), $operator, $value, $th->getMessage()), previous: $th);
         }
 
         try {
             $expr = $this->parseOperator($column->getName(), $operator, $value);
         } catch (\Throwable $th) {
-            throw new InvalidQueryExpressionException(
-                message: sprintf(
-                    "Invalid value in '%s' %s '%s'. Reason: %s",
-                    $column->getName(),
-                    $operator,
-                    $value,
-                    $th->getMessage()
-                ),
-                previous: $th
-            );
+            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getName(), $operator, $value, $th->getMessage()), previous: $th);
         }
 
         $this->criteria->andWhere($expr);

@@ -20,10 +20,9 @@ jobs:
           args: --config=.php-cs-fixer.dist.php
 
       - name: Lint the PHP code
-        uses: php-actions/phpcs@v1
+        uses: docker://oskarstark/php-cs-fixer-ga
         with:
-          php_version: 8.2
-          standard: phpcs.xml.dist
+          args: --config=.php-cs-fixer.dist.php --dry-run
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3

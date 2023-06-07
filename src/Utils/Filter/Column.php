@@ -34,12 +34,7 @@ class Column
         }
 
         if (!array_key_exists('type', $data) || $data['type'] instanceof string || !$data['type']) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    "Column type for column '%s' is not provided or does not have a valid value.",
-                    $data['name']
-                )
-            );
+            throw new \InvalidArgumentException(sprintf("Column type for column '%s' is not provided or does not have a valid value.", $data['name']));
         }
 
         if (
@@ -49,12 +44,7 @@ class Column
                 || !$data['label']
             )
         ) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    "Column label for column '%s' is not provided or does not have a valid value.",
-                    $data['name']
-                )
-            );
+            throw new \InvalidArgumentException(sprintf("Column label for column '%s' is not provided or does not have a valid value.", $data['name']));
         }
 
         switch ($data['type']) {

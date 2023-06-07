@@ -57,11 +57,6 @@ class RequestUtils
             }
         }
 
-        throw new BadRequestException(
-            sprintf(
-                "Content-Type '%s' is not supported.",
-                $request->headers->get('content-type')
-            )
-        );
+        throw new BadRequestException(sprintf("Content-Type '%s' is not supported.", $request->headers->get('content-type')));
     }
 }
