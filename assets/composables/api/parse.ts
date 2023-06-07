@@ -5,7 +5,7 @@ export function useParseApiParams(params?: ApiParams) {
     return undefined;
   }
 
-  const result: { order?: Order; filter?: Filter[]; pagination: Pagination; deleted?: boolean } = {
+  const result: { orders?: Order[]; filters?: Filter[]; pagination: Pagination; deleted?: boolean } = {
     pagination: {
       pageSize: params.pageSize && Number(params.pageSize) >= 0 ? Number(params.pageSize) : 20,
       offset: params.offset && Number(params.offset) >= 0 ? Number(params.offset) : 0,
@@ -13,12 +13,14 @@ export function useParseApiParams(params?: ApiParams) {
   };
 
   if (params.order !== undefined) {
-    const [column, direction] = Object.entries(params.order)[Object.entries.length - 1];
+    result.orders = [];
 
-    result.order = {
-      column,
-      direction,
-    };
+    for (const [column, direction] of Object.entries(params.order)) {
+      result.orders.push({
+        column,
+        direction,
+      });
+    }
   }
 
   result.deleted = params.deleted ? true : undefined;
@@ -32,7 +34,7 @@ export function useParseApiParams(params?: ApiParams) {
     return result;
   }
 
-  result.filter = [];
+  result.filters = [];
 
   for (const [column, filters] of Object.entries(params)) {
     if (typeof filters !== 'object') {
@@ -46,7 +48,7 @@ export function useParseApiParams(params?: ApiParams) {
 
       const _value = value.split(',');
 
-      result.filter.push({
+      result.filters.push({
         column,
         operator: operator as FilterOperator,
         value: _value.length === 1 ? _value[0] : _value,

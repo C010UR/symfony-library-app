@@ -1,87 +1,134 @@
 <template>
   <div class="order" v-if="orderableColumns.length > 0">
     <div class="order-header">
-      <h1 class="margin-right">Упорядочить:</h1>
+      <h1 class="header-text">Упорядочить:</h1>
       <el-switch v-model="toggle" />
     </div>
-    <div class="order-form" v-if="toggle">
-      <el-select
-        :model-value="modelValue?.column"
-        @update:model-value="handleColumnChange"
-        filterable
-        default-first-option
-        :disabled="!toggle"
-        class="margin-right"
-      >
-        <el-option v-for="order in orderableColumns" :key="order.name" :value="order.name" :label="order.label" />
-      </el-select>
-      <el-switch
-        :model-value="modelValue?.direction"
-        @update:model-value="handleDirectionChange"
-        size="large"
-        inline-prompt
-        :active-icon="Top"
-        :inactive-icon="Bottom"
-        active-value="ASC"
-        inactive-value="DESC"
-      />
-    </div>
+    <vue-draggable ghost-class="ghost" class="order-container" animation="150" v-model="orderList" v-if="toggle">
+      <div class="order-form" v-for="order in orderList" :key="order.id">
+        <p class="order-label">{{ order.label !== undefined ? order.label : order.column }}</p>
+        <el-switch
+          v-model="order.direction"
+          size="large"
+          inline-prompt
+          :active-icon="Top"
+          :inactive-icon="Bottom"
+          active-value="ASC"
+          inactive-value="DESC"
+          active-color="var(--el-color-primary-light-5)"
+          class="order-switch"
+        />
+      </div>
+    </vue-draggable>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElSelect, ElOption, ElSwitch } from 'element-plus';
+import { ElSwitch } from 'element-plus';
 import { Top, Bottom } from '@element-plus/icons-vue';
 import { computed, ref } from 'vue';
 import type { FilterOption, Order } from '@/composables';
-import { watchEffect } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
+import { watch } from 'vue';
+import { reactive } from 'vue';
 
 export interface Props {
   columns: FilterOption[];
-  modelValue: Order | undefined;
+  modelValue: Order[] | undefined;
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', orders: Order | undefined): void;
+  (e: 'update:modelValue', orders: Order[] | undefined): void;
 }>();
 
-const toggle = ref<boolean>(false);
+interface OrderListItem extends Order {
+  id: number;
+  label?: string;
+}
 
-watchEffect(() => {
-  if (!toggle.value) {
-    emit('update:modelValue', undefined);
-  }
-});
+let orderList = reactive<OrderListItem[]>([]);
 
 const orderableColumns = computed(() => {
   return props.columns.filter(element => element.isOrderable);
 });
 
-function handleColumnChange(value: string) {
-  const data: Order = { direction: props.modelValue?.direction ?? 'ASC', column: value };
+function setOrderList() {
+  orderList.splice(0);
 
-  emit('update:modelValue', data);
+  if (props.modelValue === undefined) {
+    let counter = 0;
+    orderableColumns.value.forEach(column => {
+      orderList.push({ column: column.name, direction: 'ASC', label: column.label, id: counter++ });
+    });
+  } else {
+    let counter = 0;
+    props.modelValue.forEach(column => {
+      orderList.push({
+        id: counter++,
+        column: column.column,
+        direction: column.direction,
+        label: orderableColumns.value.find(column2 => column.column === column2.name)?.label,
+      });
+    });
+
+    const orderable: OrderListItem[] = [];
+    orderableColumns.value.forEach(column => {
+      orderable.push({ column: column.name, direction: 'ASC', label: column.label, id: counter++ });
+    });
+
+    orderable.forEach(column => {
+      const matching = orderList.find(column2 => column.column === column2.column);
+
+      if (!matching) {
+        orderList.push(column);
+      }
+    });
+  }
 }
 
-function handleDirectionChange(value: string | number | boolean) {
-  if (props.modelValue?.column === undefined) {
+// watch(
+//   () => props.modelValue,
+//   () => {
+//     console.trace('updated');
+//     if (!watchDisabled.value) {
+//       watchDisabled.value = true;
+//       setOrderList();
+//       watchDisabled.value = false;
+//     }
+//   },
+// );
+
+setOrderList();
+
+watch(orderList, after => {
+  if (after.length === 0) {
+    emit('update:modelValue', undefined);
     return;
   }
 
-  if (typeof value === 'string') {
-    const data: Order = { direction: value === 'ASC' ? 'ASC' : 'DESC', column: props.modelValue.column };
+  const result: Order[] = [];
 
-    emit('update:modelValue', data);
-
-    return;
+  for (const order of after) {
+    result.push({
+      column: order.column,
+      direction: order.direction,
+    });
   }
 
-  const data: Order = { direction: value ? 'ASC' : 'DESC', column: props.modelValue.column };
+  emit('update:modelValue', result);
+});
 
-  emit('update:modelValue', data);
-}
+const toggle = ref<boolean>(props.modelValue ? true : false);
+
+watch(toggle, after => {
+  if (!after) {
+    orderList.splice(0);
+  } else {
+    setOrderList();
+  }
+});
 </script>
 
 <style scoped>
@@ -93,11 +140,38 @@ function handleDirectionChange(value: string | number | boolean) {
 
 .order-form {
   display: flex;
+  flex: 1;
   flex-direction: row;
   align-items: center;
+  border-radius: var(--el-border-radius-base);
+  color: var(--el-color-primary);
+  background-color: var(--el-color-primary-light-9);
+  border: 1px solid var(--el-color-primary-light-5);
+  padding: 0.5rem;
+  cursor: move;
+  /* max-width: 20rem; */
 }
 
-.margin-right {
-  margin-right: 0.5rem;
+.order-form:hover {
+  background-color: var(--el-color-primary);
+  color: var(--el-color-white);
+}
+
+.header-text {
+  margin-right: 1rem;
+}
+
+.order-label {
+  margin-left: 1rem;
+}
+
+.order-switch {
+  margin-right: 1rem;
+  margin-left: auto;
+}
+
+.order-container {
+  display: grid;
+  gap: 10px;
 }
 </style>

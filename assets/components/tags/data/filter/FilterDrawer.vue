@@ -14,8 +14,9 @@
   >
     <order-filter
       :model-value="orders"
-      @update:model-value="(_orders: Order | undefined) => $emit('update:orders',
-    _orders)"
+      @update:model-value="
+      (_orders: Order[] | undefined) =>
+      $emit('update:orders', _orders)"
       :columns="columns"
     />
     <data-filter
@@ -39,7 +40,7 @@ import { onUnmounted } from 'vue';
 export interface Props {
   disabled?: boolean;
   columns: FilterOption[];
-  orders: Order | undefined;
+  orders: Order[] | undefined;
   filters: Filter[] | undefined;
 }
 

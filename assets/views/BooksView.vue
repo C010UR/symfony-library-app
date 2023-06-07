@@ -101,8 +101,8 @@ const route = useRoute();
 
 const params = useParseApiParams(route.query as ApiParams);
 
-const filters = ref<Filter[] | undefined>(params?.filter);
-const orders = ref<Order | undefined>(params?.order);
+const filters = ref<Filter[] | undefined>(params?.filters);
+const orders = ref<Order[] | undefined>(params?.orders);
 const pagination = ref<ApiMeta>({
   offset: 0,
   pageSize: 20,
@@ -115,7 +115,7 @@ const data = ref<BookFull[] | undefined>();
 const watchDisabled = ref<boolean>(false);
 
 async function getData() {
-  const parsedParams = useParseParams(filters.value, orders.value === undefined ? undefined : [orders.value], {
+  const parsedParams = useParseParams(filters.value, orders.value, {
     offset: pagination.value.offset,
     pageSize: pagination.value.pageSize,
   });
