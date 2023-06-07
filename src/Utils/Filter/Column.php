@@ -4,26 +4,68 @@ namespace App\Utils\Filter;
 
 /**
  * Class encapsulates filtration/order/search options for QueryParser.
+ * @see \App\Tests\Utils\Filter\ColumnTest
  */
 class Column
 {
     // Available column types
-    public const BOOLEAN_TYPE = 'boolean';
-    public const INTEGER_TYPE = 'integer';
-    public const FLOAT_TYPE = 'float';
-    public const STRING_TYPE = 'string';
-    public const ENTITY_TYPE = 'entity';
-    public const ENTITIES_TYPE = 'entities';
-    public const DATE_TYPE = 'date';
-    public const ARRAY_TYPE = 'array';
-    public const NOT_FILTERABLE_TYPE = 'not_filterable';
+    /**
+     * @var string
+     */
+    final public const BOOLEAN_TYPE = 'boolean';
+
+    /**
+     * @var string
+     */
+    final public const INTEGER_TYPE = 'integer';
+
+    /**
+     * @var string
+     */
+    final public const FLOAT_TYPE = 'float';
+
+    /**
+     * @var string
+     */
+    final public const STRING_TYPE = 'string';
+
+    /**
+     * @var string
+     */
+    final public const ENTITY_TYPE = 'entity';
+
+    /**
+     * @var string
+     */
+    final public const ENTITIES_TYPE = 'entities';
+
+    /**
+     * @var string
+     */
+    final public const DATE_TYPE = 'date';
+
+    /**
+     * @var string
+     */
+    final public const ARRAY_TYPE = 'array';
+
+    /**
+     * @var string
+     */
+    final public const NOT_FILTERABLE_TYPE = 'not_filterable';
 
     private array $operators = [];
+
     private array $data = [];
+
     private string $name = '';
+
     private string $label = '';
+
     private string $type = '';
+
     private bool $isOrderable = false;
+
     private bool $isSearchable = false;
 
     public function __construct(
@@ -47,12 +89,8 @@ class Column
             throw new \InvalidArgumentException(sprintf("Column label for column '%s' is not provided or does not have a valid value.", $data['name']));
         }
 
-        switch ($data['type']) {
-            case self::ENTITY_TYPE:
-            case self::ENTITIES_TYPE:
-                if (!array_key_exists('entity', $data)) {
-                    throw new \InvalidArgumentException(sprintf("Entity not specified for column '%s'", $data['name']));
-                }
+        if (($data['type'] == self::ENTITY_TYPE || $data['type'] == self::ENTITIES_TYPE) && !array_key_exists('entity', $data)) {
+            throw new \InvalidArgumentException(sprintf("Entity not specified for column '%s'", $data['name']));
         }
 
         $this->setName($data['name']);
@@ -64,7 +102,7 @@ class Column
         $this->setType(
             $data['type'],
             array_key_exists('isNullable', $data) ? $data['isNullable'] : false,
-            array_key_exists('entity', $data) ? $data['entity'] : null
+            $data['entity'] ?? null
         );
 
         $this->setIsOrderable(array_key_exists('isOrderable', $data) ? $data['isOrderable'] : false);
@@ -228,7 +266,7 @@ class Column
             'isSearchable' => $this->isSearchable(),
         ];
 
-        if (!empty($this->getData())) {
+        if ($this->getData() !== []) {
             $formatted['data'] = $this->getData();
         }
 
@@ -240,7 +278,7 @@ class Column
      */
     public function isValidOperator(string $operator): bool
     {
-        return in_array(strtolower($operator), array_keys($this->getOperators()));
+        return array_key_exists(strtolower($operator), $this->getOperators());
     }
 
     /**
@@ -256,9 +294,8 @@ class Column
             }
 
             return $result;
-        } else {
-            return self::convertDataPoint($column->getType(), $data);
         }
+        return self::convertDataPoint($column->getType(), $data);
     }
 
     /**
@@ -266,19 +303,12 @@ class Column
      */
     private static function convertDataPoint(string $type, string $data): mixed
     {
-        switch ($type) {
-            case self::BOOLEAN_TYPE:
-                return boolval($data);
-            case self::INTEGER_TYPE:
-            case self::ENTITY_TYPE:
-            case self::ENTITIES_TYPE:
-                return intval($data);
-            case self::FLOAT_TYPE:
-                return floatval($data);
-            case self::DATE_TYPE:
-                return new \DateTimeImmutable($data);
-            default:
-                return $data;
-        }
+        return match ($type) {
+            self::BOOLEAN_TYPE => (bool) $data,
+            self::INTEGER_TYPE, self::ENTITY_TYPE, self::ENTITIES_TYPE => (int) $data,
+            self::FLOAT_TYPE => (float) $data,
+            self::DATE_TYPE => new \DateTimeImmutable($data),
+            default => $data,
+        };
     }
 }

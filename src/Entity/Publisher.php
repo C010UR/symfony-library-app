@@ -12,7 +12,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[ORM\Entity(repositoryClass: PublisherRepository::class)]
 #[UniqueEntity('name', 'Name is already taken.')]
 #[UniqueEntity('slug', 'Slug is already taken.')]
-class Publisher implements EntityInterface
+class Publisher implements EntityInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

@@ -17,6 +17,9 @@ do
     echo "    Installing for the template 'template1'..."
     psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -T template1 -c "CREATE EXTENSION IF NOT EXISTS $extension;"
 
+    echo "    Installing for the template 'template0'..."
+    psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -T template0 -c "CREATE EXTENSION IF NOT EXISTS $extension;"
+
     echo ""
 
 done

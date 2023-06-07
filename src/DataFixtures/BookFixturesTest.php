@@ -26,7 +26,7 @@ class BookFixturesTest extends Fixture implements FixtureGroupInterface, Depende
             $book->setDatePublished(new \DateTime());
             $book->setDescription('test');
             $book->setPageCount(100);
-            $book->setPublisher($manager->getRepository(Publisher::class)->first());
+            $book->setPublisher($manager->getRepository(Publisher::class)->findOneBy([]));
             $book->addAuthor($manager->getRepository(Author::class)->findOneBy([]));
 
             foreach ($manager->getRepository(Tag::class)->findBy([]) as $tag) {
@@ -48,10 +48,10 @@ class BookFixturesTest extends Fixture implements FixtureGroupInterface, Depende
 
     public function getDependencies()
     {
-        return [AuthorFixturesTest::class];
-
-        return [PublisherFixturesTest::class];
-
-        return [TagFixturesTest::class];
+        return [
+            AuthorFixturesTest::class,
+            PublisherFixturesTest::class,
+            TagFixturesTest::class,
+        ];
     }
 }

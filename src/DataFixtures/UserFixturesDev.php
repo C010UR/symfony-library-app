@@ -11,10 +11,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserFixturesDev extends Fixture implements FixtureGroupInterface
 {
     public function __construct(
-        private UserPasswordHasherInterface $hasher,
-        private string $dirPublic,
-        private string $dirUserUploads,
-        private string $dirFixtures,
+        private readonly UserPasswordHasherInterface $hasher,
+        private readonly string $dirPublic,
+        private readonly string $dirUserUploads,
+        private readonly string $dirFixtures,
     ) {
     }
 
@@ -25,14 +25,14 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
 
     private function createFromFile(array $file): User
     {
-        preg_match('/(.*)\. /U', $file['filename'], $preg);
+        preg_match('/(.*)\. /U', (string) $file['filename'], $preg);
         if (empty($preg[1])) {
             throw new \InvalidArgumentException(sprintf('File %s has wrong format.', $file['filename']));
         }
 
         $role = sprintf('ROLE_%s', strtoupper($preg[1]));
 
-        $name = explode(' ', preg_replace('/(.*)\. /U', '', pathinfo($file['filename'], PATHINFO_FILENAME)));
+        $name = explode(' ', preg_replace('/(.*)\. /U', '', pathinfo((string) $file['filename'], PATHINFO_FILENAME)));
 
         $email = $this->createEmail(
             implode('.', $name),
@@ -45,6 +45,7 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
         $user = new User();
         $user->setEmail($email);
         $user->setRoles([$role]);
+
         $hashed = $this->hasher->hashPassword($user, 'dev');
         $user->setPassword($hashed);
         $user->setImagePath($filename);

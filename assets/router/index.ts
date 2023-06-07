@@ -53,7 +53,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/password-reset',
+      path: '/reset-password',
       name: 'ResetPasswordRequest',
       component: RequestPasswordResetView,
       meta: {
@@ -63,7 +63,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/password-reset/:pathMatch(.{40})',
+      path: '/reset-password/:pathMatch(.{40})',
       name: 'ResetPassword',
       component: ResetPasswordView,
       meta: {
@@ -73,7 +73,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/password-reset-confirm',
+      path: '/reset-password-confirm',
       name: 'ResetPasswordConfirm',
       component: RequestPasswordResetConfirmView,
       meta: {

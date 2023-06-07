@@ -17,16 +17,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class BookFixturesDev extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
     public function __construct(
-        private UserPasswordHasherInterface $hasher,
-        private string $dirPublic,
-        private string $dirBookCoverUploads,
-        private string $dirFixtures,
+        private readonly string $dirPublic,
+        private readonly string $dirBookCoverUploads,
+        private readonly string $dirFixtures,
     ) {
     }
 
     private function createFromFile(ObjectManager $manager, array $file): Book
     {
-        preg_match('/(.*)\. /U', $file['filename'], $preg);
+        preg_match('/(.*)\. /U', (string) $file['filename'], $preg);
 
         if (empty($preg[1])) {
             throw new \InvalidArgumentException(sprintf('File %s has wrong format.', $file['filename']));
@@ -34,7 +33,7 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
 
         $authors = explode(',', $preg[1]);
 
-        $name = preg_replace('/(.*)\. /U', '', pathinfo($file['filename'], PATHINFO_FILENAME));
+        $name = preg_replace('/(.*)\. /U', '', pathinfo((string) $file['filename'], PATHINFO_FILENAME));
         $name = ucwords(strtolower($name));
 
         $filename = sprintf('%s/cover-%s.%s', $this->dirBookCoverUploads, bin2hex(random_bytes(3)), $file['extension']);
@@ -46,7 +45,7 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
         $book->setDatePublished(new \DateTime());
         $book->setDescription(Utils::getLoremIpsum());
         $book->setImagePath($filename);
-        $book->setPageCount(rand(100, 600));
+        $book->setPageCount(random_int(100, 600));
         $book->setPublisher($manager->getRepository(Publisher::class)->findOneBy([]));
 
         foreach ($authors as $author) {
@@ -105,10 +104,10 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
 
     public function getDependencies()
     {
-        return [AuthorFixturesDev::class];
-
-        return [PublisherFixturesDev::class];
-
-        return [TagFixturesDev::class];
+        return [
+            AuthorFixturesDev::class,
+            PublisherFixturesDev::class,
+            TagFixturesDev::class,
+        ];
     }
 }

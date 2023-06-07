@@ -4,11 +4,14 @@ namespace App\Tests\Utils\Filter;
 
 use App\Utils\Filter\Column;
 use App\Utils\Filter\FilterOperators;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(Column::class)]
 class ColumnTest extends TestCase
 {
-    public function getTypes(): iterable
+    public static function getTypes(): iterable
     {
         $data = [
             [Column::BOOLEAN_TYPE, 'getForBoolTypes'],
@@ -16,6 +19,7 @@ class ColumnTest extends TestCase
             [Column::FLOAT_TYPE, 'getForNumberTypes'],
             [Column::STRING_TYPE, 'getForStringTypes'],
             [Column::ENTITY_TYPE, 'getForEntityTypes'],
+            [Column::ENTITIES_TYPE, 'getForEntitiesTypes'],
             [Column::DATE_TYPE, 'getForDateTypes'],
         ];
 
@@ -36,7 +40,7 @@ class ColumnTest extends TestCase
         yield 'Non filterable' => [Column::NOT_FILTERABLE_TYPE, false, []];
     }
 
-    public function getOperators(): iterable
+    public static function getOperators(): iterable
     {
         yield 'Integer - eq' => [Column::INTEGER_TYPE, 'eq', true];
         yield 'Integer - eqa' => [Column::INTEGER_TYPE, 'eqa', false];
@@ -44,28 +48,44 @@ class ColumnTest extends TestCase
         yield 'String - starts-with' => [Column::STRING_TYPE, 'starts-with', true];
         yield 'Entity - in' => [Column::ENTITY_TYPE, 'in', true];
         yield 'Entity - in-out' => [Column::ENTITY_TYPE, 'in-out', false];
+        yield 'Entities - in' => [Column::ENTITIES_TYPE, 'in', true];
     }
 
-    public function getConvert(): iterable
+    public static function getConvert(): iterable
     {
         $data = [
             [Column::BOOLEAN_TYPE, [true, false, true]],
             [Column::INTEGER_TYPE, [123, 231, 321]],
             [Column::FLOAT_TYPE, [1.23, 2.31, 3.21]],
             [Column::STRING_TYPE, ['string', 'str', 'srt']],
-            [Column::ENTITY_TYPE, [123, 231, 321]],
+            [Column::ENTITY_TYPE, [123, 231, 321], 'test'],
+            [Column::ENTITIES_TYPE, [123, 231, 321], 'test'],
         ];
 
         foreach ($data as $value) {
             yield sprintf('%s not array', $value[0]) => [
-                new Column('test', 'test', $value[0], false, false),
+                new Column([
+                    'name' => 'test',
+                    'label' => 'test',
+                    'type' => $value[0],
+                    'isOrderable' => false,
+                    'isNullable' => false,
+                    'entity' => $value[2] ?? null,
+                ]),
                 (string) $value[1][0],
                 false,
                 $value[1][0],
             ];
 
             yield sprintf('%s array', $value[0]) => [
-                new Column('test', 'test', $value[0], false, false),
+                new Column([
+                    'name' => 'test',
+                    'label' => 'test',
+                    'type' => $value[0],
+                    'isOrderable' => false,
+                    'isNullable' => false,
+                    'entity' => $value[2] ?? null,
+                ]),
                 implode(',', $value[1]),
                 true,
                 $value[1],
@@ -76,53 +96,78 @@ class ColumnTest extends TestCase
         $date = new \DateTimeImmutable($dateString);
 
         yield 'Date not array' => [
-            new Column('test', 'test', Column::DATE_TYPE, false, false),
+            new Column([
+                'name' => 'test',
+                'label' => 'test',
+                'type' => Column::DATE_TYPE,
+                'isOrderable' => false,
+                'isNullable' => false
+            ]),
             $dateString,
             false,
             $date,
         ];
 
         yield 'Date array' => [
-            new Column('test', 'test', Column::DATE_TYPE, false, false),
+            new Column([
+                'name' => 'test',
+                'label' => 'test',
+                'type' => Column::DATE_TYPE,
+                'isOrderable' => false,
+                'isNullable' => false
+            ]),
             implode(',', [$dateString, $dateString]),
             true,
             [$date, $date],
         ];
     }
 
-    /**
-     * @dataProvider getTypes
-     */
+    #[DataProvider('getTypes')]
     public function testSetType(string $type, bool $isNullable, array $expected): void
     {
-        $column = new Column('test', 'test', $type, true, $isNullable);
+        $column =   new Column([
+            'name' => 'test',
+            'label' => 'test',
+            'type' => $type,
+            'isOrderable' => true,
+            'isNullable' => $isNullable,
+            'entity' => $type === Column::ENTITIES_TYPE || $type === Column::ENTITY_TYPE ? 'test' : null
+        ]);
 
         $this->assertEquals($expected, $column->getOperators());
     }
 
-    /**
-     * @dataProvider getTypes
-     */
+    #[DataProvider('getTypes')]
     public function testSetTypeFail(string $type, bool $isNullable, array $expected): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        new Column('test', 'test', sprintf('%s-test', $type), true, $isNullable);
+        new Column([
+            'name' => 'test',
+            'label' => 'test',
+            'type' =>  $type === Column::ENTITIES_TYPE || $type === Column::ENTITY_TYPE ? $type : sprintf('%s-test', $type),
+            'isOrderable' => true,
+            'isNullable' => $isNullable,
+        ]);
     }
 
-    /**
-     * @dataProvider getOperators
-     */
+    #[DataProvider('getOperators')]
     public function testIsValidOperator(string $type, string $operator, bool $expected): void
     {
-        $column = new Column('test', 'test', $type, true, true);
+        $column =   new Column([
+            'name' => 'test',
+            'label' => 'test',
+            'type' => $type,
+            'isOrderable' => true,
+            'isNullable' => true,
+            'entity' => 'test'
+        ]);
+
 
         $this->assertEquals($expected, $column->isValidOperator($operator));
     }
 
-    /**
-     * @dataProvider getConvert
-     */
+    #[DataProvider('getConvert')]
     public function testConvert(Column $column, string $data, bool $isArray, mixed $expected): void
     {
         $actual = Column::convert($column, $data, $isArray);

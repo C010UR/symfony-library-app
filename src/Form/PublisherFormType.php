@@ -24,11 +24,9 @@ class PublisherFormType extends AbstractType
                     new Assert\NotBlank(message: 'Publisher name cannot be empty.'),
                     new Assert\Length(
                         min: 3,
-                        minMessage: 'Publisher name should have at least {{ limit }} characters. '
-                            . '{{ value }} was provided.',
+                        minMessage: 'Publisher name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
-                        maxMessage: 'Publisher name should not exceed {{ limit }} characters. '
-                            . '{{ value }} was provided.'
+                        maxMessage: 'Publisher name should not exceed {{ limit }} characters. {{ value }} was provided.'
                     ),
                 ],
             ])
@@ -60,8 +58,7 @@ class PublisherFormType extends AbstractType
                 'constraints' => [
                     new Assert\Image(
                         maxSize: '8192k',
-                        maxSizeMessage: 'The image is too large. The max size is {{ limit }}. '
-                            . '{{ value }} was provided.',
+                        maxSizeMessage: 'The image is too large. The max size is {{ limit }}. {{ value }} was provided.',
                     ),
                 ],
             ]);

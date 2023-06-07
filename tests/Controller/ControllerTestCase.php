@@ -13,21 +13,27 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class ControllerTestCase extends WebTestCase
 {
-    public const ADMIN_EMAIL = 'test.email.admin@mtec.by';
+    /**
+     * @var string
+     */
+    final public const ADMIN_EMAIL = 'test.email.admin@mtec.by';
 
     private KernelBrowser $client;
+
     private EntityManagerInterface $entityManager;
+
     private string $endpoint;
+
     private string $dirAssets;
 
     public function joinPaths(...$paths): string
     {
-        if (empty($paths)) {
+        if ($paths === []) {
             throw new \InvalidArgumentException('Paths are empty.');
         }
 
         foreach ($paths as $key => $argument) {
-            $paths[$key] = trim($argument);
+            $paths[$key] = trim((string) $argument);
 
             if (empty($paths[$key])) {
                 unset($paths[$key]);
@@ -47,7 +53,7 @@ abstract class ControllerTestCase extends WebTestCase
         $max = strlen($keyspace) - 1;
 
         for ($i = 0; $i < $length; ++$i) {
-            $pieces[] = $keyspace[mt_rand(0, $max)];
+            $pieces[] = $keyspace[random_int(0, $max)];
         }
 
         return implode('', $pieces);
@@ -72,7 +78,7 @@ abstract class ControllerTestCase extends WebTestCase
 
     public function getEndpoint(...$paths): string
     {
-        return $this->joinPaths($this->endpoint, ...$paths);
+        return $this->joinPaths($this->endpoint, $paths);
     }
 
     public function getEntityManager(): EntityManagerInterface
@@ -89,7 +95,7 @@ abstract class ControllerTestCase extends WebTestCase
     {
         $this->client->restart();
 
-        if ($user) {
+        if ($user instanceof \App\Entity\User) {
             $this->client->loginUser($user);
         }
     }
@@ -101,12 +107,14 @@ abstract class ControllerTestCase extends WebTestCase
                 ->getResponse()
                 ->getContent(),
             true,
+            512,
+            JSON_THROW_ON_ERROR,
         );
     }
 
-    public function getRepository(string $repository): ServiceEntityRepository
+    public static function getRepository(string $repository): ServiceEntityRepository
     {
-        return $this->getContainer()->get($repository);
+        return self::getContainer()->get($repository);
     }
 
     public function getUploadedFile(): UploadedFile
@@ -125,7 +133,7 @@ abstract class ControllerTestCase extends WebTestCase
             return;
         }
 
-        $user = $this->getRepository(UserRepository::class)->find($user->getId());
+        $this->getRepository(UserRepository::class)->find($user->getId());
 
         $this->assertResponseIsSuccessful();
     }
@@ -156,7 +164,7 @@ abstract class ControllerTestCase extends WebTestCase
         $this->assertEquals($expected, $this->getJsonResponseData());
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         self::ensureKernelShutdown();
         $this->client = self::createClient();

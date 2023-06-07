@@ -49,11 +49,9 @@ class AuthorFormType extends AbstractType
                 'constraints' => [
                     new Assert\Length(
                         min: 3,
-                        minMessage: 'Middle name should have at least {{ limit }} characters. '
-                            . '{{ value }} was provided.',
+                        minMessage: 'Middle name should have at least {{ limit }} characters. {{ value }} was provided.',
                         max: 255,
-                        maxMessage: 'Middle name should not exceed {{ limit }} characters. '
-                            . '{{ value }} was provided.'
+                        maxMessage: 'Middle name should not exceed {{ limit }} characters. {{ value }} was provided.'
                     ),
                 ],
             ])
@@ -72,8 +70,7 @@ class AuthorFormType extends AbstractType
                 'constraints' => [
                     new Assert\Image(
                         maxSize: '8192k',
-                        maxSizeMessage: 'The image is too large. The max size is {{ limit }}. '
-                            . '{{ value }} was provided.',
+                        maxSizeMessage: 'The image is too large. The max size is {{ limit }}. {{ value }} was provided.',
                     ),
                 ],
             ]);

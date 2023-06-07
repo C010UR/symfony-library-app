@@ -16,8 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 class TagService extends AbstractCrudService implements CrudServiceInterface
 {
     public function __construct(
-        private FormFactoryInterface $formFactory,
-        private TagRepository $repository
+        private readonly FormFactoryInterface $formFactory,
+        TagRepository $repository
     ) {
         $queryParser = new QueryParser();
         $queryParser->setColumns([

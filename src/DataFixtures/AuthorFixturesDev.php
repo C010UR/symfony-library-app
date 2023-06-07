@@ -11,16 +11,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AuthorFixturesDev extends Fixture implements FixtureGroupInterface
 {
     public function __construct(
-        private UserPasswordHasherInterface $hasher,
-        private string $dirPublic,
-        private string $dirBookAuthorUploads,
-        private string $dirFixtures,
+        private readonly string $dirPublic,
+        private readonly string $dirBookAuthorUploads,
+        private readonly string $dirFixtures,
     ) {
     }
 
     private function createFromFile(array $file): Author
     {
-        $name = preg_replace('/(.*)\. /U', '', pathinfo($file['filename'], PATHINFO_FILENAME));
+        $name = preg_replace('/(.*)\. /U', '', pathinfo((string) $file['filename'], PATHINFO_FILENAME));
         $name = ucwords(strtolower($name));
         $name = explode(' ', $name);
 

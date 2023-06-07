@@ -19,7 +19,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
     'Name is already taken.'
 )]
 #[UniqueEntity('slug', 'Slug is already taken.')]
-class Book implements EntityInterface
+class Book implements EntityInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -29,7 +29,7 @@ class Book implements EntityInterface
     #[ORM\Column(type: Citext::CITEXT)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $datePublished = null;
 
     #[ORM\Column(length: 255)]
@@ -160,9 +160,7 @@ class Book implements EntityInterface
      */
     public function getTags(): Collection
     {
-        return $this->tags->filter(function (Tag $tag) {
-            return !$tag->isDeleted();
-        });
+        return $this->tags->filter(static fn(Tag $tag) => !$tag->isDeleted());
     }
 
     public function addTag(Tag $tag): self
@@ -186,9 +184,7 @@ class Book implements EntityInterface
      */
     public function getAuthors(): Collection
     {
-        return $this->authors->filter(function (Author $author) {
-            return !$author->isDeleted();
-        });
+        return $this->authors->filter(static fn(Author $author) => !$author->isDeleted());
     }
 
     public function addAuthor(Author $author): self

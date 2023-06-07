@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/v1/password-reset', name: 'app_api_', format: 'json')]
+#[Route('/api/v1/reset-password', name: 'app_api_', format: 'json')]
 class PasswordResetController extends AbstractController
 {
     #[Route('', name: 'password_reset_request', methods: ['POST'])]
@@ -20,7 +20,7 @@ class PasswordResetController extends AbstractController
     }
 
     #[Route('/reset/{token}', name: 'password_reset', methods: ['POST'])]
-    public function reset(Request $request, string $token = null, PasswordResetService $service): JsonResponse
+    public function reset(Request $request, PasswordResetService $service, string $token = null): JsonResponse
     {
         $service->resetPassword($request, $token);
 

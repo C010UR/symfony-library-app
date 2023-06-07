@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('api/v1/books/tags', name: 'app_api_book_tag_', format: 'json')]
 class TagController extends AbstractController implements CrudControllerInterface
 {
-    public function __construct(private TagService $service)
+    public function __construct(private readonly TagService $service)
     {
     }
 

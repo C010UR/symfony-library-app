@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 abstract class AbstractCrudService
 {
     private QueryParser $queryParser;
+
     private AbstractCrudRepository $repository;
 
     public function setQueryParser(QueryParser $queryParser): self
@@ -51,7 +52,6 @@ abstract class AbstractCrudService
         return $this->getRepository()->findMatchingByDeleted(
             $query['deleted'] ?? false,
             $this->getQueryParser()->parseQuery($query, true, true),
-            $additional,
         );
     }
 

@@ -10,7 +10,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^2.0",
-        "doctrine/doctrine-bundle": "^2.9",
+        "doctrine/doctrine-bundle": "^2.10",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.15",
@@ -18,25 +18,25 @@
         "nelmio/cors-bundle": "^2.3",
         "pentatrion/vite-bundle": "^3.1",
         "phpdocumentor/reflection-docblock": "^5.3",
-        "phpstan/phpdoc-parser": "^1.21",
-        "symfony/amqp-messenger": "6.2.*",
-        "symfony/console": "6.2.*",
-        "symfony/dotenv": "6.2.*",
+        "phpstan/phpdoc-parser": "^1.22",
+        "symfony/amqp-messenger": "6.3.*",
+        "symfony/console": "6.3.*",
+        "symfony/dotenv": "6.3.*",
         "symfony/flex": "^2.3",
-        "symfony/form": "6.2.*",
-        "symfony/framework-bundle": "6.2.*",
-        "symfony/mailer": "6.2.*",
-        "symfony/messenger": "6.2.*",
-        "symfony/notifier": "6.2.*",
-        "symfony/property-access": "6.2.*",
-        "symfony/property-info": "6.2.*",
-        "symfony/runtime": "6.2.*",
-        "symfony/security-bundle": "6.2.*",
-        "symfony/serializer": "6.2.*",
-        "symfony/translation": "6.2.*",
-        "symfony/twig-bundle": "6.2.*",
-        "symfony/validator": "6.2.*",
-        "symfony/yaml": "6.2.*",
+        "symfony/form": "6.3.*",
+        "symfony/framework-bundle": "6.3.*",
+        "symfony/mailer": "6.3.*",
+        "symfony/messenger": "6.3.*",
+        "symfony/notifier": "6.3.*",
+        "symfony/property-access": "6.3.*",
+        "symfony/property-info": "6.3.*",
+        "symfony/runtime": "6.3.*",
+        "symfony/security-bundle": "6.3.*",
+        "symfony/serializer": "6.3.*",
+        "symfony/translation": "6.3.*",
+        "symfony/twig-bundle": "6.3.*",
+        "symfony/validator": "6.3.*",
+        "symfony/yaml": "6.3.*",
         "symfonycasts/reset-password-bundle": "^1.17",
         "twig/twig": "^3.6"
     },
@@ -89,6 +89,12 @@
         ],
         "phpcbf": [
             "phpcbf"
+        ],
+        "rector-dry": [
+            "rector process --dry-run"
+        ],
+        "rector": [
+            "rector process"
         ]
     },
     "conflict": {
@@ -97,18 +103,18 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.2.*",
+            "require": "6.3.*",
             "docker": true
         }
     },
     "require-dev": {
-        "dama/doctrine-test-bundle": "^7.2",
+        "dama/doctrine-test-bundle": "8.0.0-BETA1",
         "friendsofphp/php-cs-fixer": "^3.17",
-        "phpunit/phpunit": "^10.1",
-        "squizlabs/php_codesniffer": "^3.7",
-        "symfony/browser-kit": "6.2.*",
-        "symfony/css-selector": "6.2.*",
+        "phpunit/phpunit": "^10.2",
+        "rector/rector": "^0.17.0",
+        "symfony/browser-kit": "6.3.*",
+        "symfony/css-selector": "6.3.*",
         "symfony/maker-bundle": "^1.48",
-        "symfony/phpunit-bridge": "^6.3"
+        "symfony/phpunit-bridge": "6.3.*"
     }
 }

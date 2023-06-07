@@ -9,6 +9,9 @@ use Doctrine\DBAL\Types\TextType;
 
 final class Citext extends TextType
 {
+    /**
+     * @var string
+     */
     public const CITEXT = 'citext';
 
     public function getName(): string

@@ -14,8 +14,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class TagEntityListener
 {
     public function __construct(
-        private SluggerInterface $slugger,
-        private string $dirPublic
+        private readonly SluggerInterface $slugger,
+        private readonly string $dirPublic
     ) {
     }
 

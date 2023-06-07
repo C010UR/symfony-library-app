@@ -17,10 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 class UserService extends AbstractCrudService implements CrudServiceInterface
 {
     public function __construct(
-        private FormFactoryInterface $formFactory,
-        private string $dirPublic,
-        private string $dirUserUploads,
-        private UserRepository $repository
+        private readonly FormFactoryInterface $formFactory,
+        private readonly string $dirPublic,
+        private readonly string $dirUserUploads,
+        UserRepository $repository
     ) {
         $queryParser = new QueryParser();
         $queryParser->setColumns([

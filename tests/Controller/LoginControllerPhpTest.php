@@ -2,37 +2,46 @@
 
 namespace App\Tests\Controller;
 
+use App\Controller\LoginController;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
+#[CoversClass(LoginController::class)]
 class LoginControllerPhpTest extends ControllerTestCase
 {
+    /**
+     * @var string
+     */
     private const TEST_PASSWORD = 'test.password';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setup();
         $this->loginClient(null);
     }
 
-    public function getUser(): iterable
+    public static function getUser(): iterable
     {
-        $users = $this->getRepository(UserRepository::class)->findAll();
+        $users = self::getRepository(UserRepository::class)->findAll();
 
         /** @var User $user */
         foreach ($users as $user) {
-            if (!$user->isActive() || $user->isDeleted()) {
+            if (!$user->isActive()) {
                 continue;
             }
-
+            if ($user->isDeleted()) {
+                continue;
+            }
             yield $user->getEmail() => [$user, self::TEST_PASSWORD];
         }
     }
 
-    /**
-     * @dataProvider getUser
-     */
+    #[DataProvider('getUser')]
     public function testLogin(User $user, string $password): void
     {
         $this->getClient()->jsonRequest('POST', '/api/v1/login', [
@@ -41,12 +50,12 @@ class LoginControllerPhpTest extends ControllerTestCase
         ]);
 
         $this->assertResponseIsSuccessful();
-        $this->assertEquals(User::format($user), $this->getJsonResponseData());
+        $this->assertEquals($user->format(), $this->getJsonResponseData());
 
         $this->getClient()->request('GET', '/api/v1/profile');
 
         $this->assertResponseIsSuccessful();
-        $this->assertEquals(User::format($user), $this->getJsonResponseData());
+        $this->assertEquals($user->format(), $this->getJsonResponseData());
 
         $this->getClient()->request('GET', '/api/v1/logout');
 
@@ -64,9 +73,7 @@ class LoginControllerPhpTest extends ControllerTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
-    /**
-     * @dataProvider getUser
-     */
+    #[DataProvider('getUser')]
     public function testDisableUser(User $user, string $password): void
     {
         $this->assertLoginFail(
@@ -92,9 +99,7 @@ class LoginControllerPhpTest extends ControllerTestCase
         $this->assertLoginFail($user->getEmail(), $password, 'Account is not active');
     }
 
-    /**
-     * @dataProvider getUser
-     */
+    #[DataProvider('getUser')]
     public function testWrongCredentials(User $user, string $password): void
     {
         $this->assertLoginFail(

@@ -20,19 +20,17 @@ class RequestUtils
         $handles = [
             [
                 'content-type' => ['application/json'],
-                'handle' => function () use ($request): array {
+                'handle' => static function () use ($request) : array {
                     try {
-                        return json_decode($request->getContent(), true);
-                    } catch (\Throwable $th) {
-                        throw new NotEncodableValueException('Json is invalid.', previous: $th);
+                        return json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+                    } catch (\Throwable $throwable) {
+                        throw new NotEncodableValueException('Json is invalid.', previous: $throwable);
                     }
                 },
             ],
             [
                 'content-type' => ['multipart/form-data', 'application/x-www-form-urlencoded'],
-                'handle' => function () use ($request): array {
-                    return array_merge($request->request->all(), $request->files->all());
-                },
+                'handle' => static fn(): array => array_merge($request->request->all(), $request->files->all()),
             ],
         ];
 

@@ -60,18 +60,21 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 
 ## —— Lint —————————————————————————————————————————————————————————————————————
 lint: ## Lint the project
-	- @$(COMPOSER) run phpcs
+	- $(COMPOSER) run php-cs-fixer-dry
+	- $(COMPOSER) run rector-dry
 	- $(NPM) run type-check
 	- $(NPM) run lint
 
 format: ## Fix lint issues in the project
-	- @$(COMPOSER) run  php-cs-fixer
+	- $(COMPOSER) run php-cs-fixer
+	- $(COMPOSER) run rector
 	- $(NPM) run format
 
 ## —— Test —————————————————————————————————————————————————————————————————————
 test: ## Run tests
 	- @$(SYMFONY) doctrine:database:drop --force --env=test
 	@$(SYMFONY) doctrine:database:create --env=test
+	@$(SYMFONY) doctrine:query:sql "CREATE EXTENSION IF NOT EXISTS citext" --env=test
 	@$(SYMFONY) doctrine:migrations:migrate --no-interaction --env=test
 	@$(SYMFONY) doctrine:fixtures:load --no-interaction --env=test --group=test
 	@$(PHP_CONT) bin/phpunit --coverage-text --coverage-html var/coverage/

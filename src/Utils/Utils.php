@@ -4,14 +4,17 @@ namespace App\Utils;
 
 class Utils
 {
-    public const ENCODING = 'UTF-8';
+    /**
+     * @var string
+     */
+    final public const ENCODING = 'UTF-8';
 
     public static function ucwords(string $string): string
     {
         return mb_convert_case(mb_convert_case($string, MB_CASE_LOWER, self::ENCODING), MB_CASE_TITLE, self::ENCODING);
     }
 
-    public static function getLoremIpsum(int $paragraphs = 5)
+    public static function getLoremIpsum(int $paragraphs = 5): string
     {
         $lorem =
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris placerat dignissim ornare. ' .

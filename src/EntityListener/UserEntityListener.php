@@ -15,7 +15,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[AsEntityListener(event: Events::postRemove, entity: User::class)]
 class UserEntityListener
 {
-    public function __construct(private SluggerInterface $slugger, private string $dirPublic)
+    public function __construct(private readonly SluggerInterface $slugger, private readonly string $dirPublic)
     {
     }
 

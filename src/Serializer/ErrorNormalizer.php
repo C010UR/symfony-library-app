@@ -2,19 +2,15 @@
 
 namespace App\Serializer;
 
-use App\Utils\Filter\Exception\InvalidQueryExpressionException;
-use App\Utils\Filter\Exception\InvalidQueryOrderException;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 
 class ErrorNormalizer implements NormalizerInterface
 {
-    public function __construct(private string $environment)
+    public function __construct(private readonly string $environment)
     {
     }
 
@@ -22,7 +18,6 @@ class ErrorNormalizer implements NormalizerInterface
     {
         /** @var FlattenException $exception */
         $message = $exception->getMessage();
-        $code = $exception->getStatusCode();
 
         // change message
         switch ($exception->getClass()) {
@@ -31,35 +26,21 @@ class ErrorNormalizer implements NormalizerInterface
                 break;
             case NotEncodableValueException::class:
             case NotNormalizableValueException::class:
-                $message = 'JSON is invalid.';
+                $message = 'Invalid JSON.';
                 break;
         }
-
-        // change code
-        switch ($exception->getClass()) {
-            case ForeignKeyConstraintViolationException::class:
-            case NotEncodableValueException::class:
-            case NotNormalizableValueException::class:
-            case ResetPasswordExceptionInterface::class:
-            case InvalidQueryOrderException::class:
-            case InvalidQueryExpressionException::class:
-                $code = Response::HTTP_BAD_REQUEST;
-                break;
-        }
-
-        $exception->setStatusCode($code);
 
         if ('dev' !== $this->environment) {
             return [
                 'exception' => [
                     'message' => $message,
-                    'code' => $code,
+                    'code' => $exception->getStatusCode(),
                 ],
             ];
         }
 
         return [
-            'exception' => array_merge(['message' => $message, 'code' => $code], $exception->toArray()),
+            'exception' => array_merge(['message' => $message, 'code' => $exception->getStatusCode()], $exception->toArray()),
         ];
     }
 
@@ -67,4 +48,5 @@ class ErrorNormalizer implements NormalizerInterface
     {
         return $data instanceof FlattenException;
     }
+
 }

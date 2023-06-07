@@ -21,12 +21,12 @@ use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 class PasswordResetService
 {
     public function __construct(
-        private ResetPasswordHelperInterface $resetPasswordHelper,
-        private UserPasswordHasherInterface $passwordHasher,
-        private EntityManagerInterface $entityManager,
-        private MailerInterface $mailer,
-        private FormFactoryInterface $formFactory,
-        private string $projectDir,
+        private readonly ResetPasswordHelperInterface $resetPasswordHelper,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly MailerInterface $mailer,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly string $projectDir,
     ) {
     }
 
@@ -45,8 +45,8 @@ class PasswordResetService
 
         try {
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
-        } catch (ResetPasswordExceptionInterface $e) {
-            throw new BadRequestException(sprintf('%s', $e->getReason()));
+        } catch (ResetPasswordExceptionInterface $resetPasswordException) {
+            throw new BadRequestException($resetPasswordException->getReason());
         }
 
         $email = (new TemplatedEmail())
@@ -71,8 +71,8 @@ class PasswordResetService
 
         try {
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
-        } catch (ResetPasswordExceptionInterface $e) {
-            throw new BadRequestException(sprintf('%s', $e->getReason()));
+        } catch (ResetPasswordExceptionInterface $resetPasswordException) {
+            throw new BadRequestException($resetPasswordException->getReason());
         }
 
         $form = $this->formFactory->create(ChangePasswordFormType::class);

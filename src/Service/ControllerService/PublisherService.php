@@ -17,10 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 class PublisherService extends AbstractCrudService implements CrudServiceInterface
 {
     public function __construct(
-        private FormFactoryInterface $formFactory,
-        private string $dirPublic,
-        private string $dirBookPublisherUploads,
-        private PublisherRepository $repository
+        private readonly FormFactoryInterface $formFactory,
+        private readonly string $dirPublic,
+        private readonly string $dirBookPublisherUploads,
+        PublisherRepository $repository
     ) {
         $queryParser = new QueryParser();
         $queryParser->setColumns([

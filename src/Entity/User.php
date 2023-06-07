@@ -15,7 +15,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email', 'Email is already taken.')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,9 +28,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column(options: ['default' => 'not-set'])]
     private ?string $password = 'not-set';
 
@@ -218,7 +215,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
 
     public function getObfuscatedUserIdentifier(): ?string
     {
-        if (!$this->getUserIdentifier()) {
+        if ($this->getUserIdentifier() === '' || $this->getUserIdentifier() === '0') {
             return null;
         }
 

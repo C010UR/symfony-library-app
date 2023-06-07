@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('api/v1/books', name: 'app_api_book_', format: 'json', priority: -1)]
 class BookController extends AbstractController implements CrudControllerInterface
 {
-    public function __construct(private BookService $service)
+    public function __construct(private readonly BookService $service)
     {
     }
 

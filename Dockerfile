@@ -42,6 +42,7 @@ ARG SYMFONY_VERSION=""
 ENV SYMFONY_VERSION ${SYMFONY_VERSION}
 
 ENV APP_ENV=prod
+ENV APP_DEBUG=false
 WORKDIR /srv/app
 
 # Install install-php-extensions (https://github.com/mlocati/docker-php-extension-installer)
@@ -145,7 +146,8 @@ RUN set -eux; \
 FROM app_php AS app_php_dev
 
 ENV APP_ENV=dev
-ENV XDEBUG_MODE=off
+ENV APP_DEBUG=true
+ENV XDEBUG_MODE=coverage
 VOLUME /srv/app/var/
 
 # Persistent / runtime deps

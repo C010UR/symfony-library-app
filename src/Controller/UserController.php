@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('api/v1/users', name: 'app_api_user_', format: 'json')]
 class UserController extends AbstractController implements CrudControllerInterface
 {
-    public function __construct(private UserService $service)
+    public function __construct(private readonly UserService $service)
     {
     }
 

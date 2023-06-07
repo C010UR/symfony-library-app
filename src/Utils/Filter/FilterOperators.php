@@ -4,23 +4,75 @@ namespace App\Utils\Filter;
 
 /**
  * Class encapsulates operators for QueryParser.
+ * @see \App\Tests\Utils\Filter\FilterOperatorsTest
  */
 class FilterOperators
 {
     // Available operators
-    public const OPERATOR_EQUALS_TO = 'eq';
-    public const OPERATOR_GREATER_THAN = 'gt';
-    public const OPERATOR_LESS_THAN = 'lt';
-    public const OPERATOR_GREATER_OR_EQUAL_TO = 'gte';
-    public const OPERATOR_LESS_OR_EQUAL_TO = 'lte';
-    public const OPERATOR_NOT_EQUALS_TO = 'neq';
-    public const OPERATOR_IS_NULL = 'null';
-    public const OPERATOR_IN = 'in';
-    public const OPERATOR_NOT_IN = 'not-in';
-    public const OPERATOR_CONTAINS = 'contains';
-    public const OPERATOR_STARTS_WITH = 'starts-with';
-    public const OPERATOR_ENDS_WITH = 'ends-with';
-    public const OPERATOR_BETWEEN = 'between';
+    /**
+     * @var string
+     */
+    final public const OPERATOR_EQUALS_TO = 'eq';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_GREATER_THAN = 'gt';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_LESS_THAN = 'lt';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_GREATER_OR_EQUAL_TO = 'gte';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_LESS_OR_EQUAL_TO = 'lte';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_NOT_EQUALS_TO = 'neq';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_IS_NULL = 'null';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_IN = 'in';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_NOT_IN = 'not-in';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_CONTAINS = 'contains';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_STARTS_WITH = 'starts-with';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_ENDS_WITH = 'ends-with';
+
+    /**
+     * @var string
+     */
+    final public const OPERATOR_BETWEEN = 'between';
 
     /**
      * Get all available operators.
@@ -149,15 +201,15 @@ class FilterOperators
     /**
      * Format operators.
      */
-    private static function format(array $operators): array
+    public static function format(array $operators): array
     {
         $labels = [
             self::OPERATOR_EQUALS_TO => 'Равняется',
+            self::OPERATOR_NOT_EQUALS_TO => 'Не равняется',
             self::OPERATOR_GREATER_THAN => 'Больше',
             self::OPERATOR_LESS_THAN => 'Меньше',
             self::OPERATOR_GREATER_OR_EQUAL_TO => 'Больше либо равно',
             self::OPERATOR_LESS_OR_EQUAL_TO => 'Меньше либо равно',
-            self::OPERATOR_NOT_EQUALS_TO => 'Не равно',
             self::OPERATOR_IS_NULL => 'Пустое',
             self::OPERATOR_IN => 'Включает',
             self::OPERATOR_NOT_IN => 'Не Включает',

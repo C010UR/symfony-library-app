@@ -3,11 +3,12 @@
 namespace App\EventListener;
 
 use App\Entity\User;
+use App\Security\Exception\AccountDeactivated;
+use App\Security\Exception\AccountInactive;
+use App\Security\Exception\InvalidCredentials;
 use App\Security\UserChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
@@ -15,11 +16,13 @@ use Throwable;
 
 class AuthListener
 {
-    private EntityManagerInterface $entityManager;
+    /**
+     * @var int
+     */
+    final public const MAX_LOGIN_ATTEMPTS = 3;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     #[AsEventListener(event: LoginFailureEvent::class)]
@@ -29,28 +32,29 @@ class AuthListener
             /** @var User $user */
             $user = $event->getPassport()->getUser();
         } catch (Throwable) {
-            throw new UnauthorizedHttpException('-', UserChecker::MESSAGE_INVALID_CREDENTIALS);
+            throw new InvalidCredentials();
         }
 
         if ($user->isDeleted()) {
-            throw new UnauthorizedHttpException('-', UserChecker::MESSAGE_INVALID_CREDENTIALS);
+            throw new InvalidCredentials();
         }
 
         if (!$user->isActive()) {
-            throw new UnauthorizedHttpException('-', UserChecker::MESSAGE_ACCOUNT_INACTIVE);
+            throw new AccountInactive();
         }
 
         $attempts = $user->getLoginAttempts();
-        if ($attempts < UserChecker::MAX_LOGIN_ATTEMPTS) {
+        if ($attempts < self::MAX_LOGIN_ATTEMPTS) {
             $user->setLoginAttempts(++$attempts);
             $this->entityManager->flush();
-            throw new UnauthorizedHttpException('-', UserChecker::MESSAGE_INVALID_CREDENTIALS);
+            throw new InvalidCredentials();
         }
 
         $user->setLoginAttempts(0);
         $user->setIsActive(false);
+
         $this->entityManager->flush();
-        throw new UnauthorizedHttpException('-', UserChecker::MESSAGE_TOO_MANY_ATTEMPTS);
+        throw new AccountDeactivated();
     }
 
     #[AsEventListener(event: LoginSuccessEvent::class)]
@@ -60,7 +64,7 @@ class AuthListener
         $user = $event->getUser();
 
         if ($user->isDeleted()) {
-            throw new UnauthorizedHttpException('-', UserChecker::MESSAGE_INVALID_CREDENTIALS);
+            throw new InvalidCredentials();
         }
 
         $user->setLoginAttempts(0);
@@ -78,11 +82,11 @@ class AuthListener
         }
 
         if (!$user->isActive()) {
-            throw new AccessDeniedHttpException(UserChecker::MESSAGE_ACCOUNT_INACTIVE);
+            throw new AccountInactive();
         }
 
         if ($user->isDeleted()) {
-            throw new AccessDeniedHttpException(UserChecker::MESSAGE_INVALID_CREDENTIALS);
+            throw new InvalidCredentials();
         }
     }
 }

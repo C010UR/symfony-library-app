@@ -6,21 +6,19 @@ use App\Entity\Publisher;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class PublisherFixturesDev extends Fixture implements FixtureGroupInterface
 {
     public function __construct(
-        private UserPasswordHasherInterface $hasher,
-        private string $dirPublic,
-        private string $dirBookPublisherUploads,
-        private string $dirFixtures,
+        private readonly string $dirPublic,
+        private readonly string $dirBookPublisherUploads,
+        private readonly string $dirFixtures,
     ) {
     }
 
     private function createFromFile(array $file): Publisher
     {
-        $name = preg_replace('/(.*)\. /U', '', pathinfo($file['filename'], PATHINFO_FILENAME));
+        $name = preg_replace('/(.*)\. /U', '', pathinfo((string) $file['filename'], PATHINFO_FILENAME));
         $name = ucwords(strtolower($name));
 
         $filename = sprintf(

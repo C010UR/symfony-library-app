@@ -29,7 +29,7 @@ export async function useGetProfile() {
 
 export async function useRequestPasswordReset(email: string, link: string) {
   return await useFetch<string, { email: string; link: string }>({
-    url: '/api/v1/password-reset',
+    url: '/api/v1/reset-password',
     method: 'POST',
     contentType: 'json',
     data: {
@@ -42,7 +42,7 @@ export async function useRequestPasswordReset(email: string, link: string) {
 
 export async function useResetPassword(token: string, password: string) {
   return await useFetch<string, { password: string }>({
-    url: `/api/v1/password-reset/reset/${token}`,
+    url: `/api/v1/reset-password/reset/${token}`,
     method: 'POST',
     contentType: 'json',
     data: {

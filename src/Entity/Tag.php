@@ -14,7 +14,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 #[UniqueEntity('name', 'Name is already taken.')]
-class Tag implements EntityInterface
+class Tag implements EntityInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -99,9 +99,7 @@ class Tag implements EntityInterface
      */
     public function getBooks(): Collection
     {
-        return $this->books->filter(function (Book $book) {
-            return !$book->isDeleted();
-        });
+        return $this->books->filter(static fn(Book $book) => !$book->isDeleted());
     }
 
     public function addBook(Book $book): self

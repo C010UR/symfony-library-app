@@ -7,30 +7,78 @@ use App\Utils\Filter\Exception\InvalidQueryExpressionException;
 use App\Utils\Filter\Exception\InvalidQueryOrderException;
 use App\Utils\Filter\QueryParser;
 use Doctrine\Common\Collections\Criteria;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(QueryParser::class)]
 class QueryParserTestPhpTest extends TestCase
 {
-    public function getColumns(): iterable
+    public static function getColumns(): iterable
     {
         yield 'columns' => [
             [
-                new Column('test-1', 'label-1', Column::INTEGER_TYPE, true, false),
-                new Column('test-2', 'label-2', Column::FLOAT_TYPE, false, false),
-                new Column('test-3', 'label-3', Column::STRING_TYPE, true, true),
-                new Column('test-4', 'label-4', Column::ENTITY_TYPE, false, true),
-                new Column('test-5', 'label-5', Column::BOOLEAN_TYPE, true, false),
-                new Column('test-6', 'label-6', Column::NOT_FILTERABLE_TYPE, true, true),
+                new Column([
+                    'name' => 'test-1',
+                    'label' => 'label-1',
+                    'type' => Column::INTEGER_TYPE,
+                    'isOrderable' => true,
+                    'isNullable' => false,
+                ]),
+                new Column([
+                    'name' => 'test-2',
+                    'label' => 'label-2',
+                    'type' => Column::FLOAT_TYPE,
+                    'isOrderable' => false,
+                    'isNullable' => false,
+                ]),
+                new Column([
+                    'name' => 'test-3',
+                    'label' => 'label-3',
+                    'type' => Column::STRING_TYPE,
+                    'isOrderable' => true,
+                    'isNullable' => true,
+                ]),
+                new Column([
+                    'name' => 'test-4',
+                    'label' => 'label-4',
+                    'type' => Column::ENTITY_TYPE,
+                    'isOrderable' => false,
+                    'isNullable' => true,
+                    'entity' => 'test'
+                ]),
+                new Column([
+                    'name' => 'test-5',
+                    'label' => 'label-5',
+                    'type' => Column::BOOLEAN_TYPE,
+                    'isOrderable' => true,
+                    'isNullable' => false,
+                ]),
+                new Column([
+                    'name' => 'test-6',
+                    'label' => 'label-6',
+                    'type' => Column::NOT_FILTERABLE_TYPE,
+                    'isOrderable' => true,
+                    'isNullable' => true,
+                ]),
+                new Column([
+                    'name' => 'test-7',
+                    'label' => 'label-7',
+                    'type' => Column::ENTITIES_TYPE,
+                    'isOrderable' => false,
+                    'isNullable' => true,
+                    'entity' => 'test'
+                ]),
             ],
         ];
     }
 
-    public function getWrongColumns(): iterable
+    public static function getWrongColumns(): iterable
     {
-        yield 'columns' => [213, 'aslkdas', new \ReflectionClass(\InvalidArgumentException::class)];
+        yield 'columns' => [213, 'super-wrong-yeah', new \ReflectionClass(\InvalidArgumentException::class)];
     }
 
-    public function getPaginations(): iterable
+    public static function getPaginations(): iterable
     {
         yield 'No pagination' => [null, null, Criteria::create()];
         yield 'Set max results' => [10, null, Criteria::create()->setMaxResults(10)];
@@ -45,11 +93,23 @@ class QueryParserTestPhpTest extends TestCase
         ];
     }
 
-    public function getOrderings(): iterable
+    public static function getOrderings(): iterable
     {
         $columns = [
-            new Column('test-1', 'test', Column::INTEGER_TYPE, true, false),
-            new Column('test-2', 'test', Column::INTEGER_TYPE, true, false),
+            new Column([
+                'name' => 'test-1',
+                'label' => 'test',
+                'type' => Column::INTEGER_TYPE,
+                'isOrderable' => true,
+                'isNullable' => false,
+            ]),
+            new Column([
+                'name' => 'test-2',
+                'label' => 'test',
+                'type' => Column::INTEGER_TYPE,
+                'isOrderable' => true,
+                'isNullable' => false,
+            ]),
         ];
 
         yield 'Order asc 1' => [$columns, ['test-1' => 'ASC'], Criteria::create()->orderBy(['test-1' => 'ASC'])];
@@ -67,11 +127,23 @@ class QueryParserTestPhpTest extends TestCase
         ];
     }
 
-    public function getWrongOrderings(): iterable
+    public static function getWrongOrderings(): iterable
     {
         $columns = [
-            new Column('test-1', 'test', Column::INTEGER_TYPE, true, false),
-            new Column('test-2', 'test', Column::INTEGER_TYPE, false, false),
+            new Column([
+                'name' => 'test-1',
+                'label' => 'test',
+                'type' => Column::INTEGER_TYPE,
+                'isOrderable' => true,
+                'isNullable' => false,
+            ]),
+            new Column([
+                'name' => 'test-2',
+                'label' => 'test',
+                'type' => Column::INTEGER_TYPE,
+                'isOrderable' => false,
+                'isNullable' => false,
+            ]),
         ];
 
         yield 'Wrong column' => [$columns, ['test-3' => 'ASC']];
@@ -81,23 +153,29 @@ class QueryParserTestPhpTest extends TestCase
         yield 'Wrong order direction' => [$columns, ['test-1' => 'ASCEND']];
     }
 
-    public function getFilters(): iterable
+    public static function getFilters(): iterable
     {
         $columns = [
-            new Column('test-1', 'test', Column::INTEGER_TYPE, true, true),
-            new Column('test-2', 'test', Column::STRING_TYPE, true, false),
-        ];
-
-        yield 'NULL' => [
-            $columns,
-            ['test-1' => ['null' => '']],
-            Criteria::create()->andWhere(Criteria::expr()->isNull('test-1')),
+            new Column([
+                'name' => 'test-1',
+                'label' => 'test',
+                'type' => Column::INTEGER_TYPE,
+                'isOrderable' => true,
+                'isNullable' => true,
+            ]),
+            new Column([
+                'name' => 'test-2',
+                'label' => 'test',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isNullable' => false,
+            ]),
         ];
 
         yield 'NOT NULL' => [
             $columns,
-            ['test-1' => ['not-null' => '']],
-            Criteria::create()->andWhere(Criteria::expr()->neq('test-1', 'NULL')),
+            ['test-1' => ['null' => '']],
+            Criteria::create()->andWhere(Criteria::expr()->neq('test-1', null)),
         ];
 
         yield 'EQUALS TO' => [
@@ -175,12 +253,30 @@ class QueryParserTestPhpTest extends TestCase
         ];
     }
 
-    public function getWrongFilters(): iterable
+    public static function getWrongFilters(): iterable
     {
         $columns = [
-            new Column('test-1', 'test', Column::NOT_FILTERABLE_TYPE, true, true),
-            new Column('test-2', 'test', Column::INTEGER_TYPE, true, false),
-            new Column('test-3', 'test', Column::DATE_TYPE, true, false),
+            new Column([
+                'name' => 'test-1',
+                'label' => 'test',
+                'type' => Column::NOT_FILTERABLE_TYPE,
+                'isOrderable' => true,
+                'isNullable' => true,
+            ]),
+            new Column([
+                'name' => 'test-2',
+                'label' => 'test',
+                'type' => Column::INTEGER_TYPE,
+                'isOrderable' => true,
+                'isNullable' => false,
+            ]),
+            new Column([
+                'name' => 'test-3',
+                'label' => 'test',
+                'type' => Column::DATE_TYPE,
+                'isOrderable' => true,
+                'isNullable' => false,
+            ]),
         ];
 
         yield 'Invalid column' => [$columns, ['test-4' => ['eq' => '2']]];
@@ -194,55 +290,47 @@ class QueryParserTestPhpTest extends TestCase
         yield 'Invalid between' => [$columns, ['test-2' => ['between' => '1,2,3,4,5,6']]];
     }
 
-    /**
-     * @dataProvider getColumns
-     */
+    #[DataProvider('getColumns')]
     public function testSetAllowedColumns(array $columns): void
     {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns($columns);
+        $queryParser->setColumns($columns);
 
         $expected = [];
         foreach ($columns as $column) {
             $expected[] = $column->getAll();
         }
 
-        $this->assertEquals($expected, $queryParser->getAllowedColumns());
+        $this->assertEquals($expected, $queryParser->getColumns());
     }
 
-    /**
-     * @dataProvider getColumns
-     */
+    #[DataProvider('getColumns')]
     public function testSetAllowedColumn(array $columns): void
     {
         foreach ($columns as $column) {
             $queryParser = new QueryParser();
-            $queryParser->setAllowedColumns($column);
+            $queryParser->setColumns($column);
 
-            $this->assertEquals([$column->getAll()], $queryParser->getAllowedColumns());
+            $this->assertEquals([$column->getAll()], $queryParser->getColumns());
         }
     }
 
-    /**
-     * @dataProvider getWrongColumns
-     */
+    #[DataProvider('getWrongColumns')]
     public function testSetAllowedColumnFail(mixed $column): void
     {
         $queryParser = new QueryParser();
 
         $this->expectException(\InvalidArgumentException::class);
-        $queryParser->setAllowedColumns([$column]);
+        $queryParser->setColumns([$column]);
     }
 
-    /**
-     * @dataProvider getPaginations
-     */
+    #[DataProvider('getPaginations')]
     public function testPagination(?int $maxResults, ?int $firstResult, Criteria $expected): void
     {
         $queryParser = new QueryParser();
         $actual = $queryParser->parseQuery(
             [
-                'page_size' => $maxResults,
+                'pageSize' => $maxResults,
                 'offset' => $firstResult,
             ],
             true,
@@ -251,52 +339,44 @@ class QueryParserTestPhpTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @dataProvider getOrderings
-     */
+    #[DataProvider('getOrderings')]
     public function testOrderings(array $columns, array $orderings, Criteria $expected): void
     {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns($columns);
+        $queryParser->setColumns($columns);
 
         $actual = $queryParser->parseQuery(['order' => $orderings], false, true);
 
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @dataProvider getWrongOrderings
-     */
+    #[DataProvider('getWrongOrderings')]
     public function testWrongOrderings(array $columns, array $orderings): void
     {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns($columns);
+        $queryParser->setColumns($columns);
 
         $this->expectException(InvalidQueryOrderException::class);
 
         $queryParser->parseQuery(['order' => $orderings], false, true);
     }
 
-    /**
-     * @dataProvider getFilters
-     */
+    #[DataProvider('getFilters')]
     public function testFilters(array $columns, array $filters, Criteria $expected): void
     {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns($columns);
+        $queryParser->setColumns($columns);
 
         $actual = $queryParser->parseQuery($filters);
 
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @dataProvider getWrongFilters
-     */
+    #[DataProvider('getWrongFilters')]
     public function testFiltersFail(array $columns, array $filters): void
     {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns($columns);
+        $queryParser->setColumns($columns);
 
         $this->expectException(InvalidQueryExpressionException::class);
 

@@ -31,8 +31,8 @@ final class Version20230516204144 extends AbstractMigration
         );
 
         $this->addSql('CREATE INDEX IDX_7CE748AA76ED395 ON reset_password_request (user_id)');
-        $this->addSql('COMMENT ON COLUMN reset_password_request.requested_at IS \'(DC2Type:datetime_immutable)\'');
-        $this->addSql('COMMENT ON COLUMN reset_password_request.expires_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql("COMMENT ON COLUMN reset_password_request.requested_at IS '(DC2Type:datetime_immutable)'");
+        $this->addSql("COMMENT ON COLUMN reset_password_request.expires_at IS '(DC2Type:datetime_immutable)'");
 
         $this->addSql(
             'ALTER TABLE reset_password_request

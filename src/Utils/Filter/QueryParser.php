@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Expr\Expression;
 class QueryParser
 {
     private array $columns;
+
     private Criteria $criteria;
 
     public function __construct()
@@ -94,7 +95,7 @@ class QueryParser
         foreach ($orderings as $columnName => $order) {
             $column = $this->findColumn($columnName);
 
-            if (null === $column) {
+            if (!$column instanceof Column) {
                 throw new InvalidQueryOrderException(sprintf("Column '%s' is not valid.", $columnName));
             }
 
@@ -102,7 +103,7 @@ class QueryParser
                 throw new InvalidQueryOrderException(sprintf("Column '%s' is not orderable.", $columnName));
             }
 
-            $order = strtoupper($order);
+            $order = strtoupper((string) $order);
 
             if (Criteria::ASC !== $order && Criteria::DESC !== $order) {
                 throw new InvalidQueryOrderException(sprintf("Order '%s' for column '%s' is not valid. Acceptable orders are ASC and DESC.", $order, $columnName));
@@ -126,7 +127,7 @@ class QueryParser
     {
         switch ($operator) {
             case FilterOperators::OPERATOR_IS_NULL:
-                return $value ? Criteria::expr()->isNull($column) : Criteria::expr()->neq($column, 'NULL');
+                return $value ? Criteria::expr()->isNull($column) : Criteria::expr()->neq($column, null);
             case FilterOperators::OPERATOR_EQUALS_TO:
                 return Criteria::expr()->eq($column, $value);
             case FilterOperators::OPERATOR_NOT_EQUALS_TO:
@@ -146,7 +147,7 @@ class QueryParser
             case FilterOperators::OPERATOR_CONTAINS:
                 return Criteria::expr()->contains($column, $value);
             case FilterOperators::OPERATOR_BETWEEN:
-                if (2 !== count($value)) {
+                if (2 !== (is_countable($value) ? count($value) : 0)) {
                     throw new InvalidQueryExpressionException(sprintf('Operator between can only accept 2 values. (Column: %s)', $column));
                 }
 
@@ -170,7 +171,7 @@ class QueryParser
     {
         $column = $this->findColumn($columnName);
 
-        if (null === $column) {
+        if (!$column instanceof Column) {
             throw new InvalidQueryExpressionException(sprintf("Column '%s' is not valid.", $columnName));
         }
 
@@ -185,14 +186,26 @@ class QueryParser
 
         try {
             $value = Column::convert($column, $value, $isArray);
-        } catch (\Throwable $th) {
-            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getLabel(), $operator, $value, $th->getMessage()), previous: $th);
+        } catch (\Throwable $throwable) {
+            throw new InvalidQueryExpressionException(message: sprintf(
+                "Invalid value in '%s' %s '%s'. Reason: %s",
+                $column->getLabel(),
+                $operator,
+                is_array($value) ? '[' + implode(', ', $value) + ']' : $value,
+                $throwable->getMessage()
+            ), previous: $throwable);
         }
 
         try {
             $expr = $this->parseOperator($column->getName(), $operator, $value);
-        } catch (\Throwable $th) {
-            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getName(), $operator, $value, $th->getMessage()), previous: $th);
+        } catch (\Throwable $throwable) {
+            throw new InvalidQueryExpressionException(message: sprintf(
+                "Invalid value in '%s' %s '%s'. Reason: %s",
+                $column->getName(),
+                $operator,
+                is_array($value) ? '[' + implode(', ', $value) + ']' : $value,
+                $throwable->getMessage()
+            ), previous: $throwable);
         }
 
         $this->criteria->andWhere($expr);
@@ -233,10 +246,12 @@ class QueryParser
         unset($query['order']);
 
         foreach ($query as $name => $options) {
-            if (!isset($options) || !is_array($options)) {
+            if (!isset($options)) {
                 continue;
             }
-
+            if (!is_array($options)) {
+                continue;
+            }
             foreach ($options as $operator => $value) {
                 $this->setCriteriaExpression($name, $operator, $value);
             }

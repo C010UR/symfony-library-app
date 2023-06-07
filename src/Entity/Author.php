@@ -21,7 +21,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
     message: 'Name is already taken.'
 )]
 #[UniqueEntity('slug', 'Slug is already taken.')]
-class Author implements EntityInterface
+class Author implements EntityInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -222,9 +222,7 @@ class Author implements EntityInterface
      */
     public function getBooks(): Collection
     {
-        return $this->books->filter(function (Book $book) {
-            return !$book->isDeleted();
-        });
+        return $this->books->filter(static fn(Book $book) => !$book->isDeleted());
     }
 
     public function addBook(Book $book): self

@@ -14,15 +14,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Format the PHP code
-        uses: docker://oskarstark/php-cs-fixer-ga
-        with:
-          args: --config=.php-cs-fixer.dist.php
+      - name: Use Composer
+        uses: php-actions/composer@v6
 
-      - name: Lint the PHP code
-        uses: docker://oskarstark/php-cs-fixer-ga
-        with:
-          args: --config=.php-cs-fixer.dist.php --dry-run
+      - name: Format the PHP code with php-cs-fixer
+        run: composer run php-cs-fixer
+
+      - name: Format the PHP code with php-cs-fixer
+        run: composer run rector
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -35,7 +34,7 @@ jobs:
       - name: Format the Vue code
         run: npm run format
 
-      - name: Lint the Vue code
+      - name: Lint the Vue code with eslint
         run: npm run lint
 
       - name: Commit changes

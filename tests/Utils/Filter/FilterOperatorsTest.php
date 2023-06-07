@@ -3,127 +3,153 @@
 namespace App\Tests\Utils\Filter;
 
 use App\Utils\Filter\FilterOperators;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(FilterOperators::class)]
 class FilterOperatorsTest extends TestCase
 {
-    public function getAllOperators(): iterable
+    public static function getAllOperators(): iterable
     {
         yield 'All' => [
-            [
-                'Equals To' => 'eq',
-                'Greater Than' => 'gt',
-                'Less Than' => 'lt',
-                'Greater Or Equal To' => 'gte',
-                'Less Or Equal To' => 'lte',
-                'Not Equals To' => 'neq',
-                'Is Null' => 'null',
-                'Is Not null' => 'not-null',
-                'In' => 'in',
-                'Not In' => 'not-in',
-                'Contains' => 'contains',
-                'Starts With' => 'starts-with',
-                'Ends With' => 'ends-with',
-                'Between' => 'between',
-            ],
+            FilterOperators::format(
+                [
+                    FilterOperators::OPERATOR_EQUALS_TO,
+                    FilterOperators::OPERATOR_GREATER_THAN,
+                    FilterOperators::OPERATOR_LESS_THAN,
+                    FilterOperators::OPERATOR_GREATER_OR_EQUAL_TO,
+                    FilterOperators::OPERATOR_LESS_OR_EQUAL_TO,
+                    FilterOperators::OPERATOR_NOT_EQUALS_TO,
+                    FilterOperators::OPERATOR_IS_NULL,
+                    FilterOperators::OPERATOR_IN,
+                    FilterOperators::OPERATOR_NOT_IN,
+                    FilterOperators::OPERATOR_CONTAINS,
+                    FilterOperators::OPERATOR_STARTS_WITH,
+                    FilterOperators::OPERATOR_ENDS_WITH,
+                    FilterOperators::OPERATOR_BETWEEN,
+                ]
+            ),
         ];
     }
 
-    public function getOperatorsForNumberTypes(): iterable
+    public static function getOperators(): iterable
     {
         $operators = [
-            'Equals To' => 'eq',
-            'Not Equals To' => 'neq',
-            'Greater Than' => 'gt',
-            'Less Than' => 'lt',
-            'Greater Or Equal To' => 'gte',
-            'Less Or Equal To' => 'lte',
-            'In' => 'in',
-            'Not In' => 'not-in',
-            'Between' => 'between',
+            FilterOperators::OPERATOR_EQUALS_TO,
+            FilterOperators::OPERATOR_NOT_EQUALS_TO,
+            FilterOperators::OPERATOR_GREATER_THAN,
+            FilterOperators::OPERATOR_LESS_THAN,
+            FilterOperators::OPERATOR_GREATER_OR_EQUAL_TO,
+            FilterOperators::OPERATOR_LESS_OR_EQUAL_TO,
+            FilterOperators::OPERATOR_IN,
+            FilterOperators::OPERATOR_NOT_IN,
+            FilterOperators::OPERATOR_BETWEEN,
         ];
 
-        yield 'Without null' => [$operators, false];
+        yield 'Not nullable number' => [FilterOperators::format($operators), 'getForNumberTypes', false];
 
-        $operators['Is Null'] = 'null';
-        $operators['Is Not Null'] = 'not-null';
+        $operators[] = FilterOperators::OPERATOR_IS_NULL;
 
-        yield 'With null' => [$operators, true];
-    }
+        yield 'Nullable number' => [FilterOperators::format($operators), 'getForNumberTypes', true];
 
-    public function getOperatorsForStringTypes(): iterable
-    {
         $operators = [
-            'Equals To' => 'eq',
-            'Not Equals To' => 'neq',
-            'In' => 'in',
-            'Not In' => 'not-in',
-            'Contains' => 'contains',
-            'Starts With' => 'starts-with',
-            'Ends With' => 'ends-with',
+            FilterOperators::OPERATOR_EQUALS_TO,
+            FilterOperators::OPERATOR_NOT_EQUALS_TO,
+            FilterOperators::OPERATOR_IN,
+            FilterOperators::OPERATOR_NOT_IN,
+            FilterOperators::OPERATOR_CONTAINS,
+            FilterOperators::OPERATOR_STARTS_WITH,
+            FilterOperators::OPERATOR_ENDS_WITH,
         ];
 
-        yield 'Without null' => [$operators, false];
+        yield 'Not nullable string' => [FilterOperators::format($operators), 'getForStringTypes', false];
 
-        $operators['Is Null'] = 'null';
-        $operators['Is Not Null'] = 'not-null';
+        $operators[] = FilterOperators::OPERATOR_IS_NULL;
 
-        yield 'With null' => [$operators, true];
-    }
+        yield 'Nullable string' => [FilterOperators::format($operators), 'getForStringTypes', true];
 
-    public function getOperatorsForDateTypes(): iterable
-    {
         $operators = [
-            'Equals To' => 'eq',
-            'Not Equals To' => 'neq',
-            'Greater Or Equal To' => 'gte',
-            'Less Or Equal To' => 'lte',
-            'Between' => 'between',
+            FilterOperators::OPERATOR_EQUALS_TO,
+            FilterOperators::OPERATOR_NOT_EQUALS_TO,
+            FilterOperators::OPERATOR_GREATER_OR_EQUAL_TO,
+            FilterOperators::OPERATOR_LESS_OR_EQUAL_TO,
+            FilterOperators::OPERATOR_BETWEEN,
         ];
 
-        yield 'Without null' => [$operators, false];
+        yield 'Not nullable data' => [FilterOperators::format($operators), 'getForDateTypes', false];
 
-        $operators['Is Null'] = 'null';
-        $operators['Is Not Null'] = 'not-null';
+        $operators[] = FilterOperators::OPERATOR_IS_NULL;
 
-        yield 'With null' => [$operators, true];
-    }
+        yield 'Nullable data' => [FilterOperators::format($operators), 'getForDateTypes', true];
 
-    public function getOperatorsForBoolTypes(): iterable
-    {
         $operators = [
-            'Equals To' => 'eq',
-            'Not Equals To' => 'neq',
+            FilterOperators::OPERATOR_EQUALS_TO,
         ];
 
-        yield 'Without null' => [$operators, false];
+        yield 'Not nullable bool' => [FilterOperators::format($operators), 'getForBoolTypes', false];
 
-        $operators['Is Null'] = 'null';
-        $operators['Is Not Null'] = 'not-null';
+        $operators[] = FilterOperators::OPERATOR_IS_NULL;
 
-        yield 'With null' => [$operators, true];
-    }
+        yield 'Nullable bool' => [FilterOperators::format($operators), 'getForBoolTypes', true];
 
-    public function getOperatorsForEntityTypes(): iterable
-    {
         $operators = [
-            'Equals To' => 'eq',
-            'Not Equals To' => 'neq',
-            'In' => 'in',
-            'Not In' => 'not-in',
+            FilterOperators::OPERATOR_EQUALS_TO,
+            FilterOperators::OPERATOR_NOT_EQUALS_TO,
+            FilterOperators::OPERATOR_IN,
+            FilterOperators::OPERATOR_NOT_IN,
         ];
 
-        yield 'Without null' => [$operators, false];
+        yield 'Not nullable entity' => [FilterOperators::format($operators), 'getForEntityTypes', false];
 
-        $operators['Is Null'] = 'null';
-        $operators['Is Not Null'] = 'not-null';
+        $operators[] = FilterOperators::OPERATOR_IS_NULL;
 
-        yield 'With null' => [$operators, true];
+        yield 'Nullable entity' => [FilterOperators::format($operators), 'getForEntityTypes', true];
+
+        $operators = [
+            FilterOperators::OPERATOR_IN,
+            FilterOperators::OPERATOR_NOT_IN,
+        ];
+
+        yield 'Not nullable' => [FilterOperators::format($operators), 'getForEntitiesTypes', false];
+
+        $operators[] = FilterOperators::OPERATOR_IS_NULL;
+
+        yield 'Nullable' => [FilterOperators::format($operators), 'getForEntitiesTypes', true];
     }
 
-    /**
-     * @dataProvider getAllOperators
-     */
+
+    public static function getFormattedOperators(): iterable
+    {
+        $labels = [
+            FilterOperators::OPERATOR_EQUALS_TO => 'Равняется',
+            FilterOperators::OPERATOR_NOT_EQUALS_TO => 'Не равняется',
+            FilterOperators::OPERATOR_GREATER_THAN => 'Больше',
+            FilterOperators::OPERATOR_LESS_THAN => 'Меньше',
+            FilterOperators::OPERATOR_GREATER_OR_EQUAL_TO => 'Больше либо равно',
+            FilterOperators::OPERATOR_LESS_OR_EQUAL_TO => 'Меньше либо равно',
+            FilterOperators::OPERATOR_IS_NULL => 'Пустое',
+            FilterOperators::OPERATOR_IN => 'Включает',
+            FilterOperators::OPERATOR_NOT_IN => 'Не Включает',
+            FilterOperators::OPERATOR_CONTAINS => 'Содержит',
+            FilterOperators::OPERATOR_STARTS_WITH => 'Начинается на',
+            FilterOperators::OPERATOR_ENDS_WITH => 'Заканчивается на',
+            FilterOperators::OPERATOR_BETWEEN => 'Между',
+        ];
+
+        $result = [];
+
+        foreach ($labels as $operator => $label) {
+            $result[$operator] = [
+                $operator,
+                $label,
+            ];
+        }
+
+        return $result;
+    }
+
+    #[DataProvider('getAllOperators')]
     public function testGetAll(array $expected): void
     {
         $actual = FilterOperators::getAll();
@@ -131,53 +157,22 @@ class FilterOperatorsTest extends TestCase
         $this->assertEqualsCanonicalizing($expected, $actual);
     }
 
-    /**
-     * @dataProvider getOperatorsForNumberTypes
-     */
-    public function testGetOperatorsForNumberTypes(array $expected, bool $isNullable): void
+    #[DataProvider('getOperators')]
+    public function testGetOperators(array $expected, string $func, bool $isNullable): void
     {
-        $actual = FilterOperators::getForNumberTypes($isNullable);
+        $actual = call_user_func([FilterOperators::class, $func], $isNullable);
 
         $this->assertEqualsCanonicalizing($expected, $actual);
     }
 
-    /**
-     * @dataProvider getOperatorsForStringTypes
-     */
-    public function testGetOperatorsForStringTypes(array $expected, bool $isNullable): void
+    #[DataProvider('getFormattedOperators')]
+    public function testFormat(string $operator, string $label)
     {
-        $actual = FilterOperators::getForStringTypes($isNullable);
-
-        $this->assertEqualsCanonicalizing($expected, $actual);
-    }
-
-    /**
-     * @dataProvider getOperatorsForDateTypes
-     */
-    public function testGetOperatorsForDateTypes(array $expected, bool $isNullable): void
-    {
-        $actual = FilterOperators::getForDateTypes($isNullable);
-
-        $this->assertEqualsCanonicalizing($expected, $actual);
-    }
-
-    /**
-     * @dataProvider getOperatorsForBoolTypes
-     */
-    public function testGetOperatorsForBoolTypes(array $expected, bool $isNullable): void
-    {
-        $actual = FilterOperators::getForBoolTypes($isNullable);
-
-        $this->assertEqualsCanonicalizing($expected, $actual);
-    }
-
-    /**
-     * @dataProvider getOperatorsForEntityTypes
-     */
-    public function testGetOperatorsForEntityTypes(array $expected, bool $isNullable): void
-    {
-        $actual = FilterOperators::getForEntityTypes($isNullable);
-
-        $this->assertEqualsCanonicalizing($expected, $actual);
+        $this->assertEqualsCanonicalizing([
+            $operator => [
+                'operator' => $operator,
+                'label' => $label
+            ]
+        ], FilterOperators::format([$operator]));
     }
 }
