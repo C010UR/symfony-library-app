@@ -1,5 +1,5 @@
 <template>
-  <base-page header="Авторизация">
+  <base-card-page header="Авторизация">
     <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="rules">
       <el-form-item label="Email" prop="email">
         <el-input
@@ -36,7 +36,7 @@
         </div>
       </el-form-item>
     </el-form>
-  </base-page>
+  </base-card-page>
 </template>
 
 <script setup lang="ts">
@@ -44,8 +44,8 @@ import { popup } from '@/components/tags';
 import { ref } from 'vue';
 import { ElForm, ElFormItem, ElInput, ElButton, ElLink } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { BasePage } from '@/components/pages';
-import { useLogin } from '@/use';
+import { BaseCardPage } from '@/components/pages';
+import { useLogin } from '@/composables';
 
 const formRef = ref<FormInstance>();
 const disabled = ref(false);

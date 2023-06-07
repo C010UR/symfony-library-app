@@ -10,17 +10,7 @@
     :on-remove="onRemove"
     :disabled="disabled"
   >
-    <div
-      v-if="image || placeholder"
-      :style="{
-        height: size + 'rem',
-        'background-image': 'url(' + (image ? image : placeholder) + ')',
-        'background-size': size + 'rem',
-        'background-repeat': 'no-repeat',
-        'background-position': 'center',
-        'margin-bottom': '1rem',
-      }"
-    ></div>
+    <div v-if="image || placeholder" :style="uploadBodyStyle" class="upload-body"></div>
     <el-icon :size="40" :class="{ disabled: disabled }"><plus /></el-icon>
     <div v-if="!disabled">
       <div>Drop file here or <em>click to upload</em></div>
@@ -30,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { ElUpload, ElIcon, type UploadFile } from 'element-plus';
 import type { UploadUserFile } from 'element-plus';
 import { Plus } from '@element-plus/icons-vue';
@@ -45,27 +35,32 @@ export interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   placeholder: '',
-  size: 12,
+  size: 16,
   disabled: false,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{
+  (e: 'update:modelValue', modelValue: UploadUserFile | undefined): void;
+}>();
 
 const fileList = ref<UploadUserFile[] | undefined>([]);
 const image = ref<string | undefined>();
 
-watch(
-  () => props.modelValue,
-  (after: UploadUserFile | undefined) => {
-    fileList.value = [];
-    if (after !== undefined) {
-      fileList.value = [after];
-      image.value = after.url;
-    } else {
-      image.value = undefined;
-    }
-  },
-);
+const uploadBodyStyle = ref({
+  height: props.size + 'rem',
+  'background-image': 'url(' + (image.value ? image.value : props.placeholder) + ')',
+  'background-size': props.size + 'rem',
+});
+
+watchEffect((after: UploadUserFile | undefined) => {
+  fileList.value = [];
+  if (after !== undefined) {
+    fileList.value = [after];
+    image.value = after.url;
+  } else {
+    image.value = undefined;
+  }
+});
 
 const onChange = (file: UploadFile) => {
   if (file === undefined || file.raw === undefined) {
@@ -108,5 +103,11 @@ em {
 
 .disabled {
   transform: rotate(45deg);
+}
+
+.upload-body {
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom: '1rem';
 }
 </style>

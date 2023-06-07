@@ -2,8 +2,12 @@
 
 namespace App\Utils\Filter;
 
+/**
+ * Class encapsulates operators for QueryParser.
+ */
 class FilterOperators
 {
+    // Available operators
     public const OPERATOR_EQUALS_TO = 'eq';
     public const OPERATOR_GREATER_THAN = 'gt';
     public const OPERATOR_LESS_THAN = 'lt';
@@ -18,16 +22,22 @@ class FilterOperators
     public const OPERATOR_ENDS_WITH = 'ends-with';
     public const OPERATOR_BETWEEN = 'between';
 
+    /**
+     * Get all available operators.
+     */
     public static function getAll(): array
     {
         $class = new \ReflectionClass(self::class);
 
-        return self::labelOperators($class->getConstants());
+        return self::format($class->getConstants());
     }
 
+    /**
+     * Get operators for number types.
+     */
     public static function getForNumberTypes(bool $isNullable = false): array
     {
-        $operators = self::labelOperators([
+        $operators = self::format([
             self::OPERATOR_EQUALS_TO,
             self::OPERATOR_NOT_EQUALS_TO,
             self::OPERATOR_GREATER_THAN,
@@ -42,9 +52,12 @@ class FilterOperators
         return $isNullable ? self::withNullOperators($operators) : $operators;
     }
 
+    /**
+     * Get operators for string type.
+     */
     public static function getForStringTypes(bool $isNullable = false): array
     {
-        $operators = self::labelOperators([
+        $operators = self::format([
             self::OPERATOR_EQUALS_TO,
             self::OPERATOR_NOT_EQUALS_TO,
             self::OPERATOR_IN,
@@ -57,9 +70,12 @@ class FilterOperators
         return $isNullable ? self::withNullOperators($operators) : $operators;
     }
 
+    /**
+     * Get operators for date type.
+     */
     public static function getForDateTypes(bool $isNullable = false): array
     {
-        $operators = self::labelOperators([
+        $operators = self::format([
             self::OPERATOR_EQUALS_TO,
             self::OPERATOR_NOT_EQUALS_TO,
             self::OPERATOR_GREATER_OR_EQUAL_TO,
@@ -70,16 +86,22 @@ class FilterOperators
         return $isNullable ? self::withNullOperators($operators) : $operators;
     }
 
+    /**
+     * Get operators for boolean type.
+     */
     public static function getForBoolTypes(bool $isNullable = false): array
     {
-        $operators = self::labelOperators([self::OPERATOR_EQUALS_TO]);
+        $operators = self::format([self::OPERATOR_EQUALS_TO]);
 
         return $isNullable ? self::withNullOperators($operators) : $operators;
     }
 
+    /**
+     * Get operators for single entity type.
+     */
     public static function getForEntityTypes(bool $isNullable = false): array
     {
-        $operators = self::labelOperators([
+        $operators = self::format([
             self::OPERATOR_EQUALS_TO,
             self::OPERATOR_NOT_EQUALS_TO,
             self::OPERATOR_IN,
@@ -89,9 +111,12 @@ class FilterOperators
         return $isNullable ? self::withNullOperators($operators) : $operators;
     }
 
+    /**
+     * Get operators for multiple entities type.
+     */
     public static function getForEntitiesTypes(bool $isNullable = false): array
     {
-        $operators = self::labelOperators([
+        $operators = self::format([
             self::OPERATOR_IN,
             self::OPERATOR_NOT_IN,
         ]);
@@ -99,9 +124,12 @@ class FilterOperators
         return $isNullable ? self::withNullOperators($operators) : $operators;
     }
 
+    /**
+     * Get operators for array types.
+     */
     public static function getForArrayTypes(bool $isNullable = false): array
     {
-        $operators = self::labelOperators([
+        $operators = self::format([
             self::OPERATOR_IN,
             self::OPERATOR_NOT_IN,
             self::OPERATOR_CONTAINS,
@@ -110,12 +138,18 @@ class FilterOperators
         return $isNullable ? self::withNullOperators($operators) : $operators;
     }
 
+    /**
+     * Add null operators.
+     */
     private static function withNullOperators(array $operators): array
     {
-        return array_merge($operators, self::labelOperators([self::OPERATOR_IS_NULL]));
+        return array_merge($operators, self::format([self::OPERATOR_IS_NULL]));
     }
 
-    private static function labelOperators(array $operators): array
+    /**
+     * Format operators.
+     */
+    private static function format(array $operators): array
     {
         $labels = [
             self::OPERATOR_EQUALS_TO => 'Равняется',

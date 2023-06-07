@@ -1,16 +1,16 @@
 <template>
-  <base-page :header="path">
+  <base-card-page :header="path">
     <el-empty description="Страница не была найдена!" />
     <el-button type="primary" @click="$router.push({ name: 'Main' })" style="float: right; margin-bottom: 2.31rem">
       Вернуться на Главную страницу
     </el-button>
-  </base-page>
+  </base-card-page>
 </template>
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { ElEmpty, ElButton } from 'element-plus';
-import { BasePage } from '@/components/pages';
+import { BaseCardPage } from '@/components/pages';
 
 const route = useRoute();
 

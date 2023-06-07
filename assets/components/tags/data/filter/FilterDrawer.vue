@@ -5,9 +5,24 @@
     </el-button>
   </div>
 
-  <el-drawer v-model="drawer" title="Фильтрация & Сортировка" direction="rtl" size="50%" @closed="handleClose()">
-    <order-filter v-model="orders" :columns="columns" />
-    <data-filter v-model="filters" :columns="columns" />
+  <el-drawer
+    v-model="drawer"
+    title="Фильтрация & Сортировка"
+    direction="rtl"
+    :size="drawerSize"
+    @closed="handleClose()"
+  >
+    <order-filter
+      :model-value="orders"
+      @update:model-value="(_orders: Order | undefined) => $emit('update:orders',
+    _orders)"
+      :columns="columns"
+    />
+    <data-filter
+      :model-value="filters"
+      @update:model-value="(_filters: Filter[] | undefined) => $emit('update:filters', _filters)"
+      :columns="columns"
+    />
   </el-drawer>
 </template>
 
@@ -17,83 +32,35 @@ import { ElButton, ElDrawer } from 'element-plus';
 import { Filter as FilterIcon } from '@element-plus/icons-vue';
 import DataFilter from './DataFilter.vue';
 import OrderFilter from './DataOrder.vue';
+import type { Filter, FilterOption, Order } from '@/composables';
+import { onMounted } from 'vue';
+import { onUnmounted } from 'vue';
 
 export interface Props {
   disabled?: boolean;
   columns: FilterOption[];
-  modelValue: FilterParams;
+  orders: Order | undefined;
+  filters: Filter[] | undefined;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{
+  (e: 'update:orders', orders: Order | undefined): void;
+  (e: 'update:filters', filters: Filter[] | undefined): void;
+}>();
 
 const drawer = ref(false);
-
-const filterParams = ref<FilterParams>(props.modelValue);
-const orders = ref<Order | undefined>();
-const filters = ref<Filter[]>([]);
+const drawerSize = ref<'100%' | '50%'>('50%');
 
 watch(props, (before, after) => {
   if (before.columns !== after.columns) {
-    orders.value = undefined;
-    filters.value = [];
+    emit('update:filters', undefined);
+    emit('update:orders', undefined);
   }
 });
-
-watch(orders, () => {
-  parseOrders();
-  emit('update:modelValue', filterParams.value);
-});
-
-watch(filters, () => {
-  parseFilters();
-  emit('update:modelValue', filterParams.value);
-});
-
-function parseOrders() {
-  if (orders.value === undefined) {
-    return;
-  }
-
-  if (filterParams.value.order === undefined) {
-    filterParams.value.order = {};
-  }
-
-  filterParams.value.order[orders.value.column] = orders.value.direction;
-
-  // for (const column of orders.value) {
-  //   result.order[column.column] = column.direction;
-  // }
-}
-
-function parseFilters() {
-  for (const filter of filters.value) {
-    let value: string;
-
-    if (Array.isArray(filter.value)) {
-      if (filter.value[0] instanceof Date) {
-        value = (filter.value as Date[]).map(value => value.toISOString().split('T')[0]).join(',');
-      } else {
-        value = filter.value.join(',');
-      }
-    } else if (filter.value instanceof Date) {
-      value = filter.value.toISOString().split('T')[0];
-    } else {
-      value = String(filter.value);
-    }
-
-    if (filterParams.value[filter.column] === undefined) {
-      filterParams.value[filter.column] = {};
-    }
-
-    if (filter.operator !== undefined) {
-      filterParams.value[filter.column][filter.operator] = value;
-    }
-  }
-}
 
 function handleOpen() {
   drawer.value = true;
@@ -102,11 +69,23 @@ function handleOpen() {
 function handleClose() {
   drawer.value = false;
 }
+
+function setDrawerSize() {
+  drawerSize.value = window.innerWidth <= 992 ? '100%' : '50%';
+}
+
+onMounted(() => {
+  window.addEventListener('resize', setDrawerSize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', setDrawerSize);
+});
 </script>
 
 <style scoped>
 .wrapper {
-  margin: 0 1rem;
+  margin: 0 1rem 0.5rem 1rem;
   display: flex;
   justify-content: end;
 }

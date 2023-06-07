@@ -2,32 +2,22 @@ import { popup } from '@/components/tags';
 import Axios from 'axios';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { AxiosError, Method } from 'axios';
-import { setupCache } from 'axios-cache-interceptor';
-
-const axios = setupCache(Axios, {
-  debug: console.log,
-});
+import { axios } from '@/lib/axios';
+import type { RouteLocationNormalizedLoaded, Router } from 'vue-router';
+import type { RouteParams } from 'vue-router';
 
 export type { Method } from 'axios';
-
+export type { RouteParams } from 'vue-router';
 export type ContentType = 'json' | 'form-data';
 
-export interface Params {
-  [index: string]: string | string[] | number | number[] | object | object[];
-}
-
-export interface Data {
-  [index: string]: unknown | unknown[];
-}
-
-export interface FetchParams<T> {
+export interface FetchOptions<T> {
   url: string;
   method: Method;
   contentType: ContentType;
-  params?: Params;
+  params?: RouteParams;
   data?: T;
   isSuppressPopup?: boolean;
-  isCache?: false | undefined;
+  isCache?: false;
 }
 
 export async function useFetch<ReturnType, InputType = ReturnType>({
@@ -38,10 +28,8 @@ export async function useFetch<ReturnType, InputType = ReturnType>({
   contentType,
   isSuppressPopup = false,
   isCache = false,
-}: FetchParams<InputType>): Promise<ReturnType | undefined> {
+}: FetchOptions<InputType>): Promise<ReturnType | undefined> {
   let _contentType: string;
-
-  console.log(`${method} ${url}`, params, data, contentType);
 
   switch (contentType) {
     case 'form-data': {
@@ -72,6 +60,8 @@ export async function useFetch<ReturnType, InputType = ReturnType>({
       cache: isCache,
     });
 
+    console.log(`${method} ${url} - ${contentType} - cached (${res.id}): ${res.cached}`, params, data);
+
     return res.data as ReturnType;
   } catch (error: AxiosError | unknown) {
     if (!isSuppressPopup) {
@@ -84,4 +74,9 @@ export async function useFetch<ReturnType, InputType = ReturnType>({
 
     return undefined;
   }
+}
+
+export interface FetchOptionsWithParams<T> extends FetchOptions<T> {
+  route: RouteLocationNormalizedLoaded;
+  router: Router;
 }

@@ -23,12 +23,42 @@ class AuthorService extends AbstractCrudService implements CrudServiceInterface
         private AuthorRepository $repository
     ) {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns([
-            new Column('id', 'ID', Column::NOT_FILTERABLE_TYPE, true),
-            new Column('firstName', 'Имя', Column::STRING_TYPE, true),
-            new Column('lastName', 'Фамилия', Column::STRING_TYPE, true),
-            new Column('middleName', 'Отчество', Column::STRING_TYPE, true, true),
-            new Column('books', 'Книги', Column::ENTITIES_TYPE, true, data: [
+        $queryParser->setColumns([
+            new Column([
+                'name' => 'id',
+                'label' => 'Дата добавления',
+                'type' => Column::NOT_FILTERABLE_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => false,
+            ]),
+            new Column([
+                'name' => 'firstName',
+                'label' => 'Имя',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'lastName',
+                'label' => 'Фамилия',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'middleName',
+                'label' => 'Отчество',
+                'type' => Column::STRING_TYPE,
+                'isNullable' => true,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'books',
+                'label' => 'Книги',
+                'type' => Column::ENTITIES_TYPE,
+                'isOrderable' => false,
+                'isSearchable' => false,
                 'entity' => 'book',
             ]),
         ]);

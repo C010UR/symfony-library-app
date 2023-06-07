@@ -1,18 +1,18 @@
 <template>
   <div class="filter" v-if="filterableColumns.length > 0">
     <div class="filter-header">
-      <h1 style="margin-right: 1rem">Фильтры:</h1>
+      <h1 class="margin-right">Фильтры:</h1>
       <el-switch v-model="toggle" />
     </div>
     <div class="filter-form" v-if="toggle">
       <ul class="filters-list">
         <li v-for="(_filter, index) in modelValue" :key="index">
           <div class="li">
-            <el-icon style="margin-right: 0.5rem">
+            <el-icon class="margin-right">
               <filter-icon />
             </el-icon>
             <span> {{ columns.find(column => _filter.column === column.name)?.label }}</span>
-            <span style="margin: 0 0.4rem; font-weight: 600">
+            <span class="operator">
               {{ columns.find(column => _filter.column === column.name)?.operators[_filter.operator ?? 'eq'].label }}
             </span>
             <span>: {{ convertValue(_filter) }}</span>
@@ -26,7 +26,7 @@
         ref="formNewFilterRef"
         :model="formNew"
         :rules="rules"
-        style="margin-top: 1rem"
+        class="form"
         v-if="remainingFilterableColumns.length > 0"
       >
         <el-form-item label="Поле" prop="column">
@@ -66,20 +66,30 @@
 <script setup lang="ts">
 import { ElSwitch, ElButton, ElIcon, ElForm, ElFormItem, ElSelect, ElOption } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { ref, computed, watch, reactive } from 'vue';
+import { ref, computed, watchEffect, watch, reactive } from 'vue';
 import { Filter as FilterIcon } from '@element-plus/icons-vue';
 import FilterInput from './FilterInput.vue';
+import type { Filter, FilterOption } from '@/composables';
 
 export interface Props {
   columns: FilterOption[];
-  modelValue: Filter[];
+  modelValue: Filter[] | undefined;
 }
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{
+  (e: 'update:modelValue', filters: Filter[] | undefined): void;
+}>();
 
 const toggle = ref<boolean>(false);
+
+watchEffect(() => {
+  if (!toggle.value) {
+    emit('update:modelValue', undefined);
+  }
+});
+
 const formNewFilterRef = ref<FormInstance | undefined>();
 const formNew = reactive<Filter>({
   column: '',
@@ -110,7 +120,13 @@ const filterableColumns = computed(() => {
 });
 
 const remainingFilterableColumns = computed(() => {
-  const taken = props.modelValue.map(filter => filter.column);
+  let taken: string[];
+
+  if (props.modelValue === undefined) {
+    taken = [];
+  } else {
+    taken = props.modelValue.map(filter => filter.column);
+  }
 
   return filterableColumns.value.filter(column => !taken?.includes(column.name));
 });
@@ -122,14 +138,14 @@ const filterOption = computed(() => {
   return props.columns.find(column => column.name === formNew.column);
 });
 
-const filters = reactive([...props.modelValue]);
-
-watch(filters, () => {
-  emit('update:modelValue', [...filters]);
-});
-
 function handleFilterRemove(index: number) {
-  filters.splice(index, 1);
+  const updated = props.modelValue ? [...props.modelValue] : undefined;
+
+  if (updated !== undefined) {
+    updated.splice(index, 1);
+  }
+
+  emit('update:modelValue', updated);
 }
 
 function handleFilterAdd() {
@@ -138,7 +154,7 @@ function handleFilterAdd() {
       return false;
     }
 
-    filters.push({ ...formNew });
+    emit('update:modelValue', props.modelValue ? [...props.modelValue, { ...formNew }] : [{ ...formNew }]);
 
     formNew.column = '';
     formNew.operator = undefined;
@@ -225,5 +241,18 @@ const rules = ref<FormRules>({
   padding-left: 3rem;
   margin-left: auto;
   margin-right: 0;
+}
+
+.margin-right {
+  margin-right: 0.5rem;
+}
+
+.operator {
+  margin: 0 0.4rem;
+  font-weight: 600;
+}
+
+.form {
+  margin-top: 1rem;
 }
 </style>

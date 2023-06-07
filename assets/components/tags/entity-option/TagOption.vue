@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BookTag } from '@/use/api/api';
+import type { BookTag } from '@/composables';
 import { ElOption } from 'element-plus';
 
 export interface Props {

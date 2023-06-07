@@ -1,5 +1,5 @@
 <template>
-  <base-page header="Сбросить пароль">
+  <base-card-page header="Сбросить пароль">
     <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="rules">
       <p>
         Введите адрес электронной почты, которую вы использовали для данного сайта и мы отправим пам письмо с
@@ -30,7 +30,7 @@
         </div>
       </el-form-item>
     </el-form>
-  </base-page>
+  </base-card-page>
 </template>
 
 <script setup lang="ts">
@@ -38,8 +38,8 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton, ElLink } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { BasePage } from '@/components/pages';
-import { useRequestPasswordReset } from '@/use';
+import { BaseCardPage } from '@/components/pages';
+import { useRequestPasswordReset } from '@/composables';
 
 const router = useRouter();
 

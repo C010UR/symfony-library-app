@@ -23,7 +23,12 @@ class PublisherFixturesDev extends Fixture implements FixtureGroupInterface
         $name = preg_replace('/(.*)\. /U', '', pathinfo($file['filename'], PATHINFO_FILENAME));
         $name = ucwords(strtolower($name));
 
-        $filename = sprintf('%s/publisher-%s.%s', $this->dirBookPublisherUploads, bin2hex(random_bytes(3)), $file['extension']);
+        $filename = sprintf(
+            '%s/publisher-%s.%s',
+            $this->dirBookPublisherUploads,
+            bin2hex(random_bytes(3)),
+            $file['extension']
+        );
 
         copy($file['full_path'], sprintf('%s%s', $this->dirPublic, $filename));
 

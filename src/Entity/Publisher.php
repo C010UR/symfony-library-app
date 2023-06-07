@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DoctrineExtensions\DBAL\Types\Citext;
 use App\Entity\Interface\EntityInterface;
 use App\Repository\PublisherRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,26 +19,26 @@ class Publisher implements EntityInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(type: Citext::CITEXT, unique: true)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Citext::CITEXT)]
     private ?string $address = null;
 
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Citext::CITEXT)]
     private ?string $website = null;
 
     #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
-    #[ORM\Column(options: ['default' => false])]
-    private ?bool $isDeleted = false;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imagePath = null;
+
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $isDeleted = false;
 
     public function computeSlug(SluggerInterface $slugger): void
     {

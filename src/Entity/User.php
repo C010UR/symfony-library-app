@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DoctrineExtensions\DBAL\Types\Citext;
 use App\Entity\Interface\EntityInterface;
 use App\Repository\UserRepository;
 use App\Utils\Utils;
@@ -21,7 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(type: Citext::CITEXT, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -39,23 +40,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
     #[ORM\Column(options: ['default' => 0])]
     private ?int $loginAttempts = 0;
 
+    #[ORM\Column(type: Citext::CITEXT)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(type: Citext::CITEXT)]
+    private ?string $lastName = null;
+
+    #[ORM\Column(type: Citext::CITEXT, nullable: true)]
+    private ?string $middleName = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imagePath = null;
 
     #[ORM\Column(options: ['default' => false])]
     private ?bool $isDeleted = false;
-
-    #[ORM\Column(length: 255)]
-    private ?string $slug = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $firstName = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $lastName = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $middleName = null;
 
     public function __toString(): string
     {
@@ -68,10 +69,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
             return null;
         }
 
-        $fullName = $this->getFirstName().' '.$this->getLastName();
+        $fullName = $this->getFirstName() . ' ' . $this->getLastName();
 
         if ($this->getMiddleName()) {
-            $fullName .= ' '.$this->getMiddleName();
+            $fullName .= ' ' . $this->getMiddleName();
         }
 
         return $fullName;
@@ -225,7 +226,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
         $name = implode('@', array_slice($address, 0, count($address) - 1));
         $length = floor(strlen($name) / 2);
 
-        return substr($name, 0, $length).str_repeat('*', $length).'@'.end($address);
+        return substr($name, 0, $length) . str_repeat('*', $length) . '@' . end($address);
     }
 
     public function format(): array

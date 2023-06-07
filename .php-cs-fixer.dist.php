@@ -17,5 +17,8 @@ $finder = Symfony\Component\Finder\Finder::create()
 return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
+        'concat_space' => [
+            'spacing' => 'one'
+        ]
     ])
     ->setFinder($finder);

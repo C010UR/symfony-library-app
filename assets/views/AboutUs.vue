@@ -1,14 +1,14 @@
 <template>
-  <visitor-dashboard title="О Нас">
-    <div style="display: flex; flex-direction: column; align-items: center">
+  <base-page>
+    <div class="wrapper-item">
       <base-image src="/images/logo.png" :size="16"></base-image>
 
-      <h1 style="margin-top: 0">Веб-Сайт Библиотека МТЭК</h1>
-      <h3 style="margin-top: 0">
+      <h1 class="header-item">Веб-Сайт Библиотека МТЭК</h1>
+      <h3 class="header-item header-text">
         Веб-Сайт разработан Лауренчикасом Марком Павловичем <el-tag style="text-size: 1.5rem">Группы ПО409</el-tag>
       </h3>
 
-      <div style="width: 60%; font-size: 1.125rem; display: flex; flex-direction: column; text-align: justify">
+      <div class="description">
         <p>
           Наша библиотека представляет собой уникальный источник знаний и информации, доступный каждому
           интернет-пользователю. Наш сайт разработан для того, чтобы помочь вам находить и получать доступ к широкому
@@ -27,11 +27,41 @@
         </p>
       </div>
     </div>
-  </visitor-dashboard>
+  </base-page>
 </template>
 
 <script setup lang="ts">
-import { VisitorDashboard } from '@/components/pages';
+import { BasePage } from '@/components/pages';
 import { BaseImage } from '@/components/tags/base';
 import { ElTag } from 'element-plus';
 </script>
+
+<style scoped>
+.wrapper-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-item {
+  margin: 0.5rem 0;
+}
+
+.header-text {
+  text-align: center;
+}
+
+.description {
+  width: 60%;
+  font-size: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  text-align: justify;
+}
+
+@media only screen and (max-width: 768px) {
+  .description {
+    width: 90%;
+  }
+}
+</style>

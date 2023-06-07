@@ -23,15 +23,57 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
         private UserRepository $repository
     ) {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns([
-            new Column('id', 'ID', Column::NOT_FILTERABLE_TYPE, true),
-            new Column('firstName', 'Имя', Column::STRING_TYPE, true),
-            new Column('lastName', 'Фамилия', Column::STRING_TYPE, true),
-            new Column('middleName', 'Отчество', Column::STRING_TYPE, true),
-            new Column('email', 'Email', Column::STRING_TYPE, true),
-            new Column('roles', 'Роли', Column::ARRAY_TYPE, true),
-            new Column('email', 'Email', Column::STRING_TYPE, true),
-            new Column('isActive', 'Активен ли', Column::BOOLEAN_TYPE, true),
+        $queryParser->setColumns([
+            new Column([
+                'name' => 'id',
+                'label' => 'Дата добавления',
+                'type' => Column::NOT_FILTERABLE_TYPE,
+                'isOrderable' => true,
+                'isFilterable' => false,
+                'isSearchable' => false,
+            ]),
+            new Column([
+                'name' => 'firstName',
+                'label' => 'Имя',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'lastName',
+                'label' => 'Фамилия',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'middleName',
+                'label' => 'Отчество',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'email',
+                'label' => 'Email',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'roles',
+                'label' => 'Роли',
+                'type' => Column::ARRAY_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'isActive',
+                'label' => 'Активен',
+                'type' => Column::BOOLEAN_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => false,
+            ]),
         ]);
 
         $this->setQueryParser($queryParser)->setRepository($repository);

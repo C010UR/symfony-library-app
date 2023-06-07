@@ -3,6 +3,11 @@
 # Builder images
 FROM composer/composer:latest-bin AS composer
 
+# Database image
+FROM postgres:${POSTGRES_VERSION:-15}-alpine as app_database
+
+COPY docker/database/load-extensions.sh /docker-entrypoint-initdb.d/
+
 # Production node image. Used to build frontend app
 FROM node:slim AS app_node
 
@@ -127,6 +132,8 @@ RUN set -eux; \
 	composer run-script --no-dev post-install-cmd; \
 	chmod +x bin/console; sync; \
 	fi
+
+RUN bin/console doctrine:fixtures:load --no-interaction --group=dev
 
 # Development php image
 FROM app_php AS app_php_dev

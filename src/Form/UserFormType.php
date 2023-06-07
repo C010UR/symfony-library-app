@@ -49,9 +49,11 @@ class UserFormType extends AbstractType
                 'constraints' => [
                     new Assert\Length(
                         min: 3,
-                        minMessage: 'Middle name should have at least {{ limit }} characters. {{ value }} was provided.',
+                        minMessage: 'Middle name should have at least {{ limit }} characters. '
+                            . '{{ value }} was provided.',
                         max: 255,
-                        maxMessage: 'Middle name should not exceed {{ limit }} characters. {{ value }} was provided.'
+                        maxMessage: 'Middle name should not exceed {{ limit }} characters. '
+                            . '{{ value }} was provided.'
                     ),
                 ],
             ])
@@ -69,7 +71,8 @@ class UserFormType extends AbstractType
                     'constraints' => [
                         new Assert\Choice(
                             ['ROLE_ADMIN', 'ROLE_USER'],
-                            message: "Role '{{ value }} is not a valid role. Valid roles are: {{ choices }}. {{ value }} was provided.",
+                            message: 'Role {{ value }} is not a valid role. Valid roles are: {{ choices }}. '
+                                . '{{ value }} was provided.',
                         ),
                     ],
                 ],
@@ -83,7 +86,8 @@ class UserFormType extends AbstractType
                 'constraints' => [
                     new Assert\Image(
                         maxSize: '8192k',
-                        maxSizeMessage: 'The image is too large. The max size of the image is {{ limit }}. {{ value }} was provided.'
+                        maxSizeMessage: 'The image is too large. The max size of the image is {{ limit }}. '
+                            . '{{ value }} was provided.'
                     ),
                 ],
             ]);

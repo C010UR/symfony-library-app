@@ -32,8 +32,12 @@ final class Version20230601214647 extends AbstractMigration
                 )'
         );
 
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_BDAFD8C8989D9B62 ON author (slug)');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_BDAFD8C8A9D1C132C808BA5A59107AF8 ON author (first_name, last_name, middle_name)');
+        $this->addSql(
+            'CREATE UNIQUE INDEX UNIQ_BDAFD8C8989D9B62 ON author (slug)'
+        );
+        $this->addSql(
+            'CREATE UNIQUE INDEX UNIQ_BDAFD8C8A9D1C132C808BA5A59107AF8 ON author (first_name, last_name, middle_name)'
+        );
     }
 
     public function down(Schema $schema): void

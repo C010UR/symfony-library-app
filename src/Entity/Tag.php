@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DoctrineExtensions\DBAL\Types\Citext;
 use App\Entity\Interface\EntityInterface;
 use App\Repository\TagRepository;
 use App\Utils\Utils;
@@ -20,17 +21,17 @@ class Tag implements EntityInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(type: Citext::CITEXT, unique: true)]
     private ?string $name = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
 
     #[ORM\Column(options: ['default' => false])]
     private ?bool $isDeleted = false;
 
     #[ORM\ManyToMany(targetEntity: Book::class, mappedBy: 'tags')]
     private Collection $books;
-
-    #[ORM\Column(length: 255)]
-    private ?string $slug = null;
 
     public function __construct()
     {

@@ -1,5 +1,5 @@
-import { useFetch } from './../useFetch';
-import type { UserProfile } from './api';
+import { useFetch } from '../useFetch';
+import type { UserProfile } from './types';
 
 export async function useLogin(username: string, password: string) {
   return await useFetch<UserProfile, { username: string; password: string }>({

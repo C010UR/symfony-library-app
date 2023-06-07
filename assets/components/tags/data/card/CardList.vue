@@ -1,17 +1,13 @@
 <template>
   <div justify="center" class="wrapper">
     <template v-if="disabled">
-      <card-list-item v-for="index in skeletons" :key="index">
-        <slot name="skeleton"></slot>
-      </card-list-item>
+      <slot name="skeleton" v-for="index in skeletons" :key="index"></slot>
     </template>
     <slot></slot>
   </div>
 </template>
 
 <script setup lang="ts">
-import CardListItem from './CardListItem.vue';
-
 export type Props =
   | {
       disabled?: true;
@@ -31,6 +27,6 @@ withDefaults(defineProps<Props>(), {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  align-items: stretch;
+  align-items: center;
 }
 </style>

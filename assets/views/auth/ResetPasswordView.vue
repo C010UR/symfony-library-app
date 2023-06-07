@@ -1,5 +1,5 @@
 <template>
-  <base-page header="Сброс пароля">
+  <base-card-page header="Сброс пароля">
     <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="rules">
       <el-form-item label="Пароль" prop="password">
         <el-input
@@ -33,7 +33,7 @@
         </div>
       </el-form-item>
     </el-form>
-  </base-page>
+  </base-card-page>
 </template>
 
 <script setup lang="ts">
@@ -42,8 +42,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import validator from 'validator';
-import { BasePage } from '@/components/pages';
-import { useResetPassword } from '@/use';
+import { BaseCardPage } from '@/components/pages';
+import { useResetPassword } from '@/composables';
 
 const router = useRouter();
 const route = useRoute();

@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ApiMeta } from '@/use/api/api';
+import type { ApiMeta } from '@/composables';
 import { ElPagination } from 'element-plus';
 
 export interface Props {
@@ -28,36 +28,33 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{
+  (e: 'update:modelValue', modelValue: ApiMeta): void;
+}>();
 
 const handleSizeChange = (value: number) => {
   if (value === props.modelValue.pageSize) {
     return;
   }
-
   const meta: ApiMeta = { ...props.modelValue, pageSize: value };
-
-  console.log(meta);
-
+  console.log('2');
   emit('update:modelValue', meta);
 };
 
 const handleCurrentChange = (value: number) => {
   const offset = (value - 1) * props.modelValue.pageSize;
-
   if (offset === props.modelValue.offset) {
     return;
   }
-
   const meta: ApiMeta = { ...props.modelValue, offset: offset };
-
+  console.log('1');
   emit('update:modelValue', meta);
 };
 </script>
 
 <style scoped>
 .wrapper {
-  margin: 0 1rem;
+  margin: 0.5rem 1rem 0 1rem;
   display: flex;
   justify-content: end;
 }

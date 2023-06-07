@@ -1,6 +1,6 @@
 import { useFetch } from '../useFetch';
-import type { Params } from '../useFetch';
-import type { ApiCollection } from './api';
+import type { RouteParams } from '../useFetch';
+import type { ApiCollection, FilterOption } from './types';
 
 export const ApiUrls = {
   authors: '/api/v1/books/authors',
@@ -12,7 +12,10 @@ export const ApiUrls = {
 
 export type ApiUrl = (typeof ApiUrls)[keyof typeof ApiUrls];
 
-export async function useGetAll<ReturnType>(url: ApiUrl, params?: Params) {
+export async function useGetAll<ReturnType>(
+  url: ApiUrl,
+  params?: RouteParams,
+): Promise<ApiCollection<ReturnType> | undefined> {
   return await useFetch<ApiCollection<ReturnType>>({
     url,
     method: 'GET',
@@ -21,7 +24,7 @@ export async function useGetAll<ReturnType>(url: ApiUrl, params?: Params) {
   });
 }
 
-export async function useGetOne<ReturnType>(url: ApiUrl, slug: string) {
+export async function useGetOne<ReturnType>(url: ApiUrl, slug: string): Promise<ReturnType | undefined> {
   return await useFetch<ReturnType>({
     url: `${url}/${slug}`,
     method: 'GET',
@@ -29,7 +32,11 @@ export async function useGetOne<ReturnType>(url: ApiUrl, slug: string) {
   });
 }
 
-export async function useCreate<ReturnType, InputType>(url: ApiUrl, entity: InputType, isHasImage = false) {
+export async function useCreate<ReturnType, InputType>(
+  url: ApiUrl,
+  entity: InputType,
+  isHasImage = false,
+): Promise<ReturnType | undefined> {
   return await useFetch<ReturnType, InputType>({
     url,
     method: 'POST',
@@ -42,7 +49,7 @@ export async function useUpdate<ReturnType, InputType extends { id?: number }>(
   url: ApiUrl,
   entity: InputType,
   isHasImage = false,
-) {
+): Promise<ReturnType | undefined> {
   if (!entity.id) {
     throw new Error('Обновить поле без ID невозможно.');
   }
@@ -55,15 +62,17 @@ export async function useUpdate<ReturnType, InputType extends { id?: number }>(
   });
 }
 
-export async function useDelete<ReturnType extends { id: number }>(url: ApiUrl, entity: ReturnType) {
-  return await useFetch<ReturnType>({
+export async function useDelete<T extends { id: number }>(url: ApiUrl, entity: T): Promise<boolean> {
+  const result = await useFetch<T>({
     url: `${url}/${entity.id}`,
     method: 'DELETE',
     contentType: 'json',
   });
+
+  return result !== undefined;
 }
 
-export async function useGetMeta(url: ApiUrl) {
+export async function useGetMeta(url: ApiUrl): Promise<FilterOption[] | undefined> {
   return await useFetch<FilterOption[]>({
     url: `${url}/meta`,
     method: 'GET',

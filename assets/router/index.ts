@@ -1,5 +1,5 @@
 import { nextTick } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, type LocationQuery } from 'vue-router';
 import { resolveTransition } from './transition-resolver';
 import { isUserHasPermissions, routeFallback } from './permissions-resolver';
 import {
@@ -10,9 +10,13 @@ import {
   BooksView,
   AboutUs,
   NotFoundView,
+  BookView,
+  AuthorView,
+  PublisherView,
 } from '@/views';
-import { useGetProfile } from '@/use';
-import type { UserRole } from '@/use/api/api';
+import { useGetProfile } from '@/composables';
+import type { UserRole } from '@/composables';
+import qs from 'qs';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -22,7 +26,7 @@ const router = createRouter({
       name: 'Main',
       component: BooksView,
       meta: {
-        title: 'Библиотека',
+        title: 'Книжный Фонд',
       },
     },
     {
@@ -79,6 +83,30 @@ const router = createRouter({
       },
     },
     {
+      path: '/book/:slug([a-z0-9-]*)',
+      name: 'Book',
+      component: BookView,
+      meta: {
+        title: 'Книга',
+      },
+    },
+    {
+      path: '/publisher/:slug([a-z0-9-]*)',
+      name: 'Publisher',
+      component: PublisherView,
+      meta: {
+        title: 'Издатель',
+      },
+    },
+    {
+      path: '/author/:slug([a-z0-9-]*)',
+      name: 'Author',
+      component: AuthorView,
+      meta: {
+        title: 'Автор',
+      },
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: NotFoundView,
@@ -87,6 +115,12 @@ const router = createRouter({
       },
     },
   ],
+  parseQuery(query) {
+    return qs.parse(query) as LocationQuery;
+  },
+  stringifyQuery(query) {
+    return qs.stringify(query, { encode: false });
+  },
 });
 
 router.beforeEach(async (to, from) => {
@@ -105,11 +139,6 @@ router.beforeEach(async (to, from) => {
   if (!isUserHasPermissions(profile, to.meta.roles as UserRole[] | undefined)) {
     return routeFallback(profile);
   }
-
-  // if (to.meta.store) {
-  //   const crudStore = useCrudStore(to.meta.store);
-  //   crudStore.parseQuery(to.query);
-  // }
 });
 
 router.afterEach(async to => {

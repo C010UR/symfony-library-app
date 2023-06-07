@@ -1,6 +1,6 @@
-import type { UserProfile, UserRole } from '@/use/api/api';
+import type { UserProfile, UserRole } from '@/composables';
 
-function routeFallback(profile: UserProfile | undefined): { name: string } {
+function routeFallback(profile?: UserProfile): { name: string } {
   if (!profile) {
     return {
       name: 'Login',
@@ -22,7 +22,7 @@ function routeFallback(profile: UserProfile | undefined): { name: string } {
   throw new Error('User does not have valid roles.');
 }
 
-function isUserHasPermissions(profile: UserProfile | undefined, routeRoles?: UserRole[]): boolean {
+function isUserHasPermissions(profile?: UserProfile, routeRoles?: UserRole[]): boolean {
   if (!routeRoles) {
     return true;
   }

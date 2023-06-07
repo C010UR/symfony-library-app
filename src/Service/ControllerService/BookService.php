@@ -23,19 +23,52 @@ class BookService extends AbstractCrudService implements CrudServiceInterface
         private BookRepository $repository
     ) {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns([
-            new Column('id', 'ID', Column::NOT_FILTERABLE_TYPE, true),
-            new Column('name', 'Название', Column::STRING_TYPE, true),
-            new Column('publisher', 'Издательство', Column::ENTITY_TYPE, false, data: [
-                'entity' => 'publisher',
+        $queryParser->setColumns([
+            new Column([
+                'name' => 'id',
+                'label' => 'Дата добавления',
+                'type' => Column::NOT_FILTERABLE_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => false,
             ]),
-            new Column('pageCount', 'Количество страниц', Column::INTEGER_TYPE, true),
-            // new Column('tags', 'Жанры', Column::ENTITIES_TYPE, false, data: [
-            //     'entity' => 'tag',
-            // ]),
-            // new Column('authors', 'Авторы', Column::ENTITIES_TYPE, false, data: [
-            //     'entity' => 'author',
-            // ]),
+            new Column([
+                'name' => 'name',
+                'label' => 'Название',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'publisher',
+                'label' => 'Издательство',
+                'type' => Column::ENTITY_TYPE,
+                'entity' => 'publisher',
+                'isOrderable' => true,
+                'isSearchable' => false,
+            ]),
+            new Column([
+                'name' => 'pageCount',
+                'label' => 'Количество страниц',
+                'type' => Column::INTEGER_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'tags',
+                'label' => 'Жанры',
+                'type' => Column::ENTITIES_TYPE,
+                'isOrderable' => false,
+                'isSearchable' => false,
+                'entity' => 'tag',
+            ]),
+            new Column([
+                'name' => 'authors',
+                'label' => 'Авторы',
+                'type' => Column::ENTITIES_TYPE,
+                'isOrderable' => false,
+                'isSearchable' => false,
+                'entity' => 'author',
+            ]),
         ]);
 
         $this->setQueryParser($queryParser)->setRepository($repository);

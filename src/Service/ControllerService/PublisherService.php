@@ -23,9 +23,42 @@ class PublisherService extends AbstractCrudService implements CrudServiceInterfa
         private PublisherRepository $repository
     ) {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns([
-            new Column('id', 'ID', Column::NOT_FILTERABLE_TYPE, true),
-            new Column('name', 'Название', Column::STRING_TYPE, true),
+        $queryParser->setColumns([
+            new Column([
+                'name' => 'id',
+                'label' => 'Дата добавления',
+                'type' => Column::NOT_FILTERABLE_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => false,
+            ]),
+            new Column([
+                'name' => 'name',
+                'label' => 'Название',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'address',
+                'label' => 'Адрес',
+                'type' => Column::NOT_FILTERABLE_TYPE,
+                'isOrderable' => false,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'website',
+                'label' => 'Веб-страница',
+                'type' => Column::NOT_FILTERABLE_TYPE,
+                'isOrderable' => false,
+                'isSearchable' => true,
+            ]),
+            new Column([
+                'name' => 'email',
+                'label' => 'Email',
+                'type' => Column::NOT_FILTERABLE_TYPE,
+                'isOrderable' => false,
+                'isSearchable' => true,
+            ]),
         ]);
 
         $this->setQueryParser($queryParser)->setRepository($repository);

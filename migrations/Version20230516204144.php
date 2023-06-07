@@ -36,7 +36,8 @@ final class Version20230516204144 extends AbstractMigration
 
         $this->addSql(
             'ALTER TABLE reset_password_request
-                ADD CONSTRAINT FK_7CE748AA76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE'
+                ADD CONSTRAINT FK_7CE748AA76ED395
+                FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE'
         );
     }
 

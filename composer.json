@@ -83,6 +83,12 @@
         ],
         "php-cs-fixer": [
             "php-cs-fixer fix"
+        ],
+        "phpcs": [
+            "phpcs"
+        ],
+        "phpcbf": [
+            "phpcbf"
         ]
     },
     "conflict": {
@@ -99,6 +105,7 @@
         "dama/doctrine-test-bundle": "^7.2",
         "friendsofphp/php-cs-fixer": "^3.17",
         "phpunit/phpunit": "^10.1",
+        "squizlabs/php_codesniffer": "^3.7",
         "symfony/browser-kit": "6.2.*",
         "symfony/css-selector": "6.2.*",
         "symfony/maker-bundle": "^1.48",

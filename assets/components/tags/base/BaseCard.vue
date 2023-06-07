@@ -1,5 +1,5 @@
 <template>
-  <el-card shadow="hover">
+  <el-card shadow="hover" :style="{ padding: '0.5rem' }">
     <template #header v-if="$slots.header">
       <template v-if="disabled">
         <el-skeleton animated>
@@ -18,7 +18,9 @@
     <template v-if="disabled">
       <el-skeleton animated>
         <template #template>
-          <slot name="skeleton"></slot>
+          <div class="card-body">
+            <slot name="skeleton"></slot>
+          </div>
         </template>
       </el-skeleton>
     </template>
@@ -44,7 +46,7 @@ withDefaults(defineProps<Props>(), {
 
 <style scoped>
 .el-card {
-  margin: 1rem;
+  margin: 0.5rem 0;
   width: 100%;
   align-self: stretch;
 }
@@ -53,5 +55,13 @@ withDefaults(defineProps<Props>(), {
   display: flex;
   flex-direction: row;
   align-items: start;
+  margin: 0;
+  padding: 0;
+}
+
+@media only screen and (max-width: 768px) {
+  .card-body {
+    flex-direction: column;
+  }
 }
 </style>

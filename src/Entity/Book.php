@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DoctrineExtensions\DBAL\Types\Citext;
 use App\Entity\Interface\EntityInterface;
 use App\Repository\BookRepository;
 use App\Utils\Utils;
@@ -25,11 +26,14 @@ class Book implements EntityInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Citext::CITEXT)]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $datePublished = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imagePath = null;
@@ -44,13 +48,10 @@ class Book implements EntityInterface
     #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'books')]
     private Collection $authors;
 
-    #[ORM\Column(length: 255)]
-    private ?string $slug = null;
-
     #[ORM\Column(options: ['default' => false])]
     private ?bool $isDeleted = false;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Citext::CITEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -83,10 +84,10 @@ class Book implements EntityInterface
         $authors = '';
 
         foreach ($this->getAuthors() as $author) {
-            $authors .= $author->getFullName().' ';
+            $authors .= $author->getFullName() . ' ';
         }
 
-        return $authors.$this->getName();
+        return $authors . $this->getName();
     }
 
     public function getId(): ?int

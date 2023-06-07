@@ -20,9 +20,21 @@ class TagService extends AbstractCrudService implements CrudServiceInterface
         private TagRepository $repository
     ) {
         $queryParser = new QueryParser();
-        $queryParser->setAllowedColumns([
-            new Column('id', 'ID', Column::NOT_FILTERABLE_TYPE, true),
-            new Column('name', 'Название', Column::STRING_TYPE, true),
+        $queryParser->setColumns([
+            new Column([
+                'name' => 'id',
+                'label' => 'Дата добавления',
+                'type' => Column::NOT_FILTERABLE_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => false,
+            ]),
+            new Column([
+                'name' => 'name',
+                'label' => 'Название',
+                'type' => Column::STRING_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
         ]);
 
         $this->setQueryParser($queryParser)->setRepository($repository);

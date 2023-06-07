@@ -24,7 +24,12 @@ class AuthorFixturesDev extends Fixture implements FixtureGroupInterface
         $name = ucwords(strtolower($name));
         $name = explode(' ', $name);
 
-        $filename = sprintf('%s/author-%s.%s', $this->dirBookAuthorUploads, bin2hex(random_bytes(3)), $file['extension']);
+        $filename = sprintf(
+            '%s/author-%s.%s',
+            $this->dirBookAuthorUploads,
+            bin2hex(random_bytes(3)),
+            $file['extension']
+        );
 
         copy($file['full_path'], sprintf('%s%s', $this->dirPublic, $filename));
 

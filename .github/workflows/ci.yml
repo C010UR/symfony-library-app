@@ -6,7 +6,7 @@ on:
 
 jobs:
   php-lint:
-    name: Lint the PHP code
+    name: Lint the the code
     runs-on: ubuntu-latest
     permissions: write-all
 
@@ -20,9 +20,10 @@ jobs:
           args: --config=.php-cs-fixer.dist.php
 
       - name: Lint the PHP code
-        uses: docker://oskarstark/php-cs-fixer-ga
+        uses: php-actions/phpcs@v1
         with:
-          args: --config=.php-cs-fixer.dist.php --dry-run
+          php_version: 8.2
+          standard: phpcs.xml.dist
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -41,7 +42,7 @@ jobs:
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "[Github Actions] Lint with the code"
+          commit_message: "[Github Actions] Lint the code"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

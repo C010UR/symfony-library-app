@@ -170,11 +170,11 @@
 </template>
 
 <script async setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { ElSwitch, ElInputNumber, ElSelect, ElInput, ElDatePicker } from 'element-plus';
 import { AuthorOption, BookOption, TagOption, PublisherOption } from '@/components/tags/entity-option';
-import { useGetAll, ApiUrls } from '@/use/api';
-import type { BookAuthor, BookFull, BookPublisher, BookTag } from '@/use/api/api';
+import { useGetAll, ApiUrls } from '@/composables';
+import type { BookAuthor, BookFull, BookPublisher, BookTag, FilterOption, FilterOperator } from '@/composables';
 
 export interface Props {
   column: FilterOption;
@@ -184,7 +184,9 @@ export interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: unknown | [unknown, unknown]): void;
+}>();
 
 watch(
   () => props.operator,
@@ -200,11 +202,42 @@ const tags = ref<BookTag[] | undefined>();
 const books = ref<BookFull[] | undefined>();
 const publishers = ref<BookPublisher[] | undefined>();
 
-onMounted(async () => {
-  authors.value = (await useGetAll<BookAuthor>(ApiUrls.authors))?.data;
-  books.value = (await useGetAll<BookFull>(ApiUrls.books))?.data;
-  tags.value = (await useGetAll<BookTag>(ApiUrls.tags))?.data;
-  publishers.value = (await useGetAll<BookPublisher>(ApiUrls.publishers))?.data;
+watchEffect(async () => {
+  console.log(props.column);
+  if (props.column.type !== 'entity' && props.column.type !== 'entities') {
+    return;
+  }
+
+  switch (props.column.data.entity) {
+    case 'author': {
+      if (authors.value === undefined || authors.value.length === 0) {
+        authors.value = (await useGetAll<BookAuthor>(ApiUrls.authors))?.data;
+      }
+      break;
+    }
+    case 'book': {
+      if (books.value === undefined || books.value.length === 0) {
+        books.value = (await useGetAll<BookFull>(ApiUrls.books))?.data;
+      }
+      break;
+    }
+    case 'publisher': {
+      if (publishers.value === undefined || publishers.value.length === 0) {
+        publishers.value = (await useGetAll<BookPublisher>(ApiUrls.publishers))?.data;
+      }
+      break;
+    }
+    case 'tag': {
+      if (tags.value === undefined || tags.value.length === 0) {
+        tags.value = (await useGetAll<BookTag>(ApiUrls.tags))?.data;
+      }
+      break;
+    }
+    default: {
+      const _exhaustiveCheck: never = props.column.data.entity;
+      return _exhaustiveCheck;
+    }
+  }
 });
 
 function handleUpdate(value: unknown) {

@@ -1,6 +1,6 @@
 <template>
   <base-card class="create-card" @click="$emit('click')">
-    <div class="icon" :style="{ height: size + 'rem', width: '100%' }">
+    <div class="icon" :style="iconStyle">
       <el-icon color="var(--el-color-success)" size="100">
         <plus />
       </el-icon>
@@ -12,13 +12,18 @@
 import { ElIcon } from 'element-plus';
 import { Plus } from '@element-plus/icons-vue';
 import { BaseCard } from '@/components/tags/base';
+import { ref } from 'vue';
 
 export interface Props {
   size?: number;
 }
 
-withDefaults(defineProps<Props>(), {
-  size: 20,
+const props = withDefaults(defineProps<Props>(), {
+  size: 16,
+});
+
+const iconStyle = ref({
+  width: props.size + 'rem',
 });
 
 defineEmits(['click']);
@@ -33,5 +38,6 @@ defineEmits(['click']);
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
 }
 </style>

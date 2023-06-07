@@ -17,7 +17,10 @@ class QueryParser
         $this->criteria = Criteria::create();
     }
 
-    public function setAllowedColumns(Column|array $columns): self
+    /**
+     * Set filterable columns.
+     */
+    public function setColumns(Column|array $columns): self
     {
         if (!is_array($columns)) {
             $this->columns = [$columns];
@@ -27,7 +30,13 @@ class QueryParser
 
         foreach ($columns as $column) {
             if ('object' !== gettype($column) || Column::class !== $column::class) {
-                throw new \InvalidArgumentException(sprintf('Columns should be of type %s. %s was provided instead.', Column::class, 'object' === gettype($column) ? $column::class : gettype($column)));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Columns should be of type %s. %s was provided instead.',
+                        Column::class,
+                        'object' === gettype($column) ? $column::class : gettype($column)
+                    )
+                );
             }
         }
 
@@ -36,10 +45,14 @@ class QueryParser
         return $this;
     }
 
-    public function getAllowedColumns(): array
+    /**
+     * Get filterable columns.
+     */
+    public function getColumns(): array
     {
         $result = [];
 
+        /** @var Column $column */
         foreach ($this->columns as $column) {
             $result[] = $column->getAll();
         }
@@ -47,6 +60,9 @@ class QueryParser
         return $result;
     }
 
+    /**
+     * Find column in the list of filterable columns.
+     */
     private function findColumn(string $name): ?Column
     {
         $result = null;
@@ -60,7 +76,10 @@ class QueryParser
         return $result;
     }
 
-    private function setPaginatorOptions(int $pageSize = null, int $offset = null): self
+    /**
+     * Set criteria pagination.
+     */
+    private function setCriteriaPagination(int $pageSize = null, int $offset = null): self
     {
         if (null !== $pageSize && $pageSize > 0) {
             $this->criteria->setMaxResults($pageSize);
@@ -73,7 +92,10 @@ class QueryParser
         return $this;
     }
 
-    private function setOrderings(array $orderings): self
+    /**
+     * Set criteria order.
+     */
+    private function setCriteriaOrder(array $orderings): self
     {
         foreach ($orderings as $columnName => $order) {
             $column = $this->findColumn($columnName);
@@ -89,7 +111,18 @@ class QueryParser
             $order = strtoupper($order);
 
             if (Criteria::ASC !== $order && Criteria::DESC !== $order) {
-                throw new InvalidQueryOrderException(sprintf("Order '%s' for column '%s' is not valid. Acceptable orders are ASC and DESC.", $order, $columnName));
+                throw new InvalidQueryOrderException(
+                    sprintf(
+                        "Order '%s' for column '%s' is not valid. Acceptable orders are ASC and DESC.",
+                        $order,
+                        $columnName
+                    )
+                );
+            }
+
+            if ($column->isEntity()) {
+                $orderings[sprintf('%s.id', $column->getName())] = $order;
+                unset($orderings[$column->getName()]);
             }
         }
 
@@ -98,6 +131,9 @@ class QueryParser
         return $this;
     }
 
+    /**
+     * Parse query operators.
+     */
     private function parseOperator(string $column, string $operator, mixed $value): Expression
     {
         switch ($operator) {
@@ -123,7 +159,12 @@ class QueryParser
                 return Criteria::expr()->contains($column, $value);
             case FilterOperators::OPERATOR_BETWEEN:
                 if (2 !== count($value)) {
-                    throw new InvalidQueryExpressionException(sprintf('Operator between can only accept 2 values. (Column: %s)', $column));
+                    throw new InvalidQueryExpressionException(
+                        sprintf(
+                            'Operator between can only accept 2 values. (Column: %s)',
+                            $column
+                        )
+                    );
                 }
 
                 return Criteria::expr()->andX(
@@ -139,7 +180,10 @@ class QueryParser
         }
     }
 
-    private function setExpression(string $columnName, string $operator, string $value): self
+    /**
+     * Set criteria expression.
+     */
+    private function setCriteriaExpression(string $columnName, string $operator, string $value): self
     {
         $column = $this->findColumn($columnName);
 
@@ -148,7 +192,14 @@ class QueryParser
         }
 
         if (!$column->isValidOperator($operator)) {
-            throw new InvalidQueryExpressionException(sprintf("Operator '%s' for column '%s' is not valid. ", $operator, $columnName, implode(', ', array_keys($column->getOperators()))));
+            throw new InvalidQueryExpressionException(
+                sprintf(
+                    "Operator '%s' for column '%s' is not valid. ",
+                    $operator,
+                    $columnName,
+                    implode(', ', array_keys($column->getOperators()))
+                )
+            );
         }
 
         $isArray =
@@ -159,13 +210,31 @@ class QueryParser
         try {
             $value = Column::convert($column, $value, $isArray);
         } catch (\Throwable $th) {
-            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getLabel(), $operator, $value, $th->getMessage()), previous: $th);
+            throw new InvalidQueryExpressionException(
+                message: sprintf(
+                    "Invalid value in '%s' %s '%s'. Reason: %s",
+                    $column->getLabel(),
+                    $operator,
+                    $value,
+                    $th->getMessage()
+                ),
+                previous: $th
+            );
         }
 
         try {
             $expr = $this->parseOperator($column->getName(), $operator, $value);
         } catch (\Throwable $th) {
-            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getName(), $operator, $value, $th->getMessage()), previous: $th);
+            throw new InvalidQueryExpressionException(
+                message: sprintf(
+                    "Invalid value in '%s' %s '%s'. Reason: %s",
+                    $column->getName(),
+                    $operator,
+                    $value,
+                    $th->getMessage()
+                ),
+                previous: $th
+            );
         }
 
         $this->criteria->andWhere($expr);
@@ -173,6 +242,9 @@ class QueryParser
         return $this;
     }
 
+    /**
+     * Get criteria and reset it.
+     */
     private function getCriteria(): Criteria
     {
         $criteria = $this->criteria;
@@ -182,20 +254,22 @@ class QueryParser
     }
 
     /**
+     * Parse search query.
+     *
      * @throws InvalidQueryOrderException
      * @throws InvalidQueryExpressionException
      */
     public function parseQuery(array $query, bool $parsePages = false, bool $parseOrder = false): Criteria
     {
         if ($parsePages) {
-            $this->setPaginatorOptions($query['pageSize'] ?? null, $query['offset'] ?? null);
+            $this->setCriteriaPagination($query['pageSize'] ?? null, $query['offset'] ?? null);
         }
 
         unset($query['pageSize']);
         unset($query['offset']);
 
         if ($parseOrder && !empty($query['order'])) {
-            $this->setOrderings($query['order']);
+            $this->setCriteriaOrder($query['order']);
         }
 
         unset($query['order']);
@@ -206,7 +280,7 @@ class QueryParser
             }
 
             foreach ($options as $operator => $value) {
-                $this->setExpression($name, $operator, $value);
+                $this->setCriteriaExpression($name, $operator, $value);
             }
         }
 

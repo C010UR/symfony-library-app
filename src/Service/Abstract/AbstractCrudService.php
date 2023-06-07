@@ -41,7 +41,7 @@ abstract class AbstractCrudService
 
     public function getFilterMeta(): array
     {
-        return $this->getQueryParser()->getAllowedColumns();
+        return $this->getQueryParser()->getColumns();
     }
 
     public function getAll(Request $request, mixed $additional = null): array

@@ -40,12 +40,16 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElPopover, ElButton } from 'element-plus';
 import { BaseAvatar } from '@/components/tags/base';
-import { useGetProfile, useLogout } from '@/use';
-import type { UserProfile } from '@/use/api/api';
+import { useGetProfile, useLogout } from '@/composables';
+import type { UserProfile } from '@/composables';
 
 const router = useRouter();
 
 const profile = ref<UserProfile | undefined>();
+
+const emits = defineEmits<{
+  (e: 'load-profile', profile: UserProfile | undefined): void;
+}>();
 
 async function btnLogout() {
   await useLogout();
@@ -58,6 +62,7 @@ function btnLogin() {
 
 onMounted(async () => {
   profile.value = await useGetProfile();
+  emits('load-profile', profile.value);
 });
 </script>
 

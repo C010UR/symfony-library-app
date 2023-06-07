@@ -40,9 +40,11 @@ class BookFormType extends AbstractType
                 'constraints' => [
                     new Assert\Length(
                         min: 3,
-                        minMessage: 'Book description should have at least {{ limit }} characters. {{ value }} was provided.',
+                        minMessage: 'Book description should have at least {{ limit }} characters. '
+                            . '{{ value }} was provided.',
                         max: 255,
-                        maxMessage: 'Book description should not exceed {{ limit }} characters. {{ value }} was provided.'
+                        maxMessage: 'Book description should not exceed {{ limit }} characters. '
+                            . '{{ value }} was provided.'
                     ),
                 ],
             ])
@@ -51,7 +53,8 @@ class BookFormType extends AbstractType
                 'trim' => true,
                 'constraints' => [
                     new Assert\NotBlank(message: 'Book page count cannot be empty.'),
-                    new Assert\GreaterThan(0, message: 'Book page count must be greater than {{ compared_value }}. {{ value }} was provided.'),
+                    new Assert\GreaterThan(0, message: 'Book page count must be greater than {{ compared_value }}. '
+                        . '{{ value }} was provided.'),
                 ],
             ])
             ->add('datePublished', DateType::class, [
@@ -87,7 +90,8 @@ class BookFormType extends AbstractType
                 'constraints' => [
                     new Assert\Image(
                         maxSize: '8192k',
-                        maxSizeMessage: 'The image is too large. The max size is {{ limit }}. {{ value }} was provided.',
+                        maxSizeMessage: 'The image is too large. The max size is {{ limit }}. '
+                            . '{{ value }} was provided.',
                     ),
                 ],
             ]);

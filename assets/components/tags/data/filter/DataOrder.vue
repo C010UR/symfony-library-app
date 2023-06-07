@@ -1,7 +1,7 @@
 <template>
   <div class="order" v-if="orderableColumns.length > 0">
     <div class="order-header">
-      <h1 style="margin-right: 1rem">Упорядочить:</h1>
+      <h1 class="margin-right">Упорядочить:</h1>
       <el-switch v-model="toggle" />
     </div>
     <div class="order-form" v-if="toggle">
@@ -11,7 +11,7 @@
         filterable
         default-first-option
         :disabled="!toggle"
-        style="margin-right: 1rem"
+        class="margin-right"
       >
         <el-option v-for="order in orderableColumns" :key="order.name" :value="order.name" :label="order.label" />
       </el-select>
@@ -33,6 +33,8 @@
 import { ElSelect, ElOption, ElSwitch } from 'element-plus';
 import { Top, Bottom } from '@element-plus/icons-vue';
 import { computed, ref } from 'vue';
+import type { FilterOption, Order } from '@/composables';
+import { watchEffect } from 'vue';
 
 export interface Props {
   columns: FilterOption[];
@@ -41,9 +43,17 @@ export interface Props {
 
 const props = defineProps<Props>();
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{
+  (e: 'update:modelValue', orders: Order | undefined): void;
+}>();
 
 const toggle = ref<boolean>(false);
+
+watchEffect(() => {
+  if (!toggle.value) {
+    emit('update:modelValue', undefined);
+  }
+});
 
 const orderableColumns = computed(() => {
   return props.columns.filter(element => element.isOrderable);
@@ -85,5 +95,9 @@ function handleDirectionChange(value: string | number | boolean) {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.margin-right {
+  margin-right: 0.5rem;
 }
 </style>
