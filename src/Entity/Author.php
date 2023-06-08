@@ -222,7 +222,7 @@ class Author implements EntityInterface, \Stringable
      */
     public function getBooks(): Collection
     {
-        return $this->books->filter(static fn(Book $book) => !$book->isDeleted());
+        return $this->books->filter(static fn (Book $book) => !$book->isDeleted());
     }
 
     public function addBook(Book $book): self

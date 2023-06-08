@@ -27,16 +27,53 @@
         </p>
       </div>
     </div>
+    <el-carousel :interval="5000" arrow="always" height="40rem">
+      <el-carousel-item name="1">
+        <img src="/images/photos/library-1.jpg" />
+      </el-carousel-item>
+      <el-carousel-item name="2">
+        <img src="/images/photos/library-2.jpg" />
+      </el-carousel-item>
+      <el-carousel-item name="3">
+        <img src="/images/photos/library-3.jpg" />
+      </el-carousel-item>
+      <el-carousel-item name="3">
+        <img src="/images/photos/library-4.jpg" />
+      </el-carousel-item>
+    </el-carousel>
   </base-page>
 </template>
 
 <script setup lang="ts">
 import { BasePage } from '@/components/pages';
 import { BaseImage } from '@/components/tags/base';
-import { ElTag } from 'element-plus';
+import { ElTag, ElCarousel, ElCarouselItem } from 'element-plus';
 </script>
 
 <style scoped>
+.el-carousel {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.el-carousel__item img {
+  width: auto;
+  max-height: 40rem;
+  margin: 0 auto;
+}
+
+.el-carousel__item {
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+.carousel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .wrapper-item {
   display: flex;
   flex-direction: column;
@@ -61,6 +98,10 @@ import { ElTag } from 'element-plus';
 
 @media only screen and (max-width: 768px) {
   .description {
+    width: 90%;
+  }
+
+  .el-carousel {
     width: 90%;
   }
 }

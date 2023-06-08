@@ -48,5 +48,4 @@ class ErrorNormalizer implements NormalizerInterface
     {
         return $data instanceof FlattenException;
     }
-
 }

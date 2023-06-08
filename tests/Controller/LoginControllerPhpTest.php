@@ -8,8 +8,6 @@ use App\Repository\UserRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 #[CoversClass(LoginController::class)]
 class LoginControllerPhpTest extends ControllerTestCase
@@ -34,9 +32,11 @@ class LoginControllerPhpTest extends ControllerTestCase
             if (!$user->isActive()) {
                 continue;
             }
+
             if ($user->isDeleted()) {
                 continue;
             }
+
             yield $user->getEmail() => [$user, self::TEST_PASSWORD];
         }
     }

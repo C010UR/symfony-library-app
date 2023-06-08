@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Security\Exception\AccountDeactivated;
 use App\Security\Exception\AccountInactive;
 use App\Security\Exception\InvalidCredentials;
-use App\Security\UserChecker;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;

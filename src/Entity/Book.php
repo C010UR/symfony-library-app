@@ -160,7 +160,7 @@ class Book implements EntityInterface, \Stringable
      */
     public function getTags(): Collection
     {
-        return $this->tags->filter(static fn(Tag $tag) => !$tag->isDeleted());
+        return $this->tags->filter(static fn (Tag $tag) => !$tag->isDeleted());
     }
 
     public function addTag(Tag $tag): self
@@ -184,7 +184,7 @@ class Book implements EntityInterface, \Stringable
      */
     public function getAuthors(): Collection
     {
-        return $this->authors->filter(static fn(Author $author) => !$author->isDeleted());
+        return $this->authors->filter(static fn (Author $author) => !$author->isDeleted());
     }
 
     public function addAuthor(Author $author): self

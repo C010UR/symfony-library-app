@@ -45,7 +45,7 @@ class QueryParserTestPhpTest extends TestCase
                     'type' => Column::ENTITY_TYPE,
                     'isOrderable' => false,
                     'isNullable' => true,
-                    'entity' => 'test'
+                    'entity' => 'test',
                 ]),
                 new Column([
                     'name' => 'test-5',
@@ -67,7 +67,7 @@ class QueryParserTestPhpTest extends TestCase
                     'type' => Column::ENTITIES_TYPE,
                     'isOrderable' => false,
                     'isNullable' => true,
-                    'entity' => 'test'
+                    'entity' => 'test',
                 ]),
             ],
         ];

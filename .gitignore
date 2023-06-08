@@ -21,8 +21,6 @@
 /cypress/videos/
 /cypress/screenshots/
 
-
-
 # Assets and user uploads
 /web/bundles/
 /web/uploads/
@@ -52,6 +50,7 @@ public/uploads
 ###> friendsofphp/php-cs-fixer ###
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
+/.phpcs-cache
 ###< friendsofphp/php-cs-fixer ###
 
 ###> pentatrion/vite-bundle ###
@@ -67,4 +66,5 @@ public/uploads
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
+.phpunit.cache
 ###< phpunit/phpunit ###

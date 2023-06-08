@@ -4,6 +4,7 @@ namespace App\Utils\Filter;
 
 /**
  * Class encapsulates filtration/order/search options for QueryParser.
+ *
  * @see \App\Tests\Utils\Filter\ColumnTest
  */
 class Column
@@ -89,7 +90,7 @@ class Column
             throw new \InvalidArgumentException(sprintf("Column label for column '%s' is not provided or does not have a valid value.", $data['name']));
         }
 
-        if (($data['type'] == self::ENTITY_TYPE || $data['type'] == self::ENTITIES_TYPE) && !array_key_exists('entity', $data)) {
+        if ((self::ENTITY_TYPE == $data['type'] || self::ENTITIES_TYPE == $data['type']) && !array_key_exists('entity', $data)) {
             throw new \InvalidArgumentException(sprintf("Entity not specified for column '%s'", $data['name']));
         }
 
@@ -266,7 +267,7 @@ class Column
             'isSearchable' => $this->isSearchable(),
         ];
 
-        if ($this->getData() !== []) {
+        if ([] !== $this->getData()) {
             $formatted['data'] = $this->getData();
         }
 
@@ -295,6 +296,7 @@ class Column
 
             return $result;
         }
+
         return self::convertDataPoint($column->getType(), $data);
     }
 

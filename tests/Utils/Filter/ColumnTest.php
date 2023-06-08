@@ -101,7 +101,7 @@ class ColumnTest extends TestCase
                 'label' => 'test',
                 'type' => Column::DATE_TYPE,
                 'isOrderable' => false,
-                'isNullable' => false
+                'isNullable' => false,
             ]),
             $dateString,
             false,
@@ -114,7 +114,7 @@ class ColumnTest extends TestCase
                 'label' => 'test',
                 'type' => Column::DATE_TYPE,
                 'isOrderable' => false,
-                'isNullable' => false
+                'isNullable' => false,
             ]),
             implode(',', [$dateString, $dateString]),
             true,
@@ -125,13 +125,13 @@ class ColumnTest extends TestCase
     #[DataProvider('getTypes')]
     public function testSetType(string $type, bool $isNullable, array $expected): void
     {
-        $column =   new Column([
+        $column = new Column([
             'name' => 'test',
             'label' => 'test',
             'type' => $type,
             'isOrderable' => true,
             'isNullable' => $isNullable,
-            'entity' => $type === Column::ENTITIES_TYPE || $type === Column::ENTITY_TYPE ? 'test' : null
+            'entity' => Column::ENTITIES_TYPE === $type || Column::ENTITY_TYPE === $type ? 'test' : null,
         ]);
 
         $this->assertEquals($expected, $column->getOperators());
@@ -145,7 +145,7 @@ class ColumnTest extends TestCase
         new Column([
             'name' => 'test',
             'label' => 'test',
-            'type' =>  $type === Column::ENTITIES_TYPE || $type === Column::ENTITY_TYPE ? $type : sprintf('%s-test', $type),
+            'type' => Column::ENTITIES_TYPE === $type || Column::ENTITY_TYPE === $type ? $type : sprintf('%s-test', $type),
             'isOrderable' => true,
             'isNullable' => $isNullable,
         ]);
@@ -154,15 +154,14 @@ class ColumnTest extends TestCase
     #[DataProvider('getOperators')]
     public function testIsValidOperator(string $type, string $operator, bool $expected): void
     {
-        $column =   new Column([
+        $column = new Column([
             'name' => 'test',
             'label' => 'test',
             'type' => $type,
             'isOrderable' => true,
             'isNullable' => true,
-            'entity' => 'test'
+            'entity' => 'test',
         ]);
-
 
         $this->assertEquals($expected, $column->isValidOperator($operator));
     }

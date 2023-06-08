@@ -118,7 +118,6 @@ class FilterOperatorsTest extends TestCase
         yield 'Nullable' => [FilterOperators::format($operators), 'getForEntitiesTypes', true];
     }
 
-
     public static function getFormattedOperators(): iterable
     {
         $labels = [
@@ -171,8 +170,8 @@ class FilterOperatorsTest extends TestCase
         $this->assertEqualsCanonicalizing([
             $operator => [
                 'operator' => $operator,
-                'label' => $label
-            ]
+                'label' => $label,
+            ],
         ], FilterOperators::format([$operator]));
     }
 }

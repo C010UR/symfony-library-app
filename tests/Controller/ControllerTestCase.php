@@ -28,7 +28,7 @@ abstract class ControllerTestCase extends WebTestCase
 
     public function joinPaths(...$paths): string
     {
-        if ($paths === []) {
+        if ([] === $paths) {
             throw new \InvalidArgumentException('Paths are empty.');
         }
 
@@ -78,7 +78,7 @@ abstract class ControllerTestCase extends WebTestCase
 
     public function getEndpoint(...$paths): string
     {
-        return $this->joinPaths($this->endpoint, $paths);
+        return $this->joinPaths([$this->endpoint, $paths]);
     }
 
     public function getEntityManager(): EntityManagerInterface

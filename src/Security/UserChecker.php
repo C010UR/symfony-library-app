@@ -3,8 +3,6 @@
 namespace App\Security;
 
 use App\Entity\User;
-use App\Security\Exception\AccountInactive;
-use App\Security\Exception\InvalidCredentials;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;

@@ -215,7 +215,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
 
     public function getObfuscatedUserIdentifier(): ?string
     {
-        if ($this->getUserIdentifier() === '' || $this->getUserIdentifier() === '0') {
+        if ('' === $this->getUserIdentifier() || '0' === $this->getUserIdentifier()) {
             return null;
         }
 

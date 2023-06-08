@@ -4,6 +4,7 @@ namespace App\Utils\Filter;
 
 /**
  * Class encapsulates operators for QueryParser.
+ *
  * @see \App\Tests\Utils\Filter\FilterOperatorsTest
  */
 class FilterOperators

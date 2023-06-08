@@ -12,7 +12,6 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class BookFixturesDev extends Fixture implements FixtureGroupInterface, DependentFixtureInterface
 {
