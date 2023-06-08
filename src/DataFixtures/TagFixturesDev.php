@@ -22,7 +22,7 @@ class TagFixturesDev extends Fixture implements FixtureGroupInterface
             'Триллер',
             'Историческая Фантастика',
             'Роман',
-            'Научная',
+            'Наука',
             'Учебник',
             'Математика',
             'Физика',
