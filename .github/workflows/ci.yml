@@ -16,6 +16,10 @@ jobs:
 
       - name: Use Composer
         uses: php-actions/composer@v6
+        with:
+          php_version: "8.2"
+          php_extensions: amqp
+          version: 2.x
 
       - name: Format the PHP code with php-cs-fixer
         run: composer run php-cs-fixer

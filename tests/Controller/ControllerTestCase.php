@@ -86,7 +86,7 @@ abstract class ControllerTestCase extends WebTestCase
         return $this->entityManager;
     }
 
-    public function getClient(): KernelBrowser
+    public function getClientInstance(): KernelBrowser
     {
         return $this->client;
     }
@@ -103,7 +103,7 @@ abstract class ControllerTestCase extends WebTestCase
     public function getJsonResponseData(): array
     {
         return json_decode(
-            $this->getClient()
+            $this->getClientInstance()
                 ->getResponse()
                 ->getContent(),
             true,

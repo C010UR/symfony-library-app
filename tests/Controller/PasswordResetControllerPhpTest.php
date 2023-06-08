@@ -40,7 +40,7 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
     {
         $newPassword = $this->appendRandomString($oldPassword);
 
-        $this->getClient()->jsonRequest('POST', '/api/v1/reset-password', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password', [
             'email' => $user->getEmail(),
             'link' => 'https://localhost',
         ]);
@@ -59,7 +59,7 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
             $this->fail('Could not find url');
         }
 
-        $this->getClient()->jsonRequest(
+        $this->getClientInstance()->jsonRequest(
             'POST',
             $this->joinPaths(['/api/v1/reset-password/reset', preg_replace('/=\r?\n/m', '', (string) $urls[1][0])]),
             [
@@ -69,14 +69,14 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
 
         $this->assertResponseIsSuccessful();
 
-        $this->getClient()->jsonRequest('POST', '/api/v1/login', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/login', [
             'username' => $user->getEmail(),
             'password' => $oldPassword,
         ]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
 
-        $this->getClient()->jsonRequest('POST', '/api/v1/login', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/login', [
             'username' => $user->getEmail(),
             'password' => $newPassword,
         ]);
@@ -88,35 +88,35 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
     #[DataProvider('getUser')]
     public function testResetRequestFail(User $user): void
     {
-        $this->getClient()->jsonRequest('POST', '/api/v1/reset-password', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password', [
             'link' => 'https://localhost:8000',
         ]);
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
 
-        $this->getClient()->jsonRequest('POST', '/api/v1/reset-password', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password', [
             'email' => $user->getEmail(),
         ]);
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
 
-        $this->getClient()->jsonRequest('POST', '/api/v1/reset-password', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password', [
             'email' => sprintf('wrong.%s', $user->getEmail()),
             'link' => 'https://localhost:8000',
         ]);
         $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
 
-        $this->getClient()->jsonRequest('POST', '/api/v1/reset-password', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password', [
             'email' => $user->getEmail(),
             'link' => '',
         ]);
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
 
-        $this->getClient()->jsonRequest('POST', '/api/v1/reset-password', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password', [
             'email' => '',
             'link' => 'https://localhost:8000',
         ]);
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
 
-        $this->getClient()->Request(
+        $this->getClientInstance()->Request(
             'POST',
             '/api/v1/reset-password',
             content: json_encode([
@@ -134,13 +134,13 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
     {
         $newPassword = $this->appendRandomString($oldPassword);
 
-        $this->getClient()->jsonRequest('POST', '/api/v1/reset-password/reset/', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password/reset/', [
             'password' => $newPassword,
         ]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
 
-        $this->getClient()->jsonRequest('POST', '/api/v1/reset-password', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password', [
             'email' => $user->getEmail(),
             'link' => 'http://localhost:8000',
         ]);
@@ -151,7 +151,7 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
             ->findOneBy(['user' => $user])
             ->getSelector();
 
-        $this->getClient()->jsonRequest(
+        $this->getClientInstance()->jsonRequest(
             'POST',
             $this->joinPaths(['/api/v1/reset-password/reset', $this->appendRandomString($selector)]),
             [
@@ -161,13 +161,13 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
 
-        $this->getClient()->jsonRequest('POST', $this->joinPaths(['/api/v1/reset-password/reset', $selector]), [
+        $this->getClientInstance()->jsonRequest('POST', $this->joinPaths(['/api/v1/reset-password/reset', $selector]), [
             'password' => '',
         ]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
 
-        $this->getClient()->Request(
+        $this->getClientInstance()->Request(
             'POST',
             $this->joinPaths(['/api/v1/reset-password/reset', $selector]),
             content: json_encode([

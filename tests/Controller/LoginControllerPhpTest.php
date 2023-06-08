@@ -44,7 +44,7 @@ class LoginControllerPhpTest extends ControllerTestCase
     #[DataProvider('getUser')]
     public function testLogin(User $user, string $password): void
     {
-        $this->getClient()->jsonRequest('POST', '/api/v1/login', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/login', [
             'username' => $user->getEmail(),
             'password' => $password,
         ]);
@@ -52,19 +52,19 @@ class LoginControllerPhpTest extends ControllerTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals($user->format(), $this->getJsonResponseData());
 
-        $this->getClient()->request('GET', '/api/v1/profile');
+        $this->getClientInstance()->request('GET', '/api/v1/profile');
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals($user->format(), $this->getJsonResponseData());
 
-        $this->getClient()->request('GET', '/api/v1/logout');
+        $this->getClientInstance()->request('GET', '/api/v1/logout');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
     }
 
     public function assertLoginFail(string $email, string $password, string $expectedMessage): void
     {
-        $this->getClient()->jsonRequest('POST', '/api/v1/login', [
+        $this->getClientInstance()->jsonRequest('POST', '/api/v1/login', [
             'username' => $email,
             'password' => $password,
         ]);
@@ -123,14 +123,14 @@ class LoginControllerPhpTest extends ControllerTestCase
 
     public function testProfileForUnauthorized(): void
     {
-        $this->getClient()->request('GET', '/api/v1/profile');
+        $this->getClientInstance()->request('GET', '/api/v1/profile');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
     public function testLogoutForUnauthorized(): void
     {
-        $this->getClient()->request('GET', '/api/v1/logout');
+        $this->getClientInstance()->request('GET', '/api/v1/logout');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
     }
