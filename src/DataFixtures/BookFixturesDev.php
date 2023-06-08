@@ -24,7 +24,7 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
 
     private function createFromFile(ObjectManager $manager, array $file): Book
     {
-        preg_match('/(.*)\. /U', (string) $file['filename'], $preg);
+        preg_match('/(.*)\- /U', (string) $file['filename'], $preg);
 
         if (empty($preg[1])) {
             throw new \InvalidArgumentException(sprintf('File %s has wrong format.', $file['filename']));
@@ -32,7 +32,7 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
 
         $authors = explode(',', $preg[1]);
 
-        $name = preg_replace('/(.*)\. /U', '', pathinfo((string) $file['filename'], PATHINFO_FILENAME));
+        $name = preg_replace('/(.*)\- /U', '', pathinfo((string) $file['filename'], PATHINFO_FILENAME));
         $name = ucwords(strtolower($name));
 
         $filename = sprintf('%s/cover-%s.%s', $this->dirBookCoverUploads, bin2hex(random_bytes(3)), $file['extension']);
@@ -48,17 +48,18 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
         $book->setPublisher($manager->getRepository(Publisher::class)->findOneBy([]));
 
         foreach ($authors as $author) {
-            $author = ucwords(strtolower($author));
 
-            $book->addAuthor($manager
-                ->getRepository(Author::class)
-                ->matching(
-                    Criteria::create()
-                        ->andWhere(
-                            Criteria::expr()->contains('firstName', trim($author))
-                        )
-                )
-                ->first());
+            $author = trim(Utils::ucwords(Utils::uclower($author)));
+
+            $authorEntity = $manager
+            ->getRepository(Author::class)
+            ->findOneBy(['lastName' => $author]);
+
+            if (!$authorEntity) {
+                throw new \InvalidArgumentException(sprintf('Cannot find author \'%s\'', $author));
+            }
+
+            $book->addAuthor($authorEntity);
         }
 
         foreach ($manager->getRepository(Tag::class)->findBy([]) as $tag) {

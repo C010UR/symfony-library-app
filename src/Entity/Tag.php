@@ -51,7 +51,7 @@ class Tag implements EntityInterface, \Stringable
     public function normalizeName(): void
     {
         if ($this->getName()) {
-            $this->setName(Utils::ucwords($this->getName()));
+            $this->setName(Utils::ucwords(Utils::uclower($this->getName())));
         }
     }
 

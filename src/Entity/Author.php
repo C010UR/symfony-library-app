@@ -68,15 +68,15 @@ class Author implements EntityInterface, \Stringable
     public function normalizeName(): void
     {
         if ($this->getFirstName()) {
-            $this->setFirstName(Utils::ucwords($this->getFirstName()));
+            $this->setFirstName(Utils::ucwords(Utils::uclower($this->getFirstName())));
         }
 
         if ($this->getLastName()) {
-            $this->setLastName(Utils::ucwords($this->getLastName()));
+            $this->setLastName(Utils::ucwords(Utils::uclower($this->getLastName())));
         }
 
         if ($this->getMiddleName()) {
-            $this->setMiddleName(Utils::ucwords($this->getMiddleName()));
+            $this->setMiddleName(Utils::ucwords(Utils::uclower($this->getMiddleName())));
         }
     }
 

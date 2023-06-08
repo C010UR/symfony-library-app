@@ -41,7 +41,7 @@ logs: ## Show live logs
 php: ## Connect to the PHP FPM container
 	@$(PHP_CONT) sh
 
-volumes-remove: ## Remove all volumes from docker
+remove-volumes: ## Remove all volumes from docker
 	@$(DOCKER) volume rm $(shell $(DOCKER) volume ls -q)
 
 ## —— Composer —————————————————————————————————————————————————————————————————
