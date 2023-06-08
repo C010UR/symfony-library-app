@@ -13,7 +13,9 @@
             <i>{{ profile.email }}</i>
           </p>
           <p class="text">
-            <span v-for="role in profile.roles" :key="role" style="margin-right: 0.4rem"> @{{ role }} </span>
+            <span v-for="role in profile.roles" :key="role" style="margin-right: 0.4rem">
+              @{{ role.toLocaleLowerCase().replace('role_', '') }}
+            </span>
           </p>
         </div>
       </div>

@@ -7,7 +7,7 @@ export function useParseApiParams(params?: ApiParams) {
 
   const result: { orders?: Order[]; filters?: Filter[]; pagination: Pagination; deleted?: boolean } = {
     pagination: {
-      pageSize: params.pageSize && Number(params.pageSize) >= 0 ? Number(params.pageSize) : 20,
+      pageSize: params.pageSize && Number(params.pageSize) >= 0 ? Number(params.pageSize) : 10,
       offset: params.offset && Number(params.offset) >= 0 ? Number(params.offset) : 0,
     },
   };

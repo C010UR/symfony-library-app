@@ -9,23 +9,49 @@ use Doctrine\Persistence\ObjectManager;
 
 class PublisherFixturesTest extends Fixture implements FixtureGroupInterface
 {
+    /**
+     * @var array<string, string>[]
+     */
+    final public const DATA = [
+        [
+            'key' => 'test-1',
+            'name' => 'test-1',
+            'address' => '123308, г. Москва, Зорге ул., д.1, стр.1',
+            'email' => 'info@eksmo.ru',
+            'website' => 'https://eksmo.ru',
+            'image' => 'eksmo.png',
+        ],
+        [
+            'key' => 'test-2',
+            'name' => 'test-2',
+            'address' => 'г. Москва, Пресненская наб., д.6, стр.2, БЦ «Империя»',
+            'email' => 'support@ast.ru',
+            'website' => 'https://ast.ru',
+            'image' => 'act.png',
+        ],
+    ];
+
     public function load(ObjectManager $manager): void
     {
-        $publishers = [
-            'test 1',
-            'test 2',
-        ];
+        foreach (self::DATA as $publisher) {
+            try {
+                $entity = new Publisher();
 
-        foreach ($publishers as $data) {
-            $publisher = new Publisher();
-            $publisher->setName($data);
-            $publisher->setAddress('-');
-            $publisher->setEmail('example@email.com');
-            $publisher->setWebsite('https://example.com');
+                $entity->setName($publisher['name']);
+                $entity->setAddress($publisher['address']);
+                $entity->setEmail($publisher['email']);
+                $entity->setWebsite($publisher['website']);
 
-            $manager->persist($publisher);
+                $entity->setIsDeleted(false);
 
-            $this->setReference(sprintf('publisher: %s', $publisher->getName()), $publisher);
+                $manager->persist($entity);
+
+                if (array_key_exists('key', $publisher)) {
+                    $this->setReference(sprintf('publisher: %s', $publisher['key']), $entity);
+                }
+            } catch (\Throwable $throwable) {
+                throw new \Exception(sprintf('Failed for the publisher %s', $publisher['name'] ?? 'EMPTY'), $throwable->getCode(), previous: $throwable);
+            }
         }
 
         $manager->flush();

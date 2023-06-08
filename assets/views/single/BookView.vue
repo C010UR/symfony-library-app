@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="wrapper-description" v-if="book.description">
-        <p>{{ book.description }}</p>
+        <pre>{{ book.description }}</pre>
       </div>
     </div>
   </base-page>

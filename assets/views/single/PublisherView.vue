@@ -6,6 +6,7 @@
       <div class="body-item">
         <h1 class="name">{{ publisher.name }}</h1>
         <span class="text">
+          <el-icon><Location /></el-icon>
           <p>Адрес:</p>
           <p>{{ publisher.address }}</p>
         </span>
@@ -28,7 +29,7 @@
 import { BasePage } from '@/components/pages';
 import { BaseAvatar } from '@/components/tags/base';
 import { ElLink, ElIcon } from 'element-plus';
-import { Message, ChromeFilled } from '@element-plus/icons-vue';
+import { Message, ChromeFilled, Location } from '@element-plus/icons-vue';
 import { ApiUrls, useGetOne } from '@/composables';
 import type { BookPublisher } from '@/composables';
 import { ref } from 'vue';

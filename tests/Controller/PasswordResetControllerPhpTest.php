@@ -6,6 +6,7 @@ use App\Controller\PasswordResetController;
 use App\Entity\User;
 use App\Repository\ResetPasswordRequestRepository;
 use App\Repository\UserRepository;
+use App\Utils\FileUtils;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
@@ -61,7 +62,7 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
 
         $this->getClientInstance()->jsonRequest(
             'POST',
-            $this->joinPaths(['/api/v1/reset-password/reset', preg_replace('/=\r?\n/m', '', (string) $urls[1][0])]),
+            FileUtils::joinPaths(['/api/v1/reset-password/reset', preg_replace('/=\r?\n/m', '', (string) $urls[1][0])]),
             [
                 'password' => $newPassword,
             ],
@@ -153,7 +154,7 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
 
         $this->getClientInstance()->jsonRequest(
             'POST',
-            $this->joinPaths(['/api/v1/reset-password/reset', $this->appendRandomString($selector)]),
+            FileUtils::joinPaths(['/api/v1/reset-password/reset', $this->appendRandomString($selector)]),
             [
                 'password' => $newPassword,
             ],
@@ -161,7 +162,7 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
 
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
 
-        $this->getClientInstance()->jsonRequest('POST', $this->joinPaths(['/api/v1/reset-password/reset', $selector]), [
+        $this->getClientInstance()->jsonRequest('POST', FileUtils::joinPaths(['/api/v1/reset-password/reset', $selector]), [
             'password' => '',
         ]);
 
@@ -169,7 +170,7 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
 
         $this->getClientInstance()->Request(
             'POST',
-            $this->joinPaths(['/api/v1/reset-password/reset', $selector]),
+            FileUtils::joinPaths(['/api/v1/reset-password/reset', $selector]),
             content: json_encode([
                 'password' => $newPassword,
             ], JSON_THROW_ON_ERROR),

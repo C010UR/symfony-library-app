@@ -17,6 +17,16 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[UniqueEntity('email', 'Email is already taken.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityInterface, \Stringable
 {
+    /**
+     * @var string
+     */
+    final public const ROLE_USER = 'ROLE_USER';
+
+    /**
+     * @var string
+     */
+    final public const ROLE_ADMIN = 'ROLE_ADMIN';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -128,8 +138,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
     public function getRoles(): array
     {
         $roles = $this->roles;
+
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = self::ROLE_USER;
 
         return array_unique($roles);
     }

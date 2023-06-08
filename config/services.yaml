@@ -14,8 +14,8 @@ services:
     bind:
       string $environment: "%kernel.environment%"
       string $projectDir: "%kernel.project_dir%"
-      string $dirFixtures: "%kernel.project_dir%/src/DataFixtures"
       string $dirPublic: "%kernel.project_dir%/public"
+      string $dirFixtures: "%kernel.project_dir%/fixtures"
       string $dirBookPublisherUploads: "/uploads/books/publishers"
       string $dirBookAuthorUploads: "/uploads/books/authors"
       string $dirBookCoverUploads: "/uploads/books/covers"

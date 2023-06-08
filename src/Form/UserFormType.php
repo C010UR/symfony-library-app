@@ -68,7 +68,7 @@ class UserFormType extends AbstractType
                 'entry_options' => [
                     'constraints' => [
                         new Assert\Choice(
-                            ['ROLE_ADMIN', 'ROLE_USER'],
+                            [User::ROLE_USER, User::ROLE_ADMIN],
                             message: 'Role {{ value }} is not a valid role. Valid roles are: {{ choices }}. {{ value }} was provided.',
                         ),
                     ],

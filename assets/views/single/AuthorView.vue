@@ -5,12 +5,12 @@
 
       <div class="body-item">
         <h1 class="name">{{ author.fullName }}</h1>
-        <span class="text">
+        <span class="text" v-if="author.email">
           <el-icon><Message /></el-icon>
           <p>Email:</p>
           <el-link class="link" type="primary" :href="`mailto: ${author.email}`">{{ author.email }}</el-link>
         </span>
-        <span class="text">
+        <span class="text" v-if="author.website">
           <el-icon><ChromeFilled /></el-icon>
           <p>Веб-Страница:</p>
           <el-link class="link" type="primary" :href="author.website">{{ author.website }}</el-link>

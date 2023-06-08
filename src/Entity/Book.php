@@ -8,7 +8,6 @@ use App\Repository\BookRepository;
 use App\Utils\Utils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -70,9 +69,9 @@ class Book implements EntityInterface, \Stringable
 
     public function normalizeName(): void
     {
-        if ($this->getName()) {
-            $this->setName(Utils::ucwords($this->getName()));
-        }
+        // if ($this->getName()) {
+        //     $this->setName(Utils::ucwords($this->getName()));
+        // }
     }
 
     public function __toString(): string

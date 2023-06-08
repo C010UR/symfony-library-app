@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Utils\FileUtils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -25,23 +26,6 @@ abstract class ControllerTestCase extends WebTestCase
     private string $endpoint;
 
     private string $dirAssets;
-
-    public function joinPaths(...$paths): string
-    {
-        if ([] === $paths) {
-            throw new \InvalidArgumentException('Paths are empty.');
-        }
-
-        foreach ($paths as $key => $argument) {
-            $paths[$key] = trim((string) $argument);
-
-            if (empty($paths[$key])) {
-                unset($paths[$key]);
-            }
-        }
-
-        return preg_replace('#/+#', '/', implode('/', $paths));
-    }
 
     public function randomString(int $length = 64, string $keyspace = 'abcdefghijklmnopqrstuvwxyz'): string
     {
@@ -78,7 +62,7 @@ abstract class ControllerTestCase extends WebTestCase
 
     public function getEndpoint(...$paths): string
     {
-        return $this->joinPaths([$this->endpoint, $paths]);
+        return FileUtils::joinPaths([$this->endpoint, $paths]);
     }
 
     public function getEntityManager(): EntityManagerInterface
@@ -148,7 +132,7 @@ abstract class ControllerTestCase extends WebTestCase
 
         $user = $this->getRepository(UserRepository::class)->find($user->getId());
 
-        if (!in_array('ROLE_ADMIN', $user->getRoles())) {
+        if (!in_array(User::ROLE_ADMIN, $user->getRoles())) {
             $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
 
             return;

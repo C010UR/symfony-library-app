@@ -77,7 +77,7 @@
         </div>
         <div class="column description" v-if="entity.description">
           <p class="description-title">Описание:</p>
-          <p class="description-text">{{ entity.description }}</p>
+          <pre class="description-text">{{ entity.description }}</pre>
         </div>
       </base-card>
     </card-list>
@@ -105,7 +105,7 @@ const filters = ref<Filter[] | undefined>(params?.filters);
 const orders = ref<Order[] | undefined>(params?.orders);
 const pagination = ref<ApiMeta>({
   offset: 0,
-  pageSize: 20,
+  pageSize: 10,
   paginated: true,
   totalCount: 0,
   ...params?.pagination,
@@ -194,6 +194,7 @@ watch([filters, orders, pagination], async () => {
   flex-direction: row;
   align-items: center;
   margin: 0.5rem 0;
+  word-wrap: break-word;
 }
 
 .avatar {

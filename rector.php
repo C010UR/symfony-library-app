@@ -10,6 +10,7 @@ use Rector\Symfony\Set\SymfonySetList;
 use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\Symfony\Set\TwigSetList;
 use Rector\CodingStyle\Tests\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector;
+use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -25,6 +26,10 @@ return static function (RectorConfig $rectorConfig): void {
         MakeInheritedMethodVisibilitySameAsParentRector::class => [
             __DIR__ . '/tests/Controller/ControllerTestCase.php'
         ]
+    ]);
+
+    $rectorConfig->skip([
+        RemoveAlwaysTrueIfConditionRector::class
     ]);
 
     $rectorConfig->symfonyContainerPhp(__DIR__ . '/tests/symfony-container.php');

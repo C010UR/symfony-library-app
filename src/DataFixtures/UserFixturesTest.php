@@ -10,41 +10,80 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixturesTest extends Fixture implements FixtureGroupInterface
 {
+    /**
+     * @var string
+     */
+    final public const PASSWORD = 'test';
+
+    final public const DATA = [
+        [
+            'key' => 'admin',
+            'firstName' => 'Адам',
+            'lastName' => 'Пенкин',
+            'middleName' => 'Геннадиевич',
+            'email' => 'admin@mtec.by',
+            'roles' => [User::ROLE_USER, User::ROLE_ADMIN],
+            'isActive' => true,
+        ],
+        [
+            'key' => 'user',
+            'firstName' => 'Агафья',
+            'lastName' => 'Бетрозова',
+            'middleName' => 'Иосифовна',
+            'email' => 'user@mtec.by',
+            'roles' => [User::ROLE_USER],
+            'isActive' => true,
+        ],
+        [
+            'firstName' => 'Эмма',
+            'lastName' => 'Софийская',
+            'middleName' => 'Викторовна',
+            'email' => 'disabled.admin@mtec.by',
+            'roles' => [User::ROLE_USER, User::ROLE_ADMIN],
+            'isActive' => false,
+        ],
+        [
+            'firstName' => 'Антон',
+            'lastName' => 'Лучной',
+            'middleName' => 'Геннадиевич',
+            'email' => 'disabled.user@mtec.by',
+            'roles' => [User::ROLE_USER],
+            'isActive' => false,
+        ],
+    ];
+
     public function __construct(private readonly UserPasswordHasherInterface $hasher)
     {
     }
 
-    private function createEmail(string $name): string
-    {
-        return sprintf('test.email.%s@mtec.by', $name);
-    }
-
     public function load(ObjectManager $manager): void
     {
-        $roleAdmin = 'ROLE_ADMIN';
-        $roleUser = 'ROLE_USER';
-        $password = 'test.password';
+        foreach (self::DATA as $user) {
+            try {
+                $entity = new User();
 
-        $users = [
-            ['admin', $roleAdmin, true],
-            ['user', $roleUser, true],
-            ['disabled.admin', $roleAdmin, false],
-            ['disabled.user', $roleUser, false],
-        ];
+                $entity->setFirstName($user['firstName']);
+                $entity->setLastName($user['lastName']);
 
-        foreach ($users as $data) {
-            $user = new User();
-            $user->setEmail($this->createEmail($data[0]));
-            $user->setRoles([$data[1]]);
-            $hashed = $this->hasher->hashPassword($user, $password);
-            $user->setPassword($hashed);
-            $user->setIsActive($data[2]);
-            $user->setFirstName($data[0]);
-            $user->setLastName($data[0]);
+                if (array_key_exists('middleName', $user)) {
+                    $entity->setMiddleName($user['middleName']);
+                }
 
-            $manager->persist($user);
+                $entity->setEmail($user['email']);
+                $entity->setRoles($user['roles']);
+                $entity->setPassword($this->hasher->hashPassword($entity, self::PASSWORD));
 
-            $this->setReference(sprintf('user: %s', $user->getEmail()), $user);
+                $entity->setIsActive($user['isActive']);
+                $entity->setIsDeleted(false);
+
+                $manager->persist($entity);
+
+                if (array_key_exists('key', $user)) {
+                    $this->setReference(sprintf('user: %s', $user['key']), $entity);
+                }
+            } catch (\Throwable $throwable) {
+                throw new \Exception(sprintf('Failed for the user %s %s %s', $user['firstName'] ?? 'EMPTY', $user['lastName'] ?? 'EMPTY', $user['middleName'] ?? ''), $throwable->getCode(), previous: $throwable);
+            }
         }
 
         $manager->flush();

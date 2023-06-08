@@ -25,7 +25,7 @@ class ImageSaver
     {
         $tempFilename = tempnam('', 'upl') . $file->guessExtension();
 
-        $filename = sprintf('%s-%s.webp', $prefix ?: 'image', bin2hex(random_bytes(3)));
+        $filename = FileUtils::generateFilename($prefix, 'webp');
 
         $file = $file->move(sys_get_temp_dir(), $tempFilename);
 
