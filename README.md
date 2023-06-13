@@ -27,14 +27,15 @@ make vendor install # Install npm and composer dependencies
 
 ```sh
 make start # Build and start docker image
-npm run dev # Run vite dev (Vite dev was not containerised because of performance issues related to wsl2)
+make load-fixtures # Load mock data (Must be used only when php container is healthy)
+make dev dev # Run vite dev (Vite dev was not containerised because of performance issues related to wsl2)
 ```
 
 ## Run the project (for staging)
 
 ```sh
 make serve # Build and start docker image for staging env
-make serve-load-fixtures # Load some mock data
+make serve-load-fixtures # Load mock data (Must be used only when php container is healthy)
 ```
 
 ## Stop the project
