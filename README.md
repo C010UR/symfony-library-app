@@ -20,54 +20,27 @@ Documentation:
 ## Install dependencies
 
 ```sh
-make install # Install npm and composer dependencies
-```
-
-or, if `GNU Make` is not available
-
-```sh
-npm install --include-dev
-composer install --ignore-platform-reqs
+make vendor install # Install npm and composer dependencies
 ```
 
 ## Run the project (for dev)
 
 ```sh
 make start # Build and start docker image
-npm run dev # Run vite dev (Vite dev was not containerised because of performance issues)
-```
-
-or, if `GNU Make` is not available
-
-```sh
-docker compose up --build --detach
-npm run dev
+npm run dev # Run vite dev (Vite dev was not containerised because of performance issues related to wsl2)
 ```
 
 ## Run the project (for staging)
 
 ```sh
 make serve # Build and start docker image for staging env
-npm run dev # Run vite dev (Vite dev was not containerised because of performance issues)
-```
-
-or, if `GNU Make` is not available
-
-```sh
-docker compose -f docker-compose.yml up --build --detach
-npm run dev
+make serve-load-fixtures # Load some mock data
 ```
 
 ## Stop the project
 
 ```sh
 make down # Stop the docker hub
-```
-
-or, if `GNU Make` is not available
-
-```sh
-docker composer down --remove-orphans
 ```
 
 ----------------
