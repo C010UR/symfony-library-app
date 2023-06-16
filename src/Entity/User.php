@@ -15,6 +15,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email', 'Email is already taken.')]
+#[UniqueEntity('slug', 'Slug is already taken.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityInterface, \Stringable
 {
     /**
@@ -56,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
     #[ORM\Column(type: Citext::CITEXT, nullable: true)]
     private ?string $middleName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -170,7 +171,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -212,9 +213,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
         return $this;
     }
 
-    public function isDeleted(): ?bool
+    public function isDeleted(): bool
     {
-        return $this->isDeleted;
+        return (bool) $this->isDeleted;
     }
 
     public function setIsDeleted(bool $isDeleted): self
@@ -237,7 +238,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
         return substr($name, 0, $length) . str_repeat('*', $length) . '@' . end($address);
     }
 
-    public function format(): array
+    public function format(bool $isDeleted = false): array
     {
         return [
             'id' => $this->getId(),
@@ -246,7 +247,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityI
             'lastName' => $this->getLastName(),
             'middleName' => $this->getMiddleName(),
             'slug' => $this->getSlug(),
-            'email' => self::getObfuscatedUserIdentifier(),
+            'email' => $isDeleted ? $this->getEmail() : $this->getObfuscatedUserIdentifier(),
             'image' => $this->getImagePath(),
             'roles' => $this->getRoles(),
             'isDeleted' => $this->isDeleted(),

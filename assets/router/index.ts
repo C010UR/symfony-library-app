@@ -13,6 +13,11 @@ import {
   BookView,
   AuthorView,
   PublisherView,
+  BooksCrudView,
+  PublishersCrudView,
+  AuthorsCrudView,
+  UsersCrudView,
+  TagsCrudView,
 } from '@/views';
 import { useGetProfile } from '@/composables';
 import type { UserRole } from '@/composables';
@@ -36,11 +41,6 @@ const router = createRouter({
       meta: {
         title: 'О Нас',
       },
-    },
-    {
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: NotFoundView,
     },
     {
       path: '/login',
@@ -80,6 +80,51 @@ const router = createRouter({
         title: 'Сброс пароля',
         transitionType: 'Auth',
         transitionLevel: 3,
+      },
+    },
+    {
+      path: '/admin/books',
+      name: 'BooksCrud',
+      component: BooksCrudView,
+      meta: {
+        title: '[A] Книги',
+        roles: ['ROLE_ADMIN', 'ROLE_USER'],
+      },
+    },
+    {
+      path: '/admin/publishers',
+      name: 'PublishersCrud',
+      component: PublishersCrudView,
+      meta: {
+        title: '[A] Издатели',
+        roles: ['ROLE_ADMIN', 'ROLE_USER'],
+      },
+    },
+    {
+      path: '/admin/authors',
+      name: 'AuthorsCrud',
+      component: AuthorsCrudView,
+      meta: {
+        title: '[A] Авторы',
+        roles: ['ROLE_ADMIN', 'ROLE_USER'],
+      },
+    },
+    {
+      path: '/admin/tags',
+      name: 'TagsCrud',
+      component: TagsCrudView,
+      meta: {
+        title: '[A] Жанры',
+        roles: ['ROLE_ADMIN', 'ROLE_USER'],
+      },
+    },
+    {
+      path: '/admin/users',
+      name: 'UsersCrud',
+      component: UsersCrudView,
+      meta: {
+        title: '[A] Пользователи',
+        roles: ['ROLE_ADMIN'],
       },
     },
     {
@@ -125,10 +170,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
   to.meta.transition = resolveTransition(to, from);
-
-  if (to.name === 'Dashboard') {
-    return routeFallback(await useGetProfile());
-  }
 
   if (!to.meta.roles) {
     return undefined;

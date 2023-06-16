@@ -27,7 +27,7 @@ jobs:
       - name: Format the PHP code with php-cs-fixer
         run: composer run rector
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}

@@ -4,16 +4,19 @@ namespace App\Controller;
 
 use App\Controller\Interface\CrudControllerInterface;
 use App\Service\ControllerService\AuthorService;
+use App\Service\ControllerService\BookService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('api/v1/books/authors', name: 'app_api_book_authors_', format: 'json')]
+#[Route('api/v1/authors', name: 'app_api_authors_', format: 'json')]
 class AuthorController extends AbstractController implements CrudControllerInterface
 {
-    public function __construct(private readonly AuthorService $service)
-    {
+    public function __construct(
+        private readonly AuthorService $service,
+        private readonly BookService $bookService
+    ) {
     }
 
     #[Route('', name: 'read_all', methods: ['GET'])]
@@ -52,5 +55,17 @@ class AuthorController extends AbstractController implements CrudControllerInter
         $this->service->delete($id);
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/{slug}/books', name: 'get_books', methods: ['GET'])]
+    public function getAllBooks(Request $request, string $slug)
+    {
+        return new JsonResponse($this->bookService->getAuthorBooks($request, $slug));
+    }
+
+    #[Route('/books/meta', name: 'get_books_meta', methods: ['GET'])]
+    public function getBooksMeta(): JsonResponse
+    {
+        return new JsonResponse($this->bookService->getAuthorBooksFilterMeta());
     }
 }

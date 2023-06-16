@@ -83,7 +83,7 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
         ],
         [
             'key' => 'admin',
-            'firstName' => 'Марк',
+            'firstName' => 'Мрак',
             'lastName' => 'Лауренчикас',
             'middleName' => 'Павлович',
             'image' => 'mark-laurenchikas.jpg',
@@ -137,7 +137,7 @@ class UserFixturesDev extends Fixture implements FixtureGroupInterface
                     $filename = FileUtils::joinPaths(
                         [
                             $this->dirUserUploads,
-                            FileUtils::generateFilename('user', pathinfo($user['image'], \PATHINFO_EXTENSION))
+                            FileUtils::generateFilename('user', pathinfo($user['image'], \PATHINFO_EXTENSION)),
                         ]
                     );
 

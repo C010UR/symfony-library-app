@@ -7,6 +7,11 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 interface EntityInterface
 {
     /**
+     * Check if entity is deleted.
+     */
+    public function isDeleted(): bool;
+
+    /**
      * Converts entity to string.
      */
     public function __toString(): string;

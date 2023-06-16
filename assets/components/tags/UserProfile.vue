@@ -13,9 +13,9 @@
             <i>{{ profile.email }}</i>
           </p>
           <p class="text">
-            <span v-for="role in profile.roles" :key="role" style="margin-right: 0.4rem">
+            <el-tag v-for="role in profile.roles" :key="role" style="margin-right: 0.4rem">
               @{{ role.toLocaleLowerCase().replace('role_', '') }}
-            </span>
+            </el-tag>
           </p>
         </div>
       </div>
@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { ElPopover, ElButton } from 'element-plus';
+import { ElPopover, ElTag, ElButton } from 'element-plus';
 import { BaseAvatar } from '@/components/tags/base';
 import { useGetProfile, useLogout } from '@/composables';
 import type { UserProfile } from '@/composables';
@@ -55,7 +55,7 @@ const emits = defineEmits<{
 
 async function btnLogout() {
   await useLogout();
-  router.go(0);
+  router.push({ name: 'Main' });
 }
 
 function btnLogin() {

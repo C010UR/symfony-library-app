@@ -66,6 +66,10 @@ class AuthListener
             throw new InvalidCredentials();
         }
 
+        if (!$user->isActive()) {
+            throw new AccountInactive();
+        }
+
         $user->setLoginAttempts(0);
         $this->entityManager->flush();
     }
@@ -77,15 +81,15 @@ class AuthListener
             /** @var User $user */
             $user = $event->getPassport()->getUser();
         } catch (Throwable) {
-            return;
-        }
-
-        if (!$user->isActive()) {
-            throw new AccountInactive();
+            throw new InvalidCredentials();
         }
 
         if ($user->isDeleted()) {
             throw new InvalidCredentials();
+        }
+
+        if (!$user->isActive()) {
+            throw new AccountInactive();
         }
     }
 }

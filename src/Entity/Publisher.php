@@ -115,9 +115,9 @@ class Publisher implements EntityInterface, \Stringable
         return $this;
     }
 
-    public function isDeleted(): ?bool
+    public function isDeleted(): bool
     {
-        return $this->isDeleted;
+        return (bool) $this->isDeleted;
     }
 
     public function setIsDeleted(bool $isDeleted): self

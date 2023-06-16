@@ -11,6 +11,7 @@ use App\Utils\Filter\Column;
 use App\Utils\Filter\QueryParser;
 use App\Utils\ImageSaver;
 use App\Utils\RequestUtils;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,7 +21,8 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
         private readonly FormFactoryInterface $formFactory,
         private readonly string $dirPublic,
         private readonly string $dirUserUploads,
-        UserRepository $repository
+        UserRepository $repository,
+        Security $security
     ) {
         $queryParser = new QueryParser();
         $queryParser->setColumns([
@@ -76,7 +78,7 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
             ]),
         ]);
 
-        $this->setQueryParser($queryParser)->setRepository($repository);
+        $this->setSecurity($security)->setQueryParser($queryParser)->setRepository($repository);
     }
 
     public function create(Request $request): array
@@ -120,6 +122,10 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
             );
 
             $user->setImagePath($filename);
+        }
+
+        if ($form['removeImage']->getData()) {
+            $user->setImagePath(null);
         }
 
         $user->setIsActive(false);

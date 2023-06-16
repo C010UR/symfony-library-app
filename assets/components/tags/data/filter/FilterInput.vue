@@ -174,7 +174,7 @@ import { ref, watch, watchEffect } from 'vue';
 import { ElSwitch, ElInputNumber, ElSelect, ElInput, ElDatePicker } from 'element-plus';
 import { AuthorOption, BookOption, TagOption, PublisherOption } from '@/components/tags/entity-option';
 import { useGetAll, ApiUrls } from '@/composables';
-import type { BookAuthor, BookFull, BookPublisher, BookTag, FilterOption, FilterOperator } from '@/composables';
+import type { BookAuthor, Book, BookPublisher, BookTag, FilterOption, FilterOperator } from '@/composables';
 
 export interface Props {
   column: FilterOption;
@@ -199,7 +199,7 @@ watch(
 
 const authors = ref<BookAuthor[] | undefined>();
 const tags = ref<BookTag[] | undefined>();
-const books = ref<BookFull[] | undefined>();
+const books = ref<Book[] | undefined>();
 const publishers = ref<BookPublisher[] | undefined>();
 
 watchEffect(async () => {
@@ -217,7 +217,7 @@ watchEffect(async () => {
     }
     case 'book': {
       if (books.value === undefined || books.value.length === 0) {
-        books.value = (await useGetAll<BookFull>(ApiUrls.books))?.data;
+        books.value = (await useGetAll<Book>(ApiUrls.books))?.data;
       }
       break;
     }

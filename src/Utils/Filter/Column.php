@@ -138,6 +138,10 @@ class Column
         switch ($type) {
             case self::BOOLEAN_TYPE:
                 $this->operators = FilterOperators::getForBoolTypes($isNullable);
+                $this->data['bool'] = [
+                    'true' => 'Да',
+                    'false' => 'Нет',
+                ];
                 break;
             case self::INTEGER_TYPE:
             case self::FLOAT_TYPE:

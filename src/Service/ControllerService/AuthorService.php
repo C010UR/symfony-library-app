@@ -5,13 +5,16 @@ namespace App\Service\ControllerService;
 use App\Entity\Author;
 use App\Form\AuthorFormType;
 use App\Repository\AuthorRepository;
+use App\Repository\BookRepository;
 use App\Service\Abstract\AbstractCrudService;
 use App\Service\Interface\CrudServiceInterface;
 use App\Utils\Filter\Column;
 use App\Utils\Filter\QueryParser;
 use App\Utils\ImageSaver;
 use App\Utils\RequestUtils;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthorService extends AbstractCrudService implements CrudServiceInterface
@@ -20,7 +23,9 @@ class AuthorService extends AbstractCrudService implements CrudServiceInterface
         private readonly FormFactoryInterface $formFactory,
         private readonly string $dirPublic,
         private readonly string $dirBookAuthorUploads,
-        AuthorRepository $repository
+        private readonly BookRepository $bookRepository,
+        AuthorRepository $repository,
+        Security $security
     ) {
         $queryParser = new QueryParser();
         $queryParser->setColumns([
@@ -63,7 +68,7 @@ class AuthorService extends AbstractCrudService implements CrudServiceInterface
             ]),
         ]);
 
-        $this->setQueryParser($queryParser)->setRepository($repository);
+        $this->setSecurity($security)->setQueryParser($queryParser)->setRepository($repository);
     }
 
     public function create(Request $request): array
@@ -109,8 +114,26 @@ class AuthorService extends AbstractCrudService implements CrudServiceInterface
             $author->setImagePath($filename);
         }
 
+        if ($form['removeImage']->getData()) {
+            $author->setImagePath(null);
+        }
+
         $this->getRepository()->save($author, true);
 
         return $author->format();
+    }
+
+    public function getBooks(Request $request, string $slug): array
+    {
+        /** @var Author $author */
+        $author = $this->findWithSlug($slug);
+
+        $query = HeaderUtils::parseQuery($request->getQueryString() ?? '');
+
+        return $this->bookRepository->findMatchingByAuthorAndDeleted(
+            $query['deleted'] ?? false,
+            $author,
+            $this->getQueryParser()->parseQuery($query, true, true),
+        );
     }
 }

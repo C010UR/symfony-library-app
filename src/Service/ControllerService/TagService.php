@@ -10,6 +10,7 @@ use App\Service\Interface\CrudServiceInterface;
 use App\Utils\Filter\Column;
 use App\Utils\Filter\QueryParser;
 use App\Utils\RequestUtils;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,7 +18,8 @@ class TagService extends AbstractCrudService implements CrudServiceInterface
 {
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
-        TagRepository $repository
+        TagRepository $repository,
+        Security $security
     ) {
         $queryParser = new QueryParser();
         $queryParser->setColumns([
@@ -37,7 +39,7 @@ class TagService extends AbstractCrudService implements CrudServiceInterface
             ]),
         ]);
 
-        $this->setQueryParser($queryParser)->setRepository($repository);
+        $this->setSecurity($security)->setQueryParser($queryParser)->setRepository($repository);
     }
 
     public function create(Request $request): array

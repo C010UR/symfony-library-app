@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('api/v1/books/tags', name: 'app_api_book_tag_', format: 'json')]
+#[Route('api/v1/tags', name: 'app_api_tag_', format: 'json')]
 class TagController extends AbstractController implements CrudControllerInterface
 {
     public function __construct(private readonly TagService $service)

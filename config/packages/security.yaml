@@ -51,6 +51,12 @@ security:
     - path: ^/api/v1/profile
       roles: [ROLE_USER, ROLE_ADMIN]
 
+    - path: ^/api/v1/users
+      roles: [ROLE_ADMIN] 
+
+    - path: ^/api/v1/users/*
+      roles: [ROLE_ADMIN] 
+
     - path: ^/api/v1/*
       methods: [GET]
       roles: PUBLIC_ACCESS

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Author;
 use App\Entity\Book;
 use App\Repository\Abstract\AbstractCrudRepository;
 use Doctrine\Common\Collections\Criteria;
@@ -39,6 +40,21 @@ class BookRepository extends AbstractCrudRepository
             ->leftJoin('c.tags', 'tags')
             ->leftJoin('c.authors', 'authors')
             ->leftJoin('c.publisher', 'publisher');
+
+        return $this->findMatchingByDeletedWithQueryBuilder($query, $isDeleted, $criteria);
+    }
+
+    public function findMatchingByAuthorAndDeleted(bool $isDeleted, Author $author, Criteria $criteria): array
+    {
+        $query = $this->createQueryBuilder('c')
+            ->select('c')
+            ->leftJoin('c.tags', 'tags')
+            ->leftJoin('c.authors', 'authors')
+            ->leftJoin('c.publisher', 'publisher')
+            ->andWhere('authors = :author')
+            ->setParameters([
+                'author' => $author,
+            ]);
 
         return $this->findMatchingByDeletedWithQueryBuilder($query, $isDeleted, $criteria);
     }

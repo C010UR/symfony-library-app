@@ -4,6 +4,7 @@ namespace App\Service\ControllerService;
 
 use App\Entity\Book;
 use App\Form\BookFormType;
+use App\Repository\AuthorRepository;
 use App\Repository\BookRepository;
 use App\Service\Abstract\AbstractCrudService;
 use App\Service\Interface\CrudServiceInterface;
@@ -11,19 +12,24 @@ use App\Utils\Filter\Column;
 use App\Utils\Filter\QueryParser;
 use App\Utils\ImageSaver;
 use App\Utils\RequestUtils;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 
 class BookService extends AbstractCrudService implements CrudServiceInterface
 {
+    private readonly QueryParser $authorBooksQueryParser;
+
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
         private readonly string $dirPublic,
         private readonly string $dirBookCoverUploads,
-        BookRepository $repository
+        private readonly AuthorRepository $authorRepository,
+        BookRepository $repository,
+        Security $security
     ) {
-        $queryParser = new QueryParser();
-        $queryParser->setColumns([
+        $columns = [
             new Column([
                 'name' => 'id',
                 'label' => 'Дата добавления',
@@ -61,6 +67,12 @@ class BookService extends AbstractCrudService implements CrudServiceInterface
                 'isSearchable' => false,
                 'entity' => 'tag',
             ]),
+        ];
+
+        $this->authorBooksQueryParser = new QueryParser();
+        $this->authorBooksQueryParser->setColumns($columns);
+
+        $columns[] =
             new Column([
                 'name' => 'authors',
                 'label' => 'Авторы',
@@ -68,10 +80,12 @@ class BookService extends AbstractCrudService implements CrudServiceInterface
                 'isOrderable' => false,
                 'isSearchable' => false,
                 'entity' => 'author',
-            ]),
-        ]);
+            ]);
 
-        $this->setQueryParser($queryParser)->setRepository($repository);
+        $queryParser = new QueryParser();
+        $queryParser->setColumns($columns);
+
+        $this->setSecurity($security)->setQueryParser($queryParser)->setRepository($repository);
     }
 
     public function create(Request $request): array
@@ -117,8 +131,31 @@ class BookService extends AbstractCrudService implements CrudServiceInterface
             $book->setImagePath($filename);
         }
 
+        if ($form['removeImage']->getData()) {
+            $book->setImagePath(null);
+        }
+
         $this->getRepository()->save($book, true);
 
         return $book->format();
+    }
+
+    public function getAuthorBooks(Request $request, string $slug): array
+    {
+        /** @var Author $author */
+        $author = $this->findWithRepository($this->authorRepository, ['slug' => $slug]);
+
+        $query = HeaderUtils::parseQuery($request->getQueryString() ?? '');
+
+        return $this->getRepository()->findMatchingByAuthorAndDeleted(
+            $this->isAdmin(),
+            $author,
+            $this->authorBooksQueryParser->parseQuery($query, true, true),
+        );
+    }
+
+    public function getAuthorBooksFilterMeta(): array
+    {
+        return $this->authorBooksQueryParser->getColumns();
     }
 }

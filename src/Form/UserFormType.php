@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -62,9 +63,6 @@ class UserFormType extends AbstractType
                 'constraints' => [new Assert\NotBlank(message: 'Email cannot be empty.')],
             ])
             ->add('roles', CollectionType::class, [
-                'required' => true,
-                'allow_add' => true,
-                'invalid_message' => 'Roles are not valid.',
                 'entry_options' => [
                     'constraints' => [
                         new Assert\Choice(
@@ -73,6 +71,9 @@ class UserFormType extends AbstractType
                         ),
                     ],
                 ],
+                'required' => true,
+                'allow_add' => false,
+                'invalid_message' => 'Roles are not valid.',
                 'constraints' => [
                     new Assert\NotBlank(message: 'Roles cannot be empty.'),
                 ],
@@ -86,6 +87,11 @@ class UserFormType extends AbstractType
                         maxSizeMessage: 'The image is too large. The max size of the image is {{ limit }}. {{ value }} was provided.'
                     ),
                 ],
+            ])
+            ->add('removeImage', CheckboxType::class, [
+                'required' => false,
+                'invalid_message' => 'removeImage flag is not valid.',
+                'mapped' => false,
             ]);
     }
 

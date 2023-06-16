@@ -19,53 +19,34 @@
           <p>Написанные работы:</p>
         </span>
       </div>
-
-      <card-list :disabled="false" :skeletons="20" v-if="author.books && author.books.length > 0">
-        <base-card v-for="entity in author.books" :key="entity.id" class="card">
-          <base-image :src="entity.image" :size="16" class="image" />
-          <div class="column info">
-            <el-link
-              class="name"
-              type="primary"
-              :underline="false"
-              @click="$router.push({ name: 'Book', params: { slug: entity.slug } })"
-            >
-              {{ entity.name }}
-            </el-link>
-            <div class="list">
-              <p class="list-title">{{ entity.tags.length > 1 ? 'Жанры' : 'Жанр' }}:</p>
-              <el-tag v-for="tag in entity.tags" :key="tag.id" class="list-item">
-                {{ tag.name }}
-              </el-tag>
-            </div>
-          </div>
-        </base-card>
-      </card-list>
     </div>
+    <base-books-view v-if="author" :url="`${ApiUrls.authors}/${slug}/books`" :metaUrl="`${ApiUrls.authors}/books`" />
   </base-page>
 </template>
 
 <script setup lang="ts">
 import { BasePage } from '@/components/pages';
-import { BaseAvatar, BaseCard, BaseImage } from '@/components/tags/base';
-import { ElLink, ElTag, ElIcon } from 'element-plus';
+import { BaseAvatar } from '@/components/tags/base';
+import { ElLink, ElIcon } from 'element-plus';
 import { Message, ChromeFilled } from '@element-plus/icons-vue';
 import { ApiUrls, useGetOne } from '@/composables';
 import type { BookAuthor } from '@/composables';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { CardList } from '@/components/tags/data';
+import { BaseBooksView } from '@/components/pages/base';
 
 const author = ref<BookAuthor | undefined>();
 
 const route = useRoute();
 
-onMounted(async () => {
+const slug = computed(() => {
   const path = route.path.split('/');
-  const slug = (path.pop() || path.pop()) ?? '';
+  return (path.pop() || path.pop()) ?? '';
+});
 
-  author.value = await useGetOne<BookAuthor>(ApiUrls.authors, slug);
+onMounted(async () => {
+  author.value = await useGetOne<BookAuthor>(ApiUrls.authors, slug.value);
 });
 </script>
 

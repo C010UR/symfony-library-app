@@ -1,11 +1,21 @@
 <template>
   <base-page>
-    <div class="wrapper-item" v-if="book !== undefined">
+    <div class="wrapper-item" v-if="book">
       <div class="wrapper-info">
         <base-image :size="20" :src="book?.image" class="image" />
 
         <div class="body-item">
           <h1 class="name">{{ book.name }}</h1>
+          <div class="publisher" v-if="book.publisher">
+            <el-link
+              class="publisher-name"
+              :underline="false"
+              @click="$router.push({ name: 'Publisher', params: { slug: book?.publisher.slug } })"
+            >
+              <base-avatar :src="book.publisher.image" :size="32" class="avatar" />
+              {{ book.publisher.name }}
+            </el-link>
+          </div>
           <span class="text">
             <el-icon><Clock /></el-icon>
             <p>Издана:</p>
@@ -47,16 +57,16 @@
 
 <script setup lang="ts">
 import { BasePage } from '@/components/pages';
-import { BaseImage } from '@/components/tags/base';
-import { ElTag, ElIcon, ElButton } from 'element-plus';
+import { BaseImage, BaseAvatar } from '@/components/tags/base';
+import { ElTag, ElIcon, ElButton, ElLink } from 'element-plus';
 import { Clock, Document } from '@element-plus/icons-vue';
 import { ApiUrls, useGetOne } from '@/composables';
-import type { BookFull } from '@/composables';
+import type { Book } from '@/composables';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
-const book = ref<BookFull | undefined>();
+const book = ref<Book | undefined>();
 
 const route = useRoute();
 
@@ -64,7 +74,7 @@ onMounted(async () => {
   const path = route.path.split('/');
   const slug = (path.pop() || path.pop()) ?? '';
 
-  book.value = await useGetOne<BookFull>(ApiUrls.books, slug);
+  book.value = await useGetOne<Book>(ApiUrls.books, slug);
 });
 </script>
 
@@ -135,6 +145,23 @@ onMounted(async () => {
 
 .list-item {
   margin: 0 0.5rem 0.5rem 0;
+}
+
+.publisher {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0.5rem 0;
+  word-wrap: break-word;
+}
+
+.avatar {
+  flex-shrink: 0;
+  margin-right: 1rem;
+}
+
+.publisher-name {
+  font-size: 1.125rem;
 }
 
 @media only screen and (max-width: 768px) {

@@ -1,6 +1,6 @@
 <template>
   <base-card-page header="Авторизация">
-    <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="rules">
+    <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="loginRules">
       <el-form-item label="Email" prop="email">
         <el-input
           v-model="form.email"
@@ -45,13 +45,16 @@
 <script setup lang="ts">
 import { popup } from '@/components/tags';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton, ElLink } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance } from 'element-plus';
 import { BaseCardPage } from '@/components/pages';
 import { useLogin } from '@/composables';
+import { loginRules } from '@/components/tags/form/rules';
 
 const formRef = ref<FormInstance>();
 const disabled = ref(false);
+const router = useRouter();
 
 const form = ref({
   email: '',
@@ -65,7 +68,8 @@ async function fetch() {
     form.value.password = '';
     disabled.value = false;
   } else {
-    popup('success', `Успешно авторизован как ${data.email} с ролями ${JSON.stringify(data.roles)}`);
+    popup('success', `Успешно авторизованы как ${data.fullName}`);
+    router.push({ name: 'Main' });
   }
 }
 
@@ -80,26 +84,4 @@ function submitForm() {
     return false;
   });
 }
-
-const rules = ref<FormRules>({
-  email: [
-    {
-      required: true,
-      message: 'Email не может быть пустым',
-      trigger: 'blur',
-    },
-    {
-      type: 'email',
-      message: 'Email не действителен',
-      trigger: ['blur', 'change'],
-    },
-  ],
-  password: [
-    {
-      required: true,
-      message: 'Пароль не может быть пустым',
-      trigger: 'blur',
-    },
-  ],
-});
 </script>

@@ -10,10 +10,10 @@
 <script setup lang="ts">
 import { ElOption } from 'element-plus';
 import { BaseAvatar } from '@/components/tags/base';
-import type { BookFull } from '@/composables';
+import type { Book } from '@/composables';
 
 export interface Props {
-  value: BookFull;
+  value: Book;
 }
 
 defineProps<Props>();

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('api/v1/books/publishers', name: 'app_api_book_publisher_', format: 'json')]
+#[Route('api/v1/publishers', name: 'app_api_publisher_', format: 'json')]
 class PublisherController extends AbstractController implements CrudControllerInterface
 {
     public function __construct(private readonly PublisherService $service)

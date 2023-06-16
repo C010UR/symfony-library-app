@@ -8,6 +8,7 @@ use App\Entity\Publisher;
 use App\Entity\Tag;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -41,7 +42,7 @@ class BookFormType extends AbstractType
                     new Assert\Length(
                         min: 3,
                         minMessage: 'Book description should have at least {{ limit }} characters. {{ value }} was provided.',
-                        max: 255,
+                        max: 4096,
                         maxMessage: 'Book description should not exceed {{ limit }} characters. {{ value }} was provided.'
                     ),
                 ],
@@ -90,6 +91,11 @@ class BookFormType extends AbstractType
                         maxSizeMessage: 'The image is too large. The max size is {{ limit }}. {{ value }} was provided.',
                     ),
                 ],
+            ])
+            ->add('removeImage', CheckboxType::class, [
+                'required' => false,
+                'invalid_message' => 'removeImage flag is not valid.',
+                'mapped' => false,
             ]);
     }
 

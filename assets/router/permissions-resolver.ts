@@ -7,13 +7,13 @@ function routeFallback(profile?: UserProfile): { name: string } {
     };
   }
 
-  if (profile.roles.includes('ROLE_ADMIN')) {
+  if (profile.roles?.includes('ROLE_ADMIN')) {
     return {
       name: 'AdminDashboard',
     };
   }
 
-  if (profile.roles.includes('ROLE_USER')) {
+  if (profile.roles?.includes('ROLE_USER')) {
     return {
       name: 'UserDashboard',
     };
@@ -32,7 +32,7 @@ function isUserHasPermissions(profile?: UserProfile, routeRoles?: UserRole[]): b
   }
 
   for (const routeRole of routeRoles) {
-    const found = profile.roles.find(role => role === routeRole);
+    const found = profile.roles?.find(role => role === routeRole);
 
     if (found) {
       return true;

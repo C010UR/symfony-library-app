@@ -1,15 +1,16 @@
-import type { UploadRawFile } from 'element-plus';
+import type { UploadUserFile } from 'element-plus';
 
 export type UserRole = 'ROLE_ADMIN' | 'ROLE_USER';
 
 export interface UploadUserProfile {
   id?: number;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   middleName?: string;
-  email: string;
+  email?: string;
   roles: UserRole[];
-  image?: UploadRawFile;
+  image?: UploadUserFile;
+  removeImage?: boolean;
 }
 
 export interface UserProfile extends Omit<UploadUserProfile, 'image'> {
@@ -23,12 +24,13 @@ export interface UserProfile extends Omit<UploadUserProfile, 'image'> {
 
 export interface UploadBookAuthor {
   id?: number;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   middleName?: string;
   website?: string;
   email?: string;
-  image?: UploadRawFile;
+  image?: UploadUserFile;
+  removeImage?: boolean;
 }
 
 export interface BookAuthor extends Omit<UploadBookAuthor, 'image'> {
@@ -37,16 +39,16 @@ export interface BookAuthor extends Omit<UploadBookAuthor, 'image'> {
   image?: string;
   slug: string;
   isDeleted: string;
-  books?: BookShort[];
 }
 
 export interface UploadBookPublisher {
   id?: number;
-  name: string;
-  address: string;
-  email: string;
-  website: string;
-  image?: UploadRawFile;
+  name?: string;
+  address?: string;
+  email?: string;
+  website?: string;
+  image?: UploadUserFile;
+  removeImage?: boolean;
 }
 
 export interface BookPublisher extends Omit<UploadBookPublisher, 'image'> {
@@ -58,7 +60,8 @@ export interface BookPublisher extends Omit<UploadBookPublisher, 'image'> {
 
 export interface UploadBookTag {
   id?: number;
-  name: string;
+  name?: string;
+  removeImage?: boolean;
 }
 
 export interface BookTag extends UploadBookTag {
@@ -69,26 +72,24 @@ export interface BookTag extends UploadBookTag {
 
 export interface UploadBook {
   id?: number;
-  name: string;
-  image?: UploadRawFile;
+  name?: string;
+  image?: UploadUserFile;
   tags: number[];
   authors: number[];
-  publisher: number;
-  datePublished: string;
-  pageCount: number;
+  publisher?: number;
+  datePublished?: Date | string;
+  pageCount?: number;
   description?: string;
+  removeImage?: boolean;
 }
 
-export interface BookShort {
+export interface Book {
   id: number;
   name: string;
   image?: string;
   tags: BookTag[];
   slug: string;
   isDeleted: boolean;
-}
-
-export interface BookFull extends BookShort {
   authors: BookAuthor[];
   publisher: BookPublisher;
   datePublished: string;

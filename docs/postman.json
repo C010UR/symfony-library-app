@@ -27,7 +27,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"{{user_email}}\",\r\n    \"link\": \"{{frontend_link}}\"\r\n}",
+							"raw": "{\r\n    \"email\": \"{{admin_email}}\",\r\n    \"link\": \"{{frontend_url}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -35,14 +35,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/api/v1/password-reset",
+							"raw": "{{URL}}/api/v1/reset-password",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"password-reset"
+								"reset-password"
 							]
 						}
 					},
@@ -63,16 +63,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/api/v1/password-reset/reset/n75cMIOS4vIg56JTnU2JBpHtlTlbhE7rVni0nX2h",
+							"raw": "{{URL}}/api/v1/reset-password/reset/ha7jinRuGjDymzmR2qjBFUzbVMIBSnFmQMudyWIP",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"password-reset",
+								"reset-password",
 								"reset",
-								"n75cMIOS4vIg56JTnU2JBpHtlTlbhE7rVni0nX2h"
+								"ha7jinRuGjDymzmR2qjBFUzbVMIBSnFmQMudyWIP"
 							]
 						}
 					},
@@ -180,22 +180,1030 @@
 			]
 		},
 		{
-			"name": "Image",
+			"name": "Book Tag CRUD",
 			"item": [
 				{
-					"name": "User profile",
+					"name": "Get all",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/uploads/users/user-9647ad.png",
+							"raw": "{{URL}}/api/v1/tags?deleted=true",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
-								"uploads",
+								"api",
+								"v1",
+								"tags"
+							],
+							"query": [
+								{
+									"key": "order[name]",
+									"value": "ASC",
+									"description": "Order by name Ascending",
+									"disabled": true
+								},
+								{
+									"key": "name[contains]",
+									"value": "Фантастика",
+									"description": "Filter by 'name' that contains 'fantasy'",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/tags/{{tag_slug}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"{{tag_slug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomAdjective}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/tags",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "{{$randomAdjective}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/tags/{{tag_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"{{tag_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/tags/{{tag_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"{{tag_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get filter meta info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/tags/meta",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"meta"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Book Publisher CRUD",
+			"item": [
+				{
+					"name": "Get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/publishers",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers"
+							],
+							"query": [
+								{
+									"key": "order[name]",
+									"value": "ASC",
+									"description": "Order by name Ascending",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "email[contains]",
+									"value": "yahoo.com",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/publishers/{{publisher_slug}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers",
+								"{{publisher_slug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "{{$randomCompanyName}}",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "{{$randomCity}}",
+									"type": "text"
+								},
+								{
+									"key": "website",
+									"value": "{{$randomUrl}}",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "product-category-liquid-cooler.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/publishers",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "{{$randomAdjective}}",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/pokem/work/crew-9/back-end/tests/image.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/publishers/{{publisher_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers",
+								"{{publisher_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/publishers/{{publisher_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers",
+								"{{publisher_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get filter meta info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/publishers/meta",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"publishers",
+								"meta"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Book Author CRUD",
+			"item": [
+				{
+					"name": "Get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/authors?order[id]=ASC",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors"
+							],
+							"query": [
+								{
+									"key": "order[name]",
+									"value": "ASC",
+									"description": "Order by name Ascending",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "email[contains]",
+									"value": "yahoo.com",
+									"disabled": true
+								},
+								{
+									"key": "order[id]",
+									"value": "ASC"
+								},
+								{
+									"key": "books[in]",
+									"value": "9",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/authors/{{author_slug}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								"{{author_slug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "product-category-liquid-cooler.png"
+								},
+								{
+									"key": "firstName",
+									"value": "{{$randomFirstName}}",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "{{$randomLastName}}",
+									"type": "text"
+								},
+								{
+									"key": "middleName",
+									"value": "{{$randomFirstName}}",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "website",
+									"value": "{{$randomUrl}}",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/authors",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstName",
+									"value": "Yellow",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/authors/{{author_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								"{{author_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/authors/{{author_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								"{{author_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get filter meta info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/authors/meta",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								"meta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get filter meta for books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/authors/books/meta",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								"books",
+								"meta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get books for author",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/authors/{{author_slug}}/books?order[id]=ASC",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"authors",
+								"{{author_slug}}",
+								"books"
+							],
+							"query": [
+								{
+									"key": "order[id]",
+									"value": "ASC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Book CRUD",
+			"item": [
+				{
+					"name": "Get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/books",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books"
+							],
+							"query": [
+								{
+									"key": "order[name]",
+									"value": "ASC",
+									"description": "Order by name Ascending",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "email[contains]",
+									"value": "yahoo.com",
+									"disabled": true
+								},
+								{
+									"key": "authors[in]",
+									"value": "103",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "name[contains]",
+									"value": "design Patterns",
+									"disabled": true
+								},
+								{
+									"key": "publisher[eq]",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "order[publisher]",
+									"value": "ASC",
+									"disabled": true
+								},
+								{
+									"key": "publisher[eq]",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "name[contains]",
+									"value": "глубокое обучение",
+									"disabled": true
+								},
+								{
+									"key": "authors[in]",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/books/{{book_slug}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"{{book_slug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "product-category-liquid-cooler.png"
+								},
+								{
+									"key": "name",
+									"value": "{{$randomBsBuzz}} {{$randomBsBuzz}} {{$randomBsBuzz}}",
+									"type": "text"
+								},
+								{
+									"key": "datePublished",
+									"value": "2023-10-10",
+									"type": "text"
+								},
+								{
+									"key": "publisher",
+									"value": "{{publisher_id}}",
+									"type": "text"
+								},
+								{
+									"key": "tags[]",
+									"value": "{{tag_id}}",
+									"type": "text"
+								},
+								{
+									"key": "authors[]",
+									"value": "{{author_id}}",
+									"type": "text"
+								},
+								{
+									"key": "pageCount",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/books",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Говно",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/books/{{book_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"{{book_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/books/{{book_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"{{book_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get filter meta info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/books/meta",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"meta"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User CRUD",
+			"item": [
+				{
+					"name": "Get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/users?order[id]=ASC",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "order[name]",
+									"value": "ASC",
+									"description": "Order by name Ascending",
+									"disabled": true
+								},
+								{
+									"key": "deleted",
+									"value": "true",
+									"disabled": true
+								},
+								{
+									"key": "email[contains]",
+									"value": "yahoo.com",
+									"disabled": true
+								},
+								{
+									"key": "order[id]",
+									"value": "ASC"
+								},
+								{
+									"key": "books[in]",
+									"value": "9",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/users/{{user_slug}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
 								"users",
-								"user-9647ad.png"
+								"{{user_slug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "product-category-liquid-cooler.png"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"type": "text"
+								},
+								{
+									"key": "roles[]",
+									"value": "ROLE_ADMIN",
+									"type": "text"
+								},
+								{
+									"key": "firstName",
+									"value": "{{$randomFirstName}}",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "{{$randomLastName}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Говно",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/books/{{book_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"{{book_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/books/{{book_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"{{book_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get filter meta info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/books/meta",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"books",
+								"meta"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Image",
+			"item": [
+				{
+					"name": "Get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}{{image}}",
+							"host": [
+								"{{URL}}{{image}}"
 							]
 						}
 					},
@@ -226,8 +1234,18 @@
 	],
 	"variable": [
 		{
+			"key": "URL",
+			"value": "https://localhost",
+			"type": "string"
+		},
+		{
+			"key": "image",
+			"value": "/uploads/books/publishers/publisher-ca492e.jpg",
+			"type": "string"
+		},
+		{
 			"key": "admin_email",
-			"value": "lucas.curtis@mtec.by",
+			"value": "lemur.laur@inbox.ru",
 			"type": "string"
 		},
 		{
@@ -237,7 +1255,7 @@
 		},
 		{
 			"key": "user_email",
-			"value": "eve.sanders@mtec.by",
+			"value": "user.lemur.laur@inbox.ru",
 			"type": "string"
 		},
 		{
@@ -246,13 +1264,58 @@
 			"type": "string"
 		},
 		{
-			"key": "frontend_link",
-			"value": "https://localhost:4000",
+			"key": "frontend_url",
+			"value": "https://localhost",
 			"type": "string"
 		},
 		{
-			"key": "URL",
-			"value": "http://localhost:8080",
+			"key": "tag_slug",
+			"value": "fantastika",
+			"type": "string"
+		},
+		{
+			"key": "tag_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "publisher_slug",
+			"value": "izdatel-skij-dom-piter",
+			"type": "string"
+		},
+		{
+			"key": "publisher_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "author_slug",
+			"value": "dzon-dakett",
+			"type": "string"
+		},
+		{
+			"key": "author_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "book_slug",
+			"value": "josua-bendzio-ian-gudfellou-glubokoe-obucenie",
+			"type": "string"
+		},
+		{
+			"key": "book_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "user_slug",
+			"value": "aimee-cole",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "1",
 			"type": "string"
 		}
 	]

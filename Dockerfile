@@ -131,7 +131,9 @@ COPY --from=app_node --link /srv/app/public/build public/build
 
 # Other composer things
 RUN set -eux; \
-	mkdir -p var/cache var/log; \
+	mkdir -p var/cache var/log;
+
+RUN set -eux; \
 	if [ -f composer.json ]; then \
 	composer dump-autoload --classmap-authoritative --no-dev; \
 	composer dump-env prod; \

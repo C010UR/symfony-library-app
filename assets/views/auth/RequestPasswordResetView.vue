@@ -1,6 +1,6 @@
 <template>
   <base-card-page header="Сбросить пароль">
-    <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="rules">
+    <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="requestPasswordResetRules">
       <p>
         Введите адрес электронной почты, которую вы использовали для данного сайта и мы отправим пам письмо с
         инструкциями по сбросу пароля.
@@ -37,9 +37,10 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton, ElLink } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance } from 'element-plus';
 import { BaseCardPage } from '@/components/pages';
 import { useRequestPasswordReset } from '@/composables';
+import { requestPasswordResetRules } from '@/components/tags/form/rules';
 
 const router = useRouter();
 
@@ -78,19 +79,4 @@ function submitForm() {
     return false;
   });
 }
-
-const rules = ref<FormRules>({
-  email: [
-    {
-      required: true,
-      message: 'Email не может быть пустым',
-      trigger: 'blur',
-    },
-    {
-      type: 'email',
-      message: 'Email не действителен',
-      trigger: ['blur', 'change'],
-    },
-  ],
-});
 </script>

@@ -53,19 +53,28 @@ function setLinks(profile?: UserProfileType) {
     ...getRouteLink('AboutUs'),
   };
 
-  console.log(commonLinks);
-
   if (profile === undefined) {
     links.value = {
       ...commonLinks,
     };
-  } else if (profile.roles.includes('ROLE_ADMIN')) {
+
+    return;
+  } else if (profile.roles?.includes('ROLE_ADMIN')) {
     links.value = {
       ...commonLinks,
+      ...getRouteLink('BooksCrud'),
+      ...getRouteLink('PublishersCrud'),
+      ...getRouteLink('AuthorsCrud'),
+      ...getRouteLink('TagsCrud'),
+      ...getRouteLink('UsersCrud'),
     };
-  } else if (profile.roles.includes('ROLE_USER')) {
+  } else if (profile.roles?.includes('ROLE_USER')) {
     links.value = {
       ...commonLinks,
+      ...getRouteLink('BooksCrud'),
+      ...getRouteLink('PublishersCrud'),
+      ...getRouteLink('AuthorsCrud'),
+      ...getRouteLink('TagsCrud'),
     };
   }
 

@@ -11,6 +11,7 @@ use App\Utils\Filter\Column;
 use App\Utils\Filter\QueryParser;
 use App\Utils\ImageSaver;
 use App\Utils\RequestUtils;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,7 +21,8 @@ class PublisherService extends AbstractCrudService implements CrudServiceInterfa
         private readonly FormFactoryInterface $formFactory,
         private readonly string $dirPublic,
         private readonly string $dirBookPublisherUploads,
-        PublisherRepository $repository
+        PublisherRepository $repository,
+        Security $security
     ) {
         $queryParser = new QueryParser();
         $queryParser->setColumns([
@@ -61,7 +63,7 @@ class PublisherService extends AbstractCrudService implements CrudServiceInterfa
             ]),
         ]);
 
-        $this->setQueryParser($queryParser)->setRepository($repository);
+        $this->setSecurity($security)->setQueryParser($queryParser)->setRepository($repository);
     }
 
     public function create(Request $request): array
@@ -105,6 +107,10 @@ class PublisherService extends AbstractCrudService implements CrudServiceInterfa
             );
 
             $publisher->setImagePath($filename);
+        }
+
+        if ($form['removeImage']->getData()) {
+            $publisher->setImagePath(null);
         }
 
         $this->getRepository()->save($publisher, true);

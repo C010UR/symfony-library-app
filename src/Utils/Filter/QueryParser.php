@@ -41,6 +41,28 @@ class QueryParser
     }
 
     /**
+     * Add filterable columns.
+     */
+    public function addColumns(Column|array $columns): self
+    {
+        if (!is_array($columns)) {
+            $this->columns[] = $columns;
+
+            return $this;
+        }
+
+        foreach ($columns as $column) {
+            if ('object' !== gettype($column) || Column::class !== $column::class) {
+                throw new \InvalidArgumentException(sprintf('Columns should be of type %s. %s was provided instead.', Column::class, 'object' === gettype($column) ? $column::class : gettype($column)));
+            }
+
+            $this->columns[] = $column;
+        }
+
+        return $this;
+    }
+
+    /**
      * Get filterable columns.
      */
     public function getColumns(): array

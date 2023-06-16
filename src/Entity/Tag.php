@@ -14,6 +14,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 #[UniqueEntity('name', 'Name is already taken.')]
+#[UniqueEntity('slug', 'Slug is already taken.')]
 class Tag implements EntityInterface, \Stringable
 {
     #[ORM\Id]
@@ -24,7 +25,7 @@ class Tag implements EntityInterface, \Stringable
     #[ORM\Column(type: Citext::CITEXT, unique: true)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
     #[ORM\Column(options: ['default' => false])]
@@ -72,9 +73,9 @@ class Tag implements EntityInterface, \Stringable
         return $this;
     }
 
-    public function isDeleted(): ?bool
+    public function isDeleted(): bool
     {
-        return $this->isDeleted;
+        return (bool) $this->isDeleted;
     }
 
     public function setIsDeleted(bool $isDeleted): self

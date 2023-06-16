@@ -165,9 +165,9 @@ class Author implements EntityInterface, \Stringable
         return $this;
     }
 
-    public function isDeleted(): ?bool
+    public function isDeleted(): bool
     {
-        return $this->isDeleted;
+        return (bool) $this->isDeleted;
     }
 
     public function setIsDeleted(bool $isDeleted): self
@@ -177,9 +177,9 @@ class Author implements EntityInterface, \Stringable
         return $this;
     }
 
-    public function format(bool $isWithBooks = true): array
+    public function format(): array
     {
-        $result = [
+        return [
             'id' => $this->getId(),
             'fullName' => $this->getFullName(),
             'firstName' => $this->getFirstName(),
@@ -191,18 +191,6 @@ class Author implements EntityInterface, \Stringable
             'slug' => $this->getSlug(),
             'isDeleted' => $this->isDeleted(),
         ];
-
-        if ($isWithBooks) {
-            $books = [];
-
-            foreach ($this->getBooks() as $book) {
-                $books[] = $book->format(false);
-            }
-
-            $result['books'] = $books;
-        }
-
-        return $result;
     }
 
     public function getEmail(): ?string

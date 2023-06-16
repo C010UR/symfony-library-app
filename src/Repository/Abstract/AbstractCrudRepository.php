@@ -62,7 +62,7 @@ abstract class AbstractCrudRepository extends ServiceEntityRepository
         }
 
         foreach ($data as $row) {
-            $result['data'][] = $row->format();
+            $result['data'][] = $row->format($isDeleted);
         }
 
         return $result;

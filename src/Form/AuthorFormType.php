@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Author;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -73,6 +74,11 @@ class AuthorFormType extends AbstractType
                         maxSizeMessage: 'The image is too large. The max size is {{ limit }}. {{ value }} was provided.',
                     ),
                 ],
+            ])
+            ->add('removeImage', CheckboxType::class, [
+                'required' => false,
+                'invalid_message' => 'removeImage flag is not valid.',
+                'mapped' => false,
             ]);
     }
 

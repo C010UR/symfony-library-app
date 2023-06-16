@@ -339,7 +339,7 @@ class BookFixturesDev extends Fixture implements FixtureGroupInterface, Dependen
                     $filename = FileUtils::joinPaths(
                         [
                             $this->dirBookCoverUploads,
-                            FileUtils::generateFilename('book', pathinfo($book['image'], \PATHINFO_EXTENSION))
+                            FileUtils::generateFilename('book', pathinfo($book['image'], \PATHINFO_EXTENSION)),
                         ]
                     );
 

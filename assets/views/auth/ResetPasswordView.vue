@@ -1,6 +1,6 @@
 <template>
   <base-card-page header="Сброс пароля">
-    <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="rules">
+    <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="resetPasswordRules">
       <el-form-item label="Пароль" prop="password">
         <el-input
           v-model="form.password"
@@ -37,11 +37,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
 import validator from 'validator';
+import type { FormInstance, FormRules } from 'element-plus';
 import { BaseCardPage } from '@/components/pages';
 import { useResetPassword } from '@/composables';
 
@@ -81,10 +81,14 @@ function submitForm() {
   });
 }
 
+const passwordsDontMatchMessage = 'Пароли не совпадают';
+const passwordInsecureMessage = 'Пароль недостаточно надежный';
+const emptyMessage = 'Поле не должно быть пустым';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function validatePass(rule: any, value: any, callback: any) {
   if (!validator.isStrongPassword(form.value.password, { minSymbols: 0 })) {
-    callback(new Error('Пароль недостаточно надежный'));
+    callback(new Error(passwordInsecureMessage));
   }
 
   if (form.value.passwordConfirm) {
@@ -97,17 +101,17 @@ function validatePass(rule: any, value: any, callback: any) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function validatePass2(rule: any, value: any, callback: any) {
   if (value !== form.value.password) {
-    callback(new Error('Пароли не совпадают'));
+    callback(new Error(passwordsDontMatchMessage));
   }
 
   callback();
 }
 
-const rules = ref<FormRules>({
+const resetPasswordRules = reactive<FormRules>({
   password: [
     {
       required: true,
-      message: 'Пароль не может быть пустым',
+      message: emptyMessage,
       trigger: 'blur',
     },
     { validator: validatePass, trigger: ['blur', 'change'] },
@@ -115,7 +119,7 @@ const rules = ref<FormRules>({
   passwordConfirm: [
     {
       required: true,
-      message: 'Подтверждение пароля не может быть пустым',
+      message: emptyMessage,
       trigger: 'blur',
     },
     { validator: validatePass2, trigger: ['blur', 'change'] },

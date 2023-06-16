@@ -13,7 +13,7 @@ function popup(type: popupType, message: string, httpCode?: number): void {
     ElMessage({
       message: msg,
       type,
-      duration: 15000,
+      duration: 7500,
       showClose: true,
       grouping: true,
     });

@@ -13,10 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
-#[UniqueEntity(
-    'name',
-    'Name is already taken.'
-)]
+#[UniqueEntity('name', 'Name is already taken.')]
 #[UniqueEntity('slug', 'Slug is already taken.')]
 class Book implements EntityInterface, \Stringable
 {
@@ -31,7 +28,7 @@ class Book implements EntityInterface, \Stringable
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $datePublished = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -118,9 +115,9 @@ class Book implements EntityInterface, \Stringable
         return $this;
     }
 
-    public function isDeleted(): ?bool
+    public function isDeleted(): bool
     {
-        return $this->isDeleted;
+        return (bool) $this->isDeleted;
     }
 
     public function setIsDeleted(bool $isDeleted): self
@@ -157,8 +154,11 @@ class Book implements EntityInterface, \Stringable
     /**
      * @return Collection<int, Tag>
      */
-    public function getTags(): Collection
+    public function getTags(bool $isDeleted = false): Collection
     {
+        if ($isDeleted) {
+            return $this->tags;
+        }
         return $this->tags->filter(static fn (Tag $tag) => !$tag->isDeleted());
     }
 
@@ -181,8 +181,11 @@ class Book implements EntityInterface, \Stringable
     /**
      * @return Collection<int, Author>
      */
-    public function getAuthors(): Collection
+    public function getAuthors(bool $isDeleted = false): Collection
     {
+        if ($isDeleted) {
+            return $this->authors;
+        }
         return $this->authors->filter(static fn (Author $author) => !$author->isDeleted());
     }
 
@@ -214,7 +217,7 @@ class Book implements EntityInterface, \Stringable
         return $this;
     }
 
-    public function format(bool $isAllFields = true): array
+    public function format(bool $isDeleted = false): array
     {
         $result = [
             'id' => $this->getId(),
@@ -222,25 +225,23 @@ class Book implements EntityInterface, \Stringable
             'image' => $this->getImagePath(),
             'slug' => $this->getSlug(),
             'isDeleted' => $this->isDeleted(),
+            'publisher' => $this->getPublisher()->format(),
+            'datePublished' => $this->getDatePublished()->format(\DateTimeImmutable::ATOM),
+            'pageCount' => $this->getPageCount(),
+            'description' => $this->getDescription(),
         ];
 
-        if ($isAllFields) {
-            $authors = [];
+        $authors = [];
 
-            foreach ($this->getAuthors() as $author) {
-                $authors[] = $author->format(false);
-            }
-
-            $result['authors'] = $authors;
-            $result['publisher'] = $this->getPublisher()->format();
-            $result['datePublished'] = $this->getDatePublished()->format(\DateTimeImmutable::ATOM);
-            $result['pageCount'] = $this->getPageCount();
-            $result['description'] = $this->getDescription();
+        foreach ($this->getAuthors($isDeleted) as $author) {
+            $authors[] = $author->format();
         }
+
+        $result['authors'] = $authors;
 
         $tags = [];
 
-        foreach ($this->getTags() as $tag) {
+        foreach ($this->getTags($isDeleted) as $tag) {
             $tags[] = $tag->format();
         }
 

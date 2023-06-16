@@ -26,12 +26,12 @@ build: ## Build the Docker images
 #--pull --no-cache
 
 up: ## Start the docker hub in detached mode (no logs)
-	@$(DOCKER_COMP) up --detach
+	@$(DOCKER_COMP) up --detach --wait
 
 start: build up ## Build and start the containers for dev
 
 serve: ## Build and start the containers in staging mode
-	@$(DOCKER_COMP) -f docker-compose.yml up --build --detach
+	@$(DOCKER_COMP) -f docker-compose.yml up --build --detach --wait --no-color
 
 down: ## Stop the docker hub
 	@$(DOCKER_COMP) down --remove-orphans

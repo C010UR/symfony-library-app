@@ -201,7 +201,7 @@ class AuthorFixturesDev extends Fixture implements FixtureGroupInterface
                     $filename = FileUtils::joinPaths(
                         [
                             $this->dirBookAuthorUploads,
-                            FileUtils::generateFilename('author', pathinfo($author['image'], \PATHINFO_EXTENSION))
+                            FileUtils::generateFilename('author', pathinfo($author['image'], \PATHINFO_EXTENSION)),
                         ]
                     );
 

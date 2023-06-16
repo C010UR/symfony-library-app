@@ -160,7 +160,7 @@ class PublisherFixturesDev extends Fixture implements FixtureGroupInterface
                     $filename = FileUtils::joinPaths(
                         [
                             $this->dirBookPublisherUploads,
-                            FileUtils::generateFilename('publisher', pathinfo($publisher['image'], \PATHINFO_EXTENSION))
+                            FileUtils::generateFilename('publisher', pathinfo($publisher['image'], \PATHINFO_EXTENSION)),
                         ]
                     );
 
