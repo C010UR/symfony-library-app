@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\DataFixtures\UserFixturesTest;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Utils\FileUtils;
@@ -14,11 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class ControllerTestCase extends WebTestCase
 {
-    /**
-     * @var string
-     */
-    final public const ADMIN_EMAIL = 'test.email.admin@mtec.by';
-
     private KernelBrowser $client;
 
     private EntityManagerInterface $entityManager;
@@ -26,34 +22,6 @@ abstract class ControllerTestCase extends WebTestCase
     private string $endpoint;
 
     private string $dirAssets;
-
-    public function randomString(int $length = 64, string $keyspace = 'abcdefghijklmnopqrstuvwxyz'): string
-    {
-        if ($length < 1) {
-            throw new \RangeException('Length must be a positive integer.');
-        }
-
-        $pieces = [];
-        $max = strlen($keyspace) - 1;
-
-        for ($i = 0; $i < $length; ++$i) {
-            $pieces[] = $keyspace[random_int(0, $max)];
-        }
-
-        return implode('', $pieces);
-    }
-
-    public function appendRandomString(string $value): string
-    {
-        return sprintf('%s.%s', $this->randomString(12), $value);
-    }
-
-    public function removeEntityImage(mixed $entity): void
-    {
-        $entity->setImagePath(null);
-        $this->entityManager->persist($entity);
-        $this->entityManager->flush();
-    }
 
     public function setEndpoint(string $endpoint): void
     {
@@ -155,10 +123,10 @@ abstract class ControllerTestCase extends WebTestCase
 
         $this->entityManager = $this->getContainer()->get(EntityManagerInterface::class);
 
-        $this->dirAssets = sprintf('%s/assets/uploads/test', $this->getContainer()->getParameter('kernel.project_dir'));
+        $this->dirAssets = FileUtils::joinPaths([$this->getContainer()->getParameter('kernel.project_dir'), '/fixtures/uploads/test']);
 
         $this->client->loginUser(
-            $this->getRepository(UserRepository::class)->findOneBy(['email' => self::ADMIN_EMAIL]),
+            $this->getRepository(UserRepository::class)->findOneBy(['email' => UserFixturesTest::DATA[0]['email']]),
         );
     }
 

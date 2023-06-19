@@ -49,24 +49,23 @@
 </template>
 
 <script setup lang="ts">
-import { FilterDrawer } from '@/components/tags/data/filter';
+import { popup } from '@/components/tags';
+import { BaseAvatar } from '@/components/tags/base';
+import { DataPagination, FilterDrawer, TableList } from '@/components/tags/data';
+import { CreateUserForm, UpdateUserForm } from '@/components/tags/form';
+import type { ApiMeta, ApiParams, ApiUrl, Filter, FilterOption, Order, RouteParams, UserProfile } from '@/composables';
 import {
   ApiUrls,
   useChangeQuery,
-  useGetAll,
   useDelete,
+  useGetAll,
   useGetMeta,
   useParseApiParams,
   useParseParams,
 } from '@/composables';
-import { onMounted, ref, watch, computed } from 'vue';
-import { TableList, DataPagination } from '@/components/tags/data';
-import type { ApiUrl, ApiMeta, UserProfile, Filter, Order, FilterOption, ApiParams, RouteParams } from '@/composables';
+import { ElMessageBox, ElTableColumn, ElTag } from 'element-plus';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { BaseAvatar } from '@/components/tags/base';
-import { ElTag, ElTableColumn, ElMessageBox } from 'element-plus';
-import { CreateUserForm, UpdateUserForm } from '@/components/tags/form';
-import { popup } from '@/components/tags';
 
 export interface Props {
   canCreate?: boolean;

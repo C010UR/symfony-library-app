@@ -33,15 +33,15 @@
 </template>
 
 <script setup lang="ts">
-import { BaseImageUpload } from '@/components/tags/base';
-import { ref, reactive, watch } from 'vue';
-import { ElForm, ElFormItem, ElCheckbox, ElCheckboxGroup, ElInput } from 'element-plus';
-import { ApiUrls, useCreate } from '@/composables';
 import { popup } from '@/components/tags';
+import { BaseImageUpload } from '@/components/tags/base';
 import { BaseForm } from '@/components/tags/form';
-import type { UserProfile, UploadUserProfile } from '@/composables';
-import type { FormInstance } from 'element-plus';
 import { authorRules } from '@/components/tags/form/rules';
+import type { UploadUserProfile, UserProfile } from '@/composables';
+import { ApiUrls, useCreate } from '@/composables';
+import type { FormInstance } from 'element-plus';
+import { ElCheckbox, ElCheckboxGroup, ElForm, ElFormItem, ElInput } from 'element-plus';
+import { reactive, ref, watch } from 'vue';
 
 export interface Props {
   modelValue: boolean;

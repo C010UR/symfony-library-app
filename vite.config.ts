@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-
+import vue from '@vitejs/plugin-vue';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, splitVendorChunkPlugin } from 'vite';
 import symfonyPlugin from 'vite-plugin-symfony'; // https://github.com/lhapaipai/vite-plugin-symfony & https://github.com/lhapaipai/vite-bundle
-import vue from '@vitejs/plugin-vue';
 
-import components from 'unplugin-vue-components/vite';
 import elementPlus from 'unplugin-element-plus/vite';
+import components from 'unplugin-vue-components/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -53,11 +52,20 @@ export default defineConfig({
       },
       output: {
         manualChunks: {
-          elementplus: ['element-plus', '@element-plus/icons-vue'],
-          axios: ['axios', 'axios-cache-interceptor'],
-          modules: ['lodash', 'path', 'qs', 'validator', 'vue-draggable-plus'],
-          vue: ['vue-router', 'pinia', '@vueuse/core'],
-          views: ['assets/views/index.ts'],
+          'element-plus-icons': ['@element-plus/icons-vue'],
+          'element-plus': ['element-plus'],
+          modules: [
+            'lodash',
+            'path',
+            'qs',
+            'validator',
+            'vue-draggable-plus',
+            'axios',
+            'axios-cache-interceptor',
+            'vue-router',
+            'pinia',
+            '@vueuse/core',
+          ],
         },
       },
     },

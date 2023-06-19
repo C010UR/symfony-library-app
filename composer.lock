@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a7f2430b6c5d667b0be4058fe47597e",
+    "content-hash": "7ccc5498c60391a71c4a673165be284f",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -7220,16 +7220,16 @@
         },
         {
             "name": "dama/doctrine-test-bundle",
-            "version": "v8.0.0-BETA1",
+            "version": "v7.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dmaicher/doctrine-test-bundle.git",
-                "reference": "629d385a71518c3efa1f86d9c7e62005191eddbd"
+                "reference": "175b47153609a369117d97d36049b8a8c3b69dc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dmaicher/doctrine-test-bundle/zipball/629d385a71518c3efa1f86d9c7e62005191eddbd",
-                "reference": "629d385a71518c3efa1f86d9c7e62005191eddbd",
+                "url": "https://api.github.com/repos/dmaicher/doctrine-test-bundle/zipball/175b47153609a369117d97d36049b8a8c3b69dc1",
+                "reference": "175b47153609a369117d97d36049b8a8c3b69dc1",
                 "shasum": ""
             },
             "require": {
@@ -7253,7 +7253,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "8.x-dev"
+                    "dev-master": "7.x-dev"
                 }
             },
             "autoload": {
@@ -7281,9 +7281,9 @@
             ],
             "support": {
                 "issues": "https://github.com/dmaicher/doctrine-test-bundle/issues",
-                "source": "https://github.com/dmaicher/doctrine-test-bundle/tree/v8.0.0-BETA1"
+                "source": "https://github.com/dmaicher/doctrine-test-bundle/tree/v7.2.1"
             },
-            "time": "2023-04-19T07:10:38+00:00"
+            "time": "2023-02-07T10:02:27+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
@@ -8058,16 +8058,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.2.1",
+            "version": "10.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "599b33294350e8f51163119d5670512f98b0490d"
+                "reference": "1ab521b24b88b88310c40c26c0cc4a94ba40ff95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/599b33294350e8f51163119d5670512f98b0490d",
-                "reference": "599b33294350e8f51163119d5670512f98b0490d",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1ab521b24b88b88310c40c26c0cc4a94ba40ff95",
+                "reference": "1ab521b24b88b88310c40c26c0cc4a94ba40ff95",
                 "shasum": ""
             },
             "require": {
@@ -8139,7 +8139,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.2.1"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.2.2"
             },
             "funding": [
                 {
@@ -8155,7 +8155,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-05T05:15:51+00:00"
+            "time": "2023-06-11T06:15:20+00:00"
         },
         {
             "name": "rector/rector",
@@ -9616,9 +9616,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "dama/doctrine-test-bundle": 10
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -209,13 +209,13 @@ class QueryParser
         try {
             $value = Column::convert($column, $value, $isArray);
         } catch (\Throwable $throwable) {
-            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getLabel(), $operator, is_array($value) ? '[' + implode(', ', $value) + ']' : $value, $throwable->getMessage()), previous: $throwable);
+            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getLabel(), $operator, is_array($value) ? '[' . implode(', ', $value) . ']' : $value, $throwable->getMessage()), previous: $throwable);
         }
 
         try {
             $expr = $this->parseOperator($column->getName(), $operator, $value);
         } catch (\Throwable $throwable) {
-            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getName(), $operator, is_array($value) ? '[' + implode(', ', $value) + ']' : $value, $throwable->getMessage()), previous: $throwable);
+            throw new InvalidQueryExpressionException(message: sprintf("Invalid value in '%s' %s '%s'. Reason: %s", $column->getName(), $operator, is_array($value) ? '[' . implode(', ', $value) . ']' : $value, $throwable->getMessage()), previous: $throwable);
         }
 
         $this->criteria->andWhere($expr);

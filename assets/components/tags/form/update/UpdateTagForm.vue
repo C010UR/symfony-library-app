@@ -17,14 +17,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue';
-import { ElForm, ElFormItem, ElInput } from 'element-plus';
-import { ApiUrls, useUpdate } from '@/composables';
 import { popup } from '@/components/tags';
 import { BaseForm } from '@/components/tags/form';
-import type { BookTag, UploadBookTag } from '@/composables';
-import type { FormInstance } from 'element-plus';
 import { tagRules } from '@/components/tags/form/rules';
+import type { BookTag, UploadBookTag } from '@/composables';
+import { ApiUrls, useUpdate } from '@/composables';
+import type { FormInstance } from 'element-plus';
+import { ElForm, ElFormItem, ElInput } from 'element-plus';
+import { reactive, ref, watch } from 'vue';
 
 export interface Props {
   modelValue: boolean;

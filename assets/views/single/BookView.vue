@@ -57,13 +57,12 @@
 
 <script setup lang="ts">
 import { BasePage } from '@/components/pages';
-import { BaseImage, BaseAvatar } from '@/components/tags/base';
-import { ElTag, ElIcon, ElButton, ElLink } from 'element-plus';
-import { Clock, Document } from '@element-plus/icons-vue';
-import { ApiUrls, useGetOne } from '@/composables';
+import { BaseAvatar, BaseImage } from '@/components/tags/base';
 import type { Book } from '@/composables';
-import { ref } from 'vue';
-import { onMounted } from 'vue';
+import { ApiUrls, useGetOne } from '@/composables';
+import { Clock, Document } from '@element-plus/icons-vue';
+import { ElButton, ElIcon, ElLink, ElTag } from 'element-plus';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const book = ref<Book | undefined>();

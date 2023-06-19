@@ -44,4 +44,9 @@ class Utils
 
         return implode('', $pieces);
     }
+
+    public static function appendRandomString(string $str, int $length = 64, string $keyspace = 'abcdefghijklmnopqrstuvwxyz'): string
+    {
+        return sprintf('%s.%s', self::randomString($length, $keyspace), $str);
+    }
 }

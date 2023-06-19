@@ -11,9 +11,9 @@
 </template>
 
 <script setup>
-import { ElSwitch } from 'element-plus';
-import { Sunny, Moon } from '@element-plus/icons-vue';
+import { Moon, Sunny } from '@element-plus/icons-vue';
 import { useDark } from '@vueuse/core';
+import { ElSwitch } from 'element-plus';
 
 const isDark = useDark();
 </script>

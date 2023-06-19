@@ -29,13 +29,13 @@
 </template>
 
 <script setup lang="ts">
-import { ElButton, ElInput, ElSelect, ElOption } from 'element-plus';
+import type { Filter, FilterOption } from '@/composables';
 import { Delete } from '@element-plus/icons-vue';
+import { watchPausable } from '@vueuse/core';
+import { ElButton, ElInput, ElOption, ElSelect } from 'element-plus';
+import lodash from 'lodash';
 import { computed, reactive } from 'vue';
 import FilterInput from './FilterInput.vue';
-import type { Filter, FilterOption } from '@/composables';
-import lodash from 'lodash';
-import { watchPausable } from '@vueuse/core';
 
 export interface Props {
   columns: FilterOption[];

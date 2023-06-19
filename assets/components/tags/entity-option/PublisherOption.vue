@@ -8,9 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import { ElOption } from 'element-plus';
 import { BaseAvatar } from '@/components/tags/base';
 import type { BookPublisher } from '@/composables';
+import { ElOption } from 'element-plus';
 
 export interface Props {
   value: BookPublisher;

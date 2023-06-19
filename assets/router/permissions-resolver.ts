@@ -42,4 +42,4 @@ function isUserHasPermissions(profile?: UserProfile, routeRoles?: UserRole[]): b
   return false;
 }
 
-export { routeFallback, isUserHasPermissions };
+export { isUserHasPermissions, routeFallback };

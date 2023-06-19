@@ -26,9 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { ElPopover, ElTag } from 'element-plus';
 import { BaseAvatar } from '@/components/tags/base';
 import type { UserProfile } from '@/composables';
+import { ElPopover, ElTag } from 'element-plus';
 
 export interface Props {
   user: UserProfile | undefined;

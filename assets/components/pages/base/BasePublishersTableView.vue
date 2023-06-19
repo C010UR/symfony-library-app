@@ -60,34 +60,33 @@
 </template>
 
 <script setup lang="ts">
-import { FilterDrawer } from '@/components/tags/data/filter';
+import { popup } from '@/components/tags';
+import { BaseAvatar } from '@/components/tags/base';
+import { DataPagination, FilterDrawer, TableList } from '@/components/tags/data';
+import { CreatePublisherForm, UpdatePublisherForm } from '@/components/tags/form';
+import type {
+  ApiMeta,
+  ApiParams,
+  ApiUrl,
+  BookPublisher,
+  Filter,
+  FilterOption,
+  Order,
+  RouteParams,
+} from '@/composables';
 import {
   ApiUrls,
   useChangeQuery,
-  useGetAll,
   useDelete,
+  useGetAll,
   useGetMeta,
   useParseApiParams,
   useParseParams,
 } from '@/composables';
-import { onMounted, ref, watch, computed } from 'vue';
-import { TableList, DataPagination } from '@/components/tags/data';
-import type {
-  ApiUrl,
-  ApiMeta,
-  BookPublisher,
-  Filter,
-  Order,
-  FilterOption,
-  ApiParams,
-  RouteParams,
-} from '@/composables';
+import { ChromeFilled, Location, Message } from '@element-plus/icons-vue';
+import { ElIcon, ElLink, ElMessageBox, ElTableColumn } from 'element-plus';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { BaseAvatar } from '@/components/tags/base';
-import { Location, ChromeFilled, Message } from '@element-plus/icons-vue';
-import { ElIcon, ElTableColumn, ElLink, ElMessageBox } from 'element-plus';
-import { CreatePublisherForm, UpdatePublisherForm } from '@/components/tags/form';
-import { popup } from '@/components/tags';
 
 export interface Props {
   canCreate?: boolean;

@@ -37,13 +37,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { ElForm, ElFormItem, ElInput, ElButton } from 'element-plus';
-import validator from 'validator';
-import type { FormInstance, FormRules } from 'element-plus';
 import { BaseCardPage } from '@/components/pages';
 import { useResetPassword } from '@/composables';
+import type { FormInstance, FormRules } from 'element-plus';
+import { ElButton, ElForm, ElFormItem, ElInput } from 'element-plus';
+import validator from 'validator';
+import { reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();

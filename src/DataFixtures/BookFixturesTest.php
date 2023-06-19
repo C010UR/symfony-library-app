@@ -71,11 +71,11 @@ class BookFixturesTest extends Fixture implements FixtureGroupInterface, Depende
                 $entity->setIsDeleted(false);
 
                 foreach ($book['tags'] as $tag) {
-                    $entity->addTag($this->getReference($this->getReference(sprintf('tag: %s', $tag), Tag::class)));
+                    $entity->addTag($this->getReference(sprintf('tag: %s', $tag), Tag::class));
                 }
 
                 foreach ($book['authors'] as $author) {
-                    $entity->addTag($this->getReference($this->getReference(sprintf('author: %s', $author), Author::class)));
+                    $entity->addAuthor($this->getReference(sprintf('author: %s', $author), Author::class));
                 }
 
                 $manager->persist($entity);

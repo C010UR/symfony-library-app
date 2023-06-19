@@ -38,12 +38,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { ElPopover, ElTag, ElButton } from 'element-plus';
 import { BaseAvatar } from '@/components/tags/base';
-import { useGetProfile, useLogout } from '@/composables';
 import type { UserProfile } from '@/composables';
+import { useGetProfile, useLogout } from '@/composables';
+import { ElButton, ElPopover, ElTag } from 'element-plus';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 

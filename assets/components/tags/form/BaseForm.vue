@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElDialog, ElButton, ElTag } from 'element-plus';
+import { ElButton, ElDialog, ElTag } from 'element-plus';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 export interface CreateFormProps {

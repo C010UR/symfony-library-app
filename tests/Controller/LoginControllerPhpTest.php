@@ -2,21 +2,15 @@
 
 namespace App\Tests\Controller;
 
-use App\Controller\LoginController;
+use App\DataFixtures\UserFixturesTest;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use PHPUnit\Framework\Attributes\CoversClass;
+use App\Utils\Utils;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 
-#[CoversClass(LoginController::class)]
 class LoginControllerPhpTest extends ControllerTestCase
 {
-    /**
-     * @var string
-     */
-    private const TEST_PASSWORD = 'test.password';
-
     protected function setUp(): void
     {
         parent::setup();
@@ -37,7 +31,7 @@ class LoginControllerPhpTest extends ControllerTestCase
                 continue;
             }
 
-            yield $user->getEmail() => [$user, self::TEST_PASSWORD];
+            yield $user->getEmail() => [$user, UserFixturesTest::PASSWORD];
         }
     }
 
@@ -78,23 +72,23 @@ class LoginControllerPhpTest extends ControllerTestCase
     {
         $this->assertLoginFail(
             $user->getEmail(),
-            $this->appendRandomString($password),
+            Utils::appendRandomString($password),
             'Email and/or Password are incorrect.',
         );
 
         $this->assertLoginFail(
             $user->getEmail(),
-            $this->appendRandomString($password),
+            Utils::appendRandomString($password),
             'Email and/or Password are incorrect.',
         );
 
         $this->assertLoginFail(
             $user->getEmail(),
-            $this->appendRandomString($password),
+            Utils::appendRandomString($password),
             'Email and/or Password are incorrect.',
         );
 
-        $this->assertLoginFail($user->getEmail(), $this->appendRandomString($password), 'Account was deactivated.');
+        $this->assertLoginFail($user->getEmail(), Utils::appendRandomString($password), 'Account was deactivated.');
 
         $this->assertLoginFail($user->getEmail(), $password, 'Account is not active');
     }
@@ -104,19 +98,19 @@ class LoginControllerPhpTest extends ControllerTestCase
     {
         $this->assertLoginFail(
             $user->getEmail(),
-            $this->appendRandomString($password),
+            Utils::appendRandomString($password),
             'Email and/or Password are incorrect.',
         );
 
         $this->assertLoginFail(
-            $this->appendRandomString($user->getEmail()),
+            Utils::appendRandomString($user->getEmail()),
             $password,
             'Email and/or Password are incorrect.',
         );
 
         $this->assertLoginFail(
-            $this->appendRandomString($user->getEmail()),
-            $this->appendRandomString($password),
+            Utils::appendRandomString($user->getEmail()),
+            Utils::appendRandomString($password),
             'Email and/or Password are incorrect.',
         );
     }

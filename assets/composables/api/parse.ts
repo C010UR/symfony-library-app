@@ -1,4 +1,4 @@
-import type { ApiParams, Order, Filter, Pagination, FilterOperator } from './types';
+import type { ApiParams, Filter, FilterOperator, Order, Pagination } from './types';
 
 export function useParseApiParams(params?: ApiParams) {
   if (!params) {

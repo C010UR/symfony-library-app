@@ -28,10 +28,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { ElBreadcrumb, ElBreadcrumbItem, ElScrollbar } from 'element-plus';
 import { DarkSwitch, UserProfile } from '@/components/tags';
 import type { UserProfile as UserProfileType } from '@/composables';
+import { ElBreadcrumb, ElBreadcrumbItem, ElScrollbar } from 'element-plus';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 interface Links {

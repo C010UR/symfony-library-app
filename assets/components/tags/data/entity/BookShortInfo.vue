@@ -46,9 +46,9 @@
 </template>
 
 <script setup lang="ts">
-import { ElLink, ElButton, ElTag } from 'element-plus';
 import { BaseAvatar, BaseImage } from '@/components/tags/base';
 import type { Book } from '@/composables/api';
+import { ElButton, ElLink, ElTag } from 'element-plus';
 
 export interface Props {
   book?: Book;

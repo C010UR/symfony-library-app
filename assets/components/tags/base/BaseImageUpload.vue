@@ -23,11 +23,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
-import { ElUpload, ElIcon, genFileId } from 'element-plus';
-import type { UploadUserFile, UploadProps, UploadInstance, UploadRawFile } from 'element-plus';
-import { UploadFilled } from '@element-plus/icons-vue';
 import { popup } from '@/components/tags';
+import { UploadFilled } from '@element-plus/icons-vue';
+import type { UploadInstance, UploadProps, UploadRawFile, UploadUserFile } from 'element-plus';
+import { ElIcon, ElUpload, genFileId } from 'element-plus';
+import { ref, watchEffect } from 'vue';
 
 export interface Props {
   isLoading?: boolean;

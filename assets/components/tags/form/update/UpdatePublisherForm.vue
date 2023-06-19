@@ -29,15 +29,15 @@
 </template>
 
 <script setup lang="ts">
-import { BaseImageUpload } from '@/components/tags/base';
-import { ref, reactive, watch } from 'vue';
-import { ElForm, ElFormItem, ElInput } from 'element-plus';
-import { ApiUrls, useUpdate } from '@/composables';
 import { popup } from '@/components/tags';
+import { BaseImageUpload } from '@/components/tags/base';
 import { BaseForm } from '@/components/tags/form';
-import type { BookPublisher, UploadBookPublisher } from '@/composables';
-import type { FormInstance } from 'element-plus';
 import { publisherRules } from '@/components/tags/form/rules';
+import type { BookPublisher, UploadBookPublisher } from '@/composables';
+import { ApiUrls, useUpdate } from '@/composables';
+import type { FormInstance } from 'element-plus';
+import { ElForm, ElFormItem, ElInput } from 'element-plus';
+import { reactive, ref, watch } from 'vue';
 
 export interface Props {
   modelValue: boolean;

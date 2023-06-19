@@ -26,15 +26,14 @@
 
 <script setup lang="ts">
 import { BasePage } from '@/components/pages';
-import { BaseAvatar } from '@/components/tags/base';
-import { ElLink, ElIcon } from 'element-plus';
-import { Message, ChromeFilled } from '@element-plus/icons-vue';
-import { ApiUrls, useGetOne } from '@/composables';
-import type { BookAuthor } from '@/composables';
-import { ref, computed } from 'vue';
-import { onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import { BaseBooksView } from '@/components/pages/base';
+import { BaseAvatar } from '@/components/tags/base';
+import type { BookAuthor } from '@/composables';
+import { ApiUrls, useGetOne } from '@/composables';
+import { ChromeFilled, Message } from '@element-plus/icons-vue';
+import { ElIcon, ElLink } from 'element-plus';
+import { computed, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const author = ref<BookAuthor | undefined>();
 

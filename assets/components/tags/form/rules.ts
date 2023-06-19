@@ -1,5 +1,5 @@
+import type { FormItemRule, FormRules } from 'element-plus';
 import { reactive } from 'vue';
-import type { FormRules, FormItemRule } from 'element-plus';
 
 const invalidFieldMessage = 'Поле не действительно';
 const emptyMessage = 'Поле не должно быть пустым';

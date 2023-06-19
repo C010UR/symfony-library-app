@@ -7,5 +7,5 @@
 </template>
 
 <script setup lang="ts">
-import { BasePage, BaseBooksTableView } from '@/components/pages';
+import { BaseBooksTableView, BasePage } from '@/components/pages';
 </script>

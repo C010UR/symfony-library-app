@@ -49,24 +49,22 @@
 </template>
 
 <script setup lang="ts">
-import { FilterDrawer } from '@/components/tags/data/filter';
+import { popup } from '@/components/tags';
+import { BookShortInfo, DataPagination, FilterDrawer, TableList } from '@/components/tags/data';
+import { CreateBookForm, UpdateBookForm } from '@/components/tags/form';
+import type { ApiMeta, ApiParams, ApiUrl, Book, Filter, FilterOption, Order, RouteParams } from '@/composables';
 import {
   ApiUrls,
   useChangeQuery,
-  useGetAll,
   useDelete,
+  useGetAll,
   useGetMeta,
   useParseApiParams,
   useParseParams,
 } from '@/composables';
-import { onMounted, ref, watch, computed } from 'vue';
-import { TableList, DataPagination } from '@/components/tags/data';
-import type { ApiUrl, ApiMeta, Book, Filter, Order, FilterOption, ApiParams, RouteParams } from '@/composables';
+import { ElLink, ElMessageBox, ElTableColumn } from 'element-plus';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { ElTableColumn, ElLink, ElMessageBox } from 'element-plus';
-import { CreateBookForm, UpdateBookForm } from '@/components/tags/form';
-import { BookShortInfo } from '@/components/tags/data/entity';
-import { popup } from '@/components/tags';
 
 export interface Props {
   canCreate?: boolean;

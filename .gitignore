@@ -57,7 +57,6 @@ public/uploads
 /node_modules/
 /public/build/
 ###< pentatrion/vite-bundle ###
-
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 /phpunit.xml
@@ -66,5 +65,4 @@ public/uploads
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
-.phpunit.cache
 ###< phpunit/phpunit ###

@@ -1,5 +1,5 @@
-import { useFetch } from '../useFetch';
 import type { RouteParams } from '../useFetch';
+import { useFetch } from '../useFetch';
 import type { ApiCollection, FilterOption } from './types';
 
 export const ApiUrls = {

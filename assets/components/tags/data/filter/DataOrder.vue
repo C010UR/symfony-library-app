@@ -24,13 +24,11 @@
 </template>
 
 <script setup lang="ts">
-import { ElSwitch } from 'element-plus';
-import { Top, Bottom } from '@element-plus/icons-vue';
-import { computed, ref } from 'vue';
 import type { FilterOption, Order } from '@/composables';
+import { Bottom, Top } from '@element-plus/icons-vue';
+import { ElSwitch } from 'element-plus';
+import { computed, reactive, ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { watch } from 'vue';
-import { reactive } from 'vue';
 
 export interface Props {
   columns: FilterOption[];

@@ -76,17 +76,16 @@
 </template>
 
 <script setup lang="ts">
-import { BaseImageUpload } from '@/components/tags/base';
-import { ref, reactive, watch } from 'vue';
-import { ElForm, ElFormItem, ElInput, ElSelect, ElDatePicker, ElInputNumber } from 'element-plus';
-
-import { AuthorOption, PublisherOption, TagOption } from '@/components/tags/entity-option';
-import { useGetAll, ApiUrls, useCreate } from '@/composables';
 import { popup } from '@/components/tags';
+import { BaseImageUpload } from '@/components/tags/base';
+import { AuthorOption, PublisherOption, TagOption } from '@/components/tags/entity-option';
 import { BaseForm } from '@/components/tags/form';
-import type { UploadBook, BookAuthor, BookTag, BookPublisher, Book } from '@/composables';
-import type { FormInstance } from 'element-plus';
 import { bookRules } from '@/components/tags/form/rules';
+import type { Book, BookAuthor, BookPublisher, BookTag, UploadBook } from '@/composables';
+import { ApiUrls, useCreate, useGetAll } from '@/composables';
+import type { FormInstance } from 'element-plus';
+import { ElDatePicker, ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect } from 'element-plus';
+import { reactive, ref, watch } from 'vue';
 
 export interface Props {
   modelValue: boolean;

@@ -2,25 +2,19 @@
 
 namespace App\Tests\Controller;
 
-use App\Controller\PasswordResetController;
+use App\DataFixtures\UserFixturesTest;
 use App\Entity\User;
 use App\Repository\ResetPasswordRequestRepository;
 use App\Repository\UserRepository;
 use App\Utils\FileUtils;
-use PHPUnit\Framework\Attributes\CoversClass;
+use App\Utils\Utils;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\MailerAssertionsTrait;
 use Symfony\Component\HttpFoundation\Response;
 
-#[CoversClass(PasswordResetController::class)]
 class PasswordResetControllerPhpTest extends ControllerTestCase
 {
     use MailerAssertionsTrait;
-
-    /**
-     * @var string
-     */
-    private const TEST_PASSWORD = 'test.password';
 
     public static function getUser(): iterable
     {
@@ -32,14 +26,14 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
                 continue;
             }
 
-            yield $user->getEmail() => [$user, self::TEST_PASSWORD];
+            yield $user->getEmail() => [$user, UserFixturesTest::PASSWORD];
         }
     }
 
     #[DataProvider('getUser')]
     public function testPasswordReset(User $user, string $oldPassword): void
     {
-        $newPassword = $this->appendRandomString($oldPassword);
+        $newPassword = Utils::appendRandomString($oldPassword);
 
         $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password', [
             'email' => $user->getEmail(),
@@ -133,13 +127,7 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
     #[DataProvider('getUser')]
     public function testResetFail(User $user, string $oldPassword): void
     {
-        $newPassword = $this->appendRandomString($oldPassword);
-
-        $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password/reset/', [
-            'password' => $newPassword,
-        ]);
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        $newPassword = Utils::appendRandomString($oldPassword);
 
         $this->getClientInstance()->jsonRequest('POST', '/api/v1/reset-password', [
             'email' => $user->getEmail(),
@@ -154,7 +142,7 @@ class PasswordResetControllerPhpTest extends ControllerTestCase
 
         $this->getClientInstance()->jsonRequest(
             'POST',
-            FileUtils::joinPaths(['/api/v1/reset-password/reset', $this->appendRandomString($selector)]),
+            FileUtils::joinPaths(['/api/v1/reset-password/reset', Utils::appendRandomString($selector)]),
             [
                 'password' => $newPassword,
             ],

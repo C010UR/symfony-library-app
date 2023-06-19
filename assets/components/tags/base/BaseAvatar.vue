@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import { ElAvatar, ElIcon } from 'element-plus';
 import { UserFilled } from '@element-plus/icons-vue';
+import { ElAvatar, ElIcon } from 'element-plus';
 
 export interface Props {
   size?: number;

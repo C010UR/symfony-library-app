@@ -15,8 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import { ElDivider, ElCard } from 'element-plus';
 import { DarkSwitch } from '@/components/tags';
+import { ElCard, ElDivider } from 'element-plus';
 
 export interface Props {
   header?: string;

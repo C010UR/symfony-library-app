@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { BasePage } from '@/components/pages';
 import { BaseImage } from '@/components/tags/base';
-import { ElTag, ElCarousel, ElCarouselItem } from 'element-plus';
+import { ElCarousel, ElCarouselItem, ElTag } from 'element-plus';
 </script>
 
 <style scoped>

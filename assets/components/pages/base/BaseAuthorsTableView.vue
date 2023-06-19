@@ -55,25 +55,24 @@
 </template>
 
 <script setup lang="ts">
-import { FilterDrawer } from '@/components/tags/data/filter';
+import { popup } from '@/components/tags';
+import { BaseAvatar } from '@/components/tags/base';
+import { DataPagination, FilterDrawer, TableList } from '@/components/tags/data';
+import { CreateAuthorForm, UpdateAuthorForm } from '@/components/tags/form';
+import type { ApiMeta, ApiParams, ApiUrl, BookAuthor, Filter, FilterOption, Order, RouteParams } from '@/composables';
 import {
   ApiUrls,
   useChangeQuery,
-  useGetAll,
   useDelete,
+  useGetAll,
   useGetMeta,
   useParseApiParams,
   useParseParams,
 } from '@/composables';
-import { onMounted, ref, watch, computed } from 'vue';
-import { TableList, DataPagination } from '@/components/tags/data';
-import type { ApiUrl, ApiMeta, BookAuthor, Filter, Order, FilterOption, ApiParams, RouteParams } from '@/composables';
-import { useRoute } from 'vue-router';
-import { BaseAvatar } from '@/components/tags/base';
 import { ChromeFilled, Message } from '@element-plus/icons-vue';
-import { ElIcon, ElTableColumn, ElLink, ElMessageBox } from 'element-plus';
-import { CreateAuthorForm, UpdateAuthorForm } from '@/components/tags/form';
-import { popup } from '@/components/tags';
+import { ElIcon, ElLink, ElMessageBox, ElTableColumn } from 'element-plus';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 export interface Props {
   canCreate?: boolean;

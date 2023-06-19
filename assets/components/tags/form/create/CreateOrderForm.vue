@@ -36,15 +36,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue';
-import { ElForm, ElFormItem, ElInput, ElInputNumber } from 'element-plus';
-import { ApiUrls, useCreate } from '@/composables';
 import { popup } from '@/components/tags';
+import { BookShortInfo } from '@/components/tags/data';
 import { BaseForm } from '@/components/tags/form';
-import type { Book, BookOrder, UploadBookOrder } from '@/composables';
-import type { FormInstance } from 'element-plus';
 import { orderRules } from '@/components/tags/form/rules';
-import { BookShortInfo } from '@/components/tags/data/entity';
+import type { Book, BookOrder, UploadBookOrder } from '@/composables';
+import { ApiUrls, useCreate } from '@/composables';
+import type { FormInstance } from 'element-plus';
+import { ElForm, ElFormItem, ElInput, ElInputNumber } from 'element-plus';
+import { reactive, ref, watch } from 'vue';
 
 export interface Props {
   modelValue: boolean;

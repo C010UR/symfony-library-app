@@ -12,6 +12,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(QueryParser::class)]
+#[CoversClass(Column::class)]
 class QueryParserTestPhpTest extends TestCase
 {
     public static function getColumns(): iterable

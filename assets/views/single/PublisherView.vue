@@ -28,12 +28,11 @@
 <script setup lang="ts">
 import { BasePage } from '@/components/pages';
 import { BaseAvatar } from '@/components/tags/base';
-import { ElLink, ElIcon } from 'element-plus';
-import { Message, ChromeFilled, Location } from '@element-plus/icons-vue';
-import { ApiUrls, useGetOne } from '@/composables';
 import type { BookPublisher } from '@/composables';
-import { ref } from 'vue';
-import { onMounted } from 'vue';
+import { ApiUrls, useGetOne } from '@/composables';
+import { ChromeFilled, Location, Message } from '@element-plus/icons-vue';
+import { ElIcon, ElLink } from 'element-plus';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const publisher = ref<BookPublisher | undefined>();

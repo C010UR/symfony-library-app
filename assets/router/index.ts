@@ -1,28 +1,28 @@
+import type { UserRole } from '@/composables';
+import { useGetProfile } from '@/composables';
+import {
+  AboutUs,
+  AuthorsCrudView,
+  AuthorView,
+  BooksCrudView,
+  BooksView,
+  BookView,
+  LoginView,
+  NotFoundView,
+  OrdersView,
+  PublishersCrudView,
+  PublisherView,
+  RequestPasswordResetConfirmView,
+  RequestPasswordResetView,
+  ResetPasswordView,
+  TagsCrudView,
+  UsersCrudView,
+} from '@/views';
+import qs from 'qs';
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory, type LocationQuery } from 'vue-router';
-import { resolveTransition } from './transition-resolver';
 import { isUserHasPermissions, routeFallback } from './permissions-resolver';
-import {
-  LoginView,
-  RequestPasswordResetView,
-  RequestPasswordResetConfirmView,
-  ResetPasswordView,
-  BooksView,
-  AboutUs,
-  NotFoundView,
-  BookView,
-  AuthorView,
-  PublisherView,
-  BooksCrudView,
-  PublishersCrudView,
-  AuthorsCrudView,
-  UsersCrudView,
-  TagsCrudView,
-  OrdersView,
-} from '@/views';
-import { useGetProfile } from '@/composables';
-import type { UserRole } from '@/composables';
-import qs from 'qs';
+import { resolveTransition } from './transition-resolver';
 
 const router = createRouter({
   history: createWebHistory(),

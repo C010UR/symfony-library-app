@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends {id: number, isDeleted: boolean}">
-import { ElTable, ElTableColumn, ElButton, ElPopconfirm, ElTag } from 'element-plus';
+import { ElButton, ElPopconfirm, ElTable, ElTableColumn, ElTag } from 'element-plus';
 
 export interface Props {
   canCreate?: boolean;

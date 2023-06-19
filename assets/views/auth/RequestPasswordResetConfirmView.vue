@@ -14,6 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { ElButton } from 'element-plus';
 import { BaseCardPage } from '@/components/pages';
+import { ElButton } from 'element-plus';
 </script>

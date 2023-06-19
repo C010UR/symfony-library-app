@@ -43,14 +43,14 @@
 </template>
 
 <script setup lang="ts">
+import { BaseCardPage } from '@/components/pages';
 import { popup } from '@/components/tags';
+import { loginRules } from '@/components/tags/form/rules';
+import { useLogin } from '@/composables';
+import type { FormInstance } from 'element-plus';
+import { ElButton, ElForm, ElFormItem, ElInput, ElLink } from 'element-plus';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { ElForm, ElFormItem, ElInput, ElButton, ElLink } from 'element-plus';
-import type { FormInstance } from 'element-plus';
-import { BaseCardPage } from '@/components/pages';
-import { useLogin } from '@/composables';
-import { loginRules } from '@/components/tags/form/rules';
 
 const formRef = ref<FormInstance>();
 const disabled = ref(false);

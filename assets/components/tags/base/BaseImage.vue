@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElImage, ElEmpty } from 'element-plus';
+import { ElEmpty, ElImage } from 'element-plus';
 import { ref } from 'vue';
 
 export interface Props {

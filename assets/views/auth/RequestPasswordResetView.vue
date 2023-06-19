@@ -34,13 +34,13 @@
 </template>
 
 <script setup lang="ts">
+import { BaseCardPage } from '@/components/pages';
+import { requestPasswordResetRules } from '@/components/tags/form/rules';
+import { useRequestPasswordReset } from '@/composables';
+import type { FormInstance } from 'element-plus';
+import { ElButton, ElForm, ElFormItem, ElInput, ElLink } from 'element-plus';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { ElForm, ElFormItem, ElInput, ElButton, ElLink } from 'element-plus';
-import type { FormInstance } from 'element-plus';
-import { BaseCardPage } from '@/components/pages';
-import { useRequestPasswordReset } from '@/composables';
-import { requestPasswordResetRules } from '@/components/tags/form/rules';
 
 const router = useRouter();
 

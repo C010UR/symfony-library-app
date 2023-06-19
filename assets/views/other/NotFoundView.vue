@@ -8,9 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import { ElEmpty, ElButton } from 'element-plus';
 import { BaseCardPage } from '@/components/pages';
+import { ElButton, ElEmpty } from 'element-plus';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 

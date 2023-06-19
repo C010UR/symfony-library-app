@@ -12,5 +12,5 @@
 </template>
 
 <script setup lang="ts">
-import { BasePage, BaseAuthorsTableView } from '@/components/pages';
+import { BaseAuthorsTableView, BasePage } from '@/components/pages';
 </script>

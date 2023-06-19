@@ -1,8 +1,8 @@
 import { popup } from '@/components/tags';
-import Axios from 'axios';
+import { axios } from '@/lib/axios';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { AxiosError, Method } from 'axios';
-import { axios } from '@/lib/axios';
+import Axios from 'axios';
 import type { RouteParams } from 'vue-router';
 
 export type { Method } from 'axios';
