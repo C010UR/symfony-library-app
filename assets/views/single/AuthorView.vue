@@ -95,37 +95,9 @@ onMounted(async () => {
   flex-shrink: 0;
 }
 
-.card {
-  width: 50%;
-  align-self: center;
-}
-
-.column {
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 0 0.5rem;
-}
-
-.name {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.list {
-  margin: 0.5rem 0;
-}
-
-.list-title {
-  margin-bottom: 0.5rem;
-}
-
-.list-item {
-  margin: 0 0.5rem 0.5rem 0;
-}
-
 @media only screen and (max-width: 768px) {
-  .card {
-    width: 90%;
+  .body-item {
+    align-items: baseline;
   }
 }
 </style>

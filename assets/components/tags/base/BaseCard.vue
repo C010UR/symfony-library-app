@@ -54,12 +54,12 @@ withDefaults(defineProps<Props>(), {
 .card-body {
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: stretch;
   margin: 0;
   padding: 0;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 992px) {
   .card-body {
     flex-direction: column;
   }

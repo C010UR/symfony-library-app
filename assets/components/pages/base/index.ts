@@ -4,3 +4,4 @@ export { default as BasePublishersTableView } from './BasePublishersTableView.vu
 export { default as BaseAuthorsTableView } from './BaseAuthorsTableView.vue';
 export { default as BaseUsersTableView } from './BaseUsersTableView.vue';
 export { default as BaseTagsTableView } from './BaseTagsTableView.vue';
+export { default as BaseOrdersTableView } from './BaseOrdersTableView.vue';

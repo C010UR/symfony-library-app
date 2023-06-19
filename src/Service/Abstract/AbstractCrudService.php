@@ -77,6 +77,7 @@ abstract class AbstractCrudService
         if (!$this->getSecurity()->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             return false;
         }
+
         return in_array(User::ROLE_USER, $this->getSecurity()->getUser()->getRoles());
     }
 
@@ -85,6 +86,7 @@ abstract class AbstractCrudService
         if (!$this->getSecurity()->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             return false;
         }
+
         return in_array(User::ROLE_ADMIN, $this->getSecurity()->getUser()->getRoles());
     }
 

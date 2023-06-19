@@ -1,5 +1,5 @@
 <template>
-  <filter-drawer :columns="columns" v-model:orders="orders" v-model:filters="filters" />
+  <filter-drawer :columns="columns" v-model:orders="orders" v-model:filters="filters" :disabled="isNoData" />
 
   <create-publisher-form v-model="isCreateFormOpen" @submit="submitCreate" />
   <update-publisher-form v-model="isUpdateFormOpen" @submit="submitUpdate" :entity="updateEntity" />
@@ -56,7 +56,7 @@
     </el-table-column>
   </table-list>
 
-  <data-pagination v-model="pagination" />
+  <data-pagination v-model="pagination" :disabled="isNoData" />
 </template>
 
 <script setup lang="ts">
@@ -70,7 +70,7 @@ import {
   useParseApiParams,
   useParseParams,
 } from '@/composables';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { TableList, DataPagination } from '@/components/tags/data';
 import type {
   ApiUrl,
@@ -87,6 +87,7 @@ import { BaseAvatar } from '@/components/tags/base';
 import { Location, ChromeFilled, Message } from '@element-plus/icons-vue';
 import { ElIcon, ElTableColumn, ElLink, ElMessageBox } from 'element-plus';
 import { CreatePublisherForm, UpdatePublisherForm } from '@/components/tags/form';
+import { popup } from '@/components/tags';
 
 export interface Props {
   canCreate?: boolean;
@@ -103,6 +104,10 @@ const props = withDefaults(defineProps<Props>(), {
   url: ApiUrls.publishers,
   metaUrl: ApiUrls.publishers,
 });
+
+const emit = defineEmits<{
+  (e: 'update', isUpdated: true): void;
+}>();
 
 const route = useRoute();
 
@@ -121,6 +126,10 @@ const columns = ref<FilterOption[]>([]);
 const data = ref<BookPublisher[] | undefined>();
 const watchDisabled = ref<boolean>(false);
 
+const isNoData = computed(() => {
+  return data.value === undefined;
+});
+
 async function getData() {
   const parsedParams = useParseParams(filters.value, orders.value, {
     offset: pagination.value.offset,
@@ -131,6 +140,8 @@ async function getData() {
 
   data.value = undefined;
   const _data = await useGetAll<BookPublisher>(props.url, parsedParams as RouteParams);
+
+  emit('update', true);
 
   if (!_data) {
     data.value = [];
@@ -174,7 +185,10 @@ async function handleDelete(publisher: BookPublisher) {
     type: 'warning',
     async callback(action: string) {
       if (action === 'confirm') {
-        await useDelete(props.url, publisher);
+        if (await useDelete(props.url, publisher)) {
+          popup('success', 'Издатель успешно удален!');
+        }
+
         await getData();
       }
     },

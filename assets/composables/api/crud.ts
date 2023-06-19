@@ -8,6 +8,7 @@ export const ApiUrls = {
   tags: '/api/v1/tags',
   books: '/api/v1/books',
   users: '/api/v1/users',
+  orders: '/api/v1/orders',
 } as const;
 
 export type ApiUrl = (typeof ApiUrls)[keyof typeof ApiUrls];

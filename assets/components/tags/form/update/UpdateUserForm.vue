@@ -25,9 +25,9 @@
         <el-input v-model="form.email" maxlength="255" show-word-limit clearable :disabled="isLoading" type="email" />
       </el-form-item>
       <el-form-item label="Роли" prop="roles">
-        <el-checkbox-group v-model="form.roles" :min="1">
-          <el-checkbox true-label="ROLE_ADMIN" label="Администратор" border />
-          <el-checkbox true-label="ROLE_USER" label="Пользователь" border />
+        <el-checkbox-group v-model="roleFormItem" :min="1">
+          <el-checkbox name="ROLE_USER" label="Администратор" border />
+          <el-checkbox name="ROLE_ADMIN" label="Пользователь" border />
         </el-checkbox-group>
       </el-form-item>
     </el-form>
@@ -45,6 +45,7 @@ import type { UserProfile, UploadUserProfile } from '@/composables';
 import type { FormInstance } from 'element-plus';
 import { userRoles } from '@/components/tags/form/rules';
 import lodash from 'lodash';
+import type { UserRoleLabelType } from '../types';
 
 export interface Props {
   modelValue: boolean;
@@ -70,6 +71,8 @@ const form = reactive<UploadUserProfile>({
   roles: [],
 });
 
+const roleFormItem = ref<UserRoleLabelType[]>(['Пользователь']);
+
 function resetForm() {
   form.firstName = props.entity?.firstName;
   form.lastName = props.entity?.lastName;
@@ -85,6 +88,29 @@ function resetForm() {
   } else {
     form.image = undefined;
   }
+
+  if (props.entity?.roles) {
+    roleFormItem.value = [];
+
+    for (const role of props.entity.roles) {
+      switch (role) {
+        case 'ROLE_USER': {
+          console.log('user');
+          roleFormItem.value.push('Пользователь');
+          break;
+        }
+        case 'ROLE_ADMIN': {
+          console.log('admin');
+          roleFormItem.value.push('Администратор');
+          break;
+        }
+        default: {
+          const _exhaustiveCheck: never = role;
+          return _exhaustiveCheck;
+        }
+      }
+    }
+  }
 }
 
 watch(
@@ -95,6 +121,28 @@ watch(
     }
   },
 );
+
+// transform role radio group to array that backend can understand
+watch(roleFormItem, () => {
+  form.roles = [];
+
+  for (const role of roleFormItem.value) {
+    switch (role) {
+      case 'Пользователь': {
+        form.roles.push('ROLE_USER');
+        break;
+      }
+      case 'Администратор': {
+        form.roles.push('ROLE_ADMIN');
+        break;
+      }
+      default: {
+        const _exhaustiveCheck: never = role;
+        return _exhaustiveCheck;
+      }
+    }
+  }
+});
 
 async function sendData() {
   isLoading.value = true;
@@ -141,7 +189,7 @@ async function sendData() {
     );
     emit('submit', form);
   } else {
-    popup('error', 'Не удалось изменитьuserRoles пользователя!');
+    popup('error', 'Не удалось изменить пользователя!');
   }
 
   isLoading.value = false;

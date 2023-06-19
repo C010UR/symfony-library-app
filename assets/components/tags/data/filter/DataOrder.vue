@@ -1,8 +1,8 @@
 <template>
-  <div class="order" v-if="orderableColumns.length > 0">
+  <div class="order-wrapper" v-if="orderableColumns.length > 0">
     <div class="order-header">
-      <h1 class="header-text">Упорядочить:</h1>
-      <el-switch v-model="toggle" />
+      <h3>Упорядочить:</h3>
+      <el-switch v-model="toggle" class="order-toggle" />
     </div>
     <vue-draggable ghost-class="ghost" class="order-container" animation="150" v-model="orderList" v-if="toggle">
       <div class="order-form" v-for="order in orderList" :key="order.id">
@@ -88,18 +88,6 @@ function setOrderList() {
   }
 }
 
-// watch(
-//   () => props.modelValue,
-//   () => {
-//     console.trace('updated');
-//     if (!watchDisabled.value) {
-//       watchDisabled.value = true;
-//       setOrderList();
-//       watchDisabled.value = false;
-//     }
-//   },
-// );
-
 setOrderList();
 
 watch(orderList, after => {
@@ -132,10 +120,19 @@ watch(toggle, after => {
 </script>
 
 <style scoped>
+.order-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .order-header {
   display: flex;
   flex-direction: row;
-  align-items: baseline;
+  align-items: center;
+}
+
+.order-toggle {
+  margin-left: auto;
 }
 
 .order-form {
@@ -149,16 +146,11 @@ watch(toggle, after => {
   border: 1px solid var(--el-color-primary-light-5);
   padding: 0.5rem;
   cursor: move;
-  /* max-width: 20rem; */
 }
 
 .order-form:hover {
   background-color: var(--el-color-primary);
   color: var(--el-color-white);
-}
-
-.header-text {
-  margin-right: 1rem;
 }
 
 .order-label {

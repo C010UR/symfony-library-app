@@ -61,6 +61,7 @@ services:
     depends_on:
       - rabbitmq
       - redis
+      - database
     volumes:
       - php-socket:/var/run/php
     restart: unless-stopped
@@ -72,7 +73,9 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-14}&charset=${POSTGRES_CHARSET:-utf8}
       RABBITMQ_URL: amqp://${RABBITMQ_USER:-app}:${RABBITMQ_PASSWORD:-!ChangeMe!}@rabbitmq:5672
-      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://${REDIS_HOST:-redis}:${REDIS_PORT:-6379}
       MAILER_DSN: smtp://mailer:1025
       
   caddy:

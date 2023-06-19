@@ -36,6 +36,9 @@
           :disabled="isLoading"
           filterable
           multiple
+          collapse-tags
+          collapse-tags-tooltip
+          :max-collapse-tags="3"
           :loading="authors === undefined"
           class="input"
         >
@@ -48,6 +51,9 @@
           :disabled="isLoading"
           filterable
           multiple
+          collapse-tags
+          collapse-tags-tooltip
+          :max-collapse-tags="3"
           :loading="tags === undefined"
           class="input"
         >

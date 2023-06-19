@@ -1,5 +1,5 @@
 <template>
-  <filter-drawer :columns="columns" v-model:orders="orders" v-model:filters="filters" />
+  <filter-drawer :columns="columns" v-model:orders="orders" v-model:filters="filters" :disabled="isNoData" />
 
   <create-book-form v-model="isCreateFormOpen" @submit="submitCreate" />
   <update-book-form v-model="isUpdateFormOpen" @submit="submitUpdate" :entity="updateEntity" />
@@ -17,52 +17,7 @@
     <template #expanded>
       <el-table-column type="expand">
         <template #default="props">
-          <div class="expanded-container">
-            <div class="expanded-container-2">
-              <base-image style="margin: 0" :src="props.row.image" :size="16" class="image" />
-              <div class="expanded-container-info">
-                <el-link
-                  class="name"
-                  type="primary"
-                  :underline="false"
-                  @click="$router.push({ name: 'Book', params: { slug: props.row.slug } })"
-                >
-                  {{ props.row.name }}
-                </el-link>
-                <div class="publisher" v-if="props.row.publisher">
-                  <el-link
-                    class="publisher-name"
-                    :underline="false"
-                    @click="$router.push({ name: 'Publisher', params: { slug: props.row.publisher.slug } })"
-                  >
-                    <base-avatar :src="props.row.publisher.image" :size="32" class="avatar" />
-                    {{ props.row.publisher.name }}
-                  </el-link>
-                </div>
-                <div class="list" v-if="props.row.authors && props.row.authors.length > 0">
-                  <p class="list-title">{{ props.row.authors.length > 1 ? 'Авторы' : 'Автор' }}:</p>
-
-                  <el-button
-                    v-for="author in props.row.authors"
-                    :key="author.id"
-                    class="list-item"
-                    type="primary"
-                    plain
-                    size="small"
-                    @click="$router.push({ name: 'Author', params: { slug: author.slug } })"
-                  >
-                    {{ author.fullName }}
-                  </el-button>
-                </div>
-                <div class="list" v-if="props.row.tags && props.row.tags.length > 0">
-                  <p class="list-title">{{ props.row.tags.length > 1 ? 'Жанры' : 'Жанр' }}:</p>
-                  <el-tag v-for="tag in props.row.tags" :key="tag.id" class="list-item">
-                    {{ tag.name }}
-                  </el-tag>
-                </div>
-              </div>
-            </div>
-          </div>
+          <book-short-info :book="props.row" />
         </template>
       </el-table-column>
     </template>
@@ -80,7 +35,7 @@
     </el-table-column>
     <el-table-column label="Издано в">
       <template #default="prop">
-        <span>{{ new Date(prop.row.datePublished).toDateString() }}</span>
+        <span>{{ new Date(prop.row.datePublished).toLocaleDateString() }}</span>
       </template>
     </el-table-column>
     <el-table-column label="Издатель">
@@ -90,7 +45,7 @@
     </el-table-column>
   </table-list>
 
-  <data-pagination v-model="pagination" />
+  <data-pagination v-model="pagination" :disabled="isNoData" />
 </template>
 
 <script setup lang="ts">
@@ -104,13 +59,14 @@ import {
   useParseApiParams,
   useParseParams,
 } from '@/composables';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { TableList, DataPagination } from '@/components/tags/data';
 import type { ApiUrl, ApiMeta, Book, Filter, Order, FilterOption, ApiParams, RouteParams } from '@/composables';
 import { useRoute } from 'vue-router';
-import { BaseImage, BaseAvatar } from '@/components/tags/base';
-import { ElTag, ElButton, ElTableColumn, ElLink, ElMessageBox } from 'element-plus';
+import { ElTableColumn, ElLink, ElMessageBox } from 'element-plus';
 import { CreateBookForm, UpdateBookForm } from '@/components/tags/form';
+import { BookShortInfo } from '@/components/tags/data/entity';
+import { popup } from '@/components/tags';
 
 export interface Props {
   canCreate?: boolean;
@@ -127,6 +83,10 @@ const props = withDefaults(defineProps<Props>(), {
   url: ApiUrls.books,
   metaUrl: ApiUrls.books,
 });
+
+const emit = defineEmits<{
+  (e: 'update', isUpdated: true): void;
+}>();
 
 const route = useRoute();
 
@@ -145,6 +105,10 @@ const columns = ref<FilterOption[]>([]);
 const data = ref<Book[] | undefined>();
 const watchDisabled = ref<boolean>(false);
 
+const isNoData = computed(() => {
+  return data.value === undefined;
+});
+
 async function getData() {
   const parsedParams = useParseParams(filters.value, orders.value, {
     offset: pagination.value.offset,
@@ -155,6 +119,8 @@ async function getData() {
 
   data.value = undefined;
   const _data = await useGetAll<Book>(props.url, parsedParams as RouteParams);
+
+  emit('update', true);
 
   if (!_data) {
     data.value = [];
@@ -198,7 +164,10 @@ async function handleDelete(book: Book) {
     type: 'warning',
     async callback(action: string) {
       if (action === 'confirm') {
-        await useDelete(props.url, book);
+        if (await useDelete(props.url, book)) {
+          popup('success', 'Книга успешно удалена!');
+        }
+
         await getData();
       }
     },
@@ -230,61 +199,5 @@ async function submitCreate() {
   margin: 1rem;
   display: flex;
   flex-direction: column;
-}
-
-.expanded-container-2 {
-  display: flex;
-  flex-direction: row;
-}
-
-.expanded-container-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.image {
-  flex-shrink: 0;
-}
-
-.list {
-  margin: 0.5rem 0;
-}
-
-.list-title {
-  margin-bottom: 0.5rem;
-}
-
-.list-item {
-  margin: 0 0.5rem 0.5rem 0;
-}
-
-.name {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.row-text {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-}
-
-.publisher {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin: 0.5rem 0;
-  word-wrap: break-word;
-}
-
-.avatar {
-  flex-shrink: 0;
-  margin-right: 1rem;
-}
-
-.publisher-name {
-  font-size: 1.125rem;
 }
 </style>

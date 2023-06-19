@@ -19,7 +19,7 @@
           <span class="text">
             <el-icon><Clock /></el-icon>
             <p>Издана:</p>
-            <p>{{ new Date(book.datePublished).toDateString() }}</p>
+            <p>{{ new Date(book.datePublished).toLocaleDateString() }}</p>
           </span>
           <span class="text">
             <el-icon><Document /></el-icon>
@@ -165,8 +165,13 @@ onMounted(async () => {
 }
 
 @media only screen and (max-width: 768px) {
-  .description {
-    width: 90%;
+  .wrapper-description {
+    margin: 0;
+  }
+
+  .wrapper-info {
+    flex-direction: column;
+    margin: 0;
   }
 }
 </style>

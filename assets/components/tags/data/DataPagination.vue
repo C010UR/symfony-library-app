@@ -36,8 +36,7 @@ const handleSizeChange = (value: number) => {
   if (value === props.modelValue.pageSize) {
     return;
   }
-  const meta: ApiMeta = { ...props.modelValue, pageSize: value };
-  console.log('2');
+  const meta: ApiMeta = { ...props.modelValue, offset: 0, pageSize: value };
   emit('update:modelValue', meta);
 };
 
@@ -47,7 +46,6 @@ const handleCurrentChange = (value: number) => {
     return;
   }
   const meta: ApiMeta = { ...props.modelValue, offset: offset };
-  console.log('1');
   emit('update:modelValue', meta);
 };
 </script>

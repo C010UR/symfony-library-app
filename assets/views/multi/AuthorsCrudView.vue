@@ -1,6 +1,13 @@
 <template>
   <base-page>
-    <base-authors-table-view can-create can-update can-delete />
+    <template #default="scrollBarRef">
+      <base-authors-table-view
+        can-create
+        can-update
+        can-delete
+        @update="() => scrollBarRef.scrollbar?.setScrollTop(0)"
+      />
+    </template>
   </base-page>
 </template>
 

@@ -52,10 +52,18 @@ security:
       roles: [ROLE_USER, ROLE_ADMIN]
 
     - path: ^/api/v1/users
-      roles: [ROLE_ADMIN] 
+      roles: ROLE_ADMIN
 
     - path: ^/api/v1/users/*
-      roles: [ROLE_ADMIN] 
+      roles: ROLE_ADMIN
+
+    - path: ^/api/v1/orders
+      methods: [GET]
+      roles: ROLE_USER
+
+    - path: ^/api/v1/orders
+      methods: [POST]
+      roles: PUBLIC_ACCESS
 
     - path: ^/api/v1/*
       methods: [GET]

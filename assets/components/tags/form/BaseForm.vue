@@ -12,7 +12,7 @@
       </template>
       <template v-else>
         <h4 class="title">
-          Изменение <el-tag>ID: {{ id ? id : -1 }}</el-tag>
+          Изменение <el-tag>№ {{ id ? id : -1 }}</el-tag>
         </h4>
       </template>
     </template>

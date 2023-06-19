@@ -1,79 +1,49 @@
 <template>
-  <div class="filter" v-if="filterableColumns.length > 0">
+  <div class="filter-wrapper" v-if="filterableColumns.length > 0">
     <div class="filter-header">
-      <h1 class="margin-right">Фильтры:</h1>
-      <el-switch v-model="toggle" />
+      <h3>Фильтры:</h3>
     </div>
-    <div class="filter-form" v-if="toggle">
-      <ul class="filters-list">
-        <li v-for="(_filter, index) in modelValue" :key="index">
-          <div class="li">
-            <el-icon class="margin-right">
-              <filter-icon />
-            </el-icon>
-            <span> {{ columns.find(column => _filter.column === column.name)?.label }}</span>
-            <span class="operator">
-              {{ columns.find(column => _filter.column === column.name)?.operators[_filter.operator ?? 'eq'].label }}
-            </span>
-            <span>: {{ convertValue(_filter) }}</span>
-            <el-button type="danger" link class="remove-button" @click="handleFilterRemove(index)"> Удалить </el-button>
-          </div>
-        </li>
-      </ul>
-      <el-form
-        inline
-        label-position="top"
-        ref="formNewFilterRef"
-        :model="formNew"
-        :rules="rules"
-        class="form"
-        v-if="remainingFilterableColumns.length > 0"
-      >
-        <el-form-item label="Поле" prop="column">
-          <el-select v-model="formNew.column">
-            <el-option
-              v-for="(column, index) in remainingFilterableColumns"
-              :key="index"
-              :label="column.label"
-              :value="column.name"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Оператор" prop="operator">
-          <el-select
-            v-model="formNew.operator"
-            :disabled="!remainingFilterableColumns.find(column => column.name == formNew.column)"
-          >
-            <el-option
-              v-for="operator in filterOption?.operators"
-              :key="operator.operator"
-              :label="operator.label"
-              :value="operator.operator"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Значение" v-if="formNew.operator !== undefined" prop="value">
-          <filter-input :column="(filterOption as FilterOption)" v-model="formNew.value" :operator="formNew.operator" />
-        </el-form-item>
-      </el-form>
-      <el-button type="success" @click="handleFilterAdd" v-if="remainingFilterableColumns.length > 0">
-        Добавить фильтр
-      </el-button>
+    <div class="filters">
+      <div v-for="column in filterableColumns" :key="column.name" class="filter">
+        <p class="filter-column">{{ column.label }}</p>
+        <el-select v-model="form[column.name].operator" class="filter-operator">
+          <el-option
+            v-for="operator in column.operators"
+            :key="operator.operator"
+            :label="operator.label"
+            :value="operator.operator"
+          />
+        </el-select>
+        <filter-input
+          v-if="form[column.name].operator !== undefined"
+          :column="column"
+          v-model="form[column.name].value"
+          :operator="form[column.name].operator"
+          class="filter-input"
+        />
+        <el-input v-else disabled class="filter-input" />
+        <el-button type="danger" plain :icon="Delete" circle @click="resetFilter(column.name)" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElSwitch, ElButton, ElIcon, ElForm, ElFormItem, ElSelect, ElOption } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
-import { ref, computed, watchEffect, watch, reactive } from 'vue';
-import { Filter as FilterIcon } from '@element-plus/icons-vue';
+import { ElButton, ElInput, ElSelect, ElOption } from 'element-plus';
+import { Delete } from '@element-plus/icons-vue';
+import { computed, reactive } from 'vue';
 import FilterInput from './FilterInput.vue';
 import type { Filter, FilterOption } from '@/composables';
+import lodash from 'lodash';
+import { watchPausable } from '@vueuse/core';
 
 export interface Props {
   columns: FilterOption[];
   modelValue: Filter[] | undefined;
+}
+
+interface Filters {
+  [column: string]: Filter;
 }
 
 const props = defineProps<Props>();
@@ -82,177 +52,115 @@ const emit = defineEmits<{
   (e: 'update:modelValue', filters: Filter[] | undefined): void;
 }>();
 
-const toggle = ref<boolean>(false);
-
-watchEffect(() => {
-  if (!toggle.value) {
-    emit('update:modelValue', undefined);
-  }
-});
-
-const formNewFilterRef = ref<FormInstance | undefined>();
-const formNew = reactive<Filter>({
-  column: '',
-  operator: undefined,
-  value: undefined,
-});
-
-watch(props, (before, after) => {
-  if (before.columns !== after.columns) {
-    formNew.column = '';
-    formNew.operator = undefined;
-    formNew.value = undefined;
-  }
-});
-
-watch(
-  () => formNew.column,
-  (before, after) => {
-    if (before !== after) {
-      formNew.operator = undefined;
-      formNew.value = undefined;
-    }
-  },
-);
+const form = reactive<Filters>({});
 
 const filterableColumns = computed(() => {
   return props.columns.filter(column => Object.keys(column.operators).length > 0);
 });
 
-const remainingFilterableColumns = computed(() => {
-  let taken: string[];
-
-  if (props.modelValue === undefined) {
-    taken = [];
-  } else {
-    taken = props.modelValue.map(filter => filter.column);
-  }
-
-  return filterableColumns.value.filter(column => !taken?.includes(column.name));
-});
-
-const filterOption = computed(() => {
-  if (!formNew.column) {
-    return undefined;
-  }
-  return props.columns.find(column => column.name === formNew.column);
-});
-
-function handleFilterRemove(index: number) {
-  const updated = props.modelValue ? [...props.modelValue] : undefined;
-
-  if (updated !== undefined) {
-    updated.splice(index, 1);
-  }
-
-  emit('update:modelValue', updated);
+function resetFilter(name: string) {
+  form[name] = {
+    column: name,
+    operator: undefined,
+    value: undefined,
+  };
 }
 
-function handleFilterAdd() {
-  formNewFilterRef.value?.validate(isValid => {
-    if (!isValid) {
-      return false;
+const { pause, resume } = watchPausable(form, (after, _, onInvalidate) => {
+  console.log('triggered');
+  const result: Filter[] = [];
+
+  const updateFilter = setTimeout(() => {
+    for (const filter of Object.values(after)) {
+      if (filter.operator && filter.value !== undefined) {
+        if (
+          (Array.isArray(filter.value) && filter.value.length === 0) ||
+          (typeof filter.value === 'string' && !filter.value)
+        ) {
+          continue;
+        }
+
+        result.push(filter);
+      }
     }
 
-    emit('update:modelValue', props.modelValue ? [...props.modelValue, { ...formNew }] : [{ ...formNew }]);
+    console.log(props.modelValue, result, result.length === 0);
 
-    formNew.column = '';
-    formNew.operator = undefined;
-    formNew.value = undefined;
+    if (!lodash.isEqual(props.modelValue, result)) {
+      emit('update:modelValue', result.length === 0 ? undefined : result);
+    }
+  }, 1000);
 
-    return true;
+  onInvalidate(() => {
+    clearInterval(updateFilter);
   });
-}
+});
 
-function convertValue(filter: Filter) {
-  let value: string;
+function resetForm() {
+  const newForm: Filters = {};
 
-  if (Array.isArray(filter.value)) {
-    if (filter.value[0] instanceof Date) {
-      value = '[ ' + (filter.value as Date[]).map(value => value.toISOString().split('T')[0]).join(', ') + ' ]';
-    } else {
-      value = '[ ' + filter.value.join(', ') + ' ]';
-    }
-  } else if (filter.value instanceof Date) {
-    value = filter.value.toISOString().split('T')[0];
-  } else {
-    value = String(filter.value);
+  for (const column of filterableColumns.value) {
+    newForm[column.name] = {
+      column: column.name,
+      operator: undefined,
+      value: undefined,
+    };
   }
 
-  return value;
+  pause();
+  Object.assign(form, newForm);
+  resume();
 }
 
-const rules = ref<FormRules>({
-  column: [
-    {
-      required: true,
-      message: 'Поле не может быть пустым',
-      trigger: 'blur',
-    },
-  ],
-  operator: [
-    {
-      required: true,
-      message: 'Оператор не может быть пустым',
-      trigger: 'blur',
-    },
-  ],
-  value: [
-    {
-      required: true,
-      message: 'Значение не может быть пустым',
-      trigger: 'blur',
-    },
-  ],
-});
+resetForm();
+
+pause();
+if (props.modelValue) {
+  for (const filter of Object.values(props.modelValue)) {
+    if (!filter.column || !filter.operator) {
+      continue;
+    }
+
+    form[filter.column] = {
+      column: filter.column,
+      operator: filter.operator,
+      value: filter.value,
+    };
+  }
+}
+resume();
 </script>
 
 <style scoped>
-.filter-header {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-}
-
-.filter-form {
-  width: 80%;
+.filter-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
 }
 
-.filters-list {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-.li {
-  border-radius: var(--el-border-radius-base);
+.filter {
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  border-radius: var(--el-border-radius-base);
+  color: var(--el-color-primary);
+  border: 1px solid var(--el-border-color);
+  padding: 1rem;
+  margin: 0.75rem 0;
+  width: 100%;
 }
 
-.li:hover {
-  background-color: var(--el-bg-color-overlay);
+.filter-column {
+  width: 18rem;
 }
 
-.remove-button {
-  padding-left: 3rem;
-  margin-left: auto;
-  margin-right: 0;
+.filter-operator {
+  margin: 0 1rem;
+  width: 15rem;
 }
 
-.margin-right {
-  margin-right: 0.5rem;
-}
-
-.operator {
-  margin: 0 0.4rem;
-  font-weight: 600;
-}
-
-.form {
-  margin-top: 1rem;
+.filter-input {
+  margin-right: 1rem;
+  width: 100%;
 }
 </style>

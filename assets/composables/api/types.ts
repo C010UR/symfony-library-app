@@ -13,11 +13,16 @@ export interface UploadUserProfile {
   removeImage?: boolean;
 }
 
-export interface UserProfile extends Omit<UploadUserProfile, 'image'> {
+export interface UserProfile {
   id: number;
-  fullName: string;
-  image?: string;
   slug: string;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  email: string;
+  roles: UserRole[];
+  image?: string;
   isDeleted: boolean;
   isActive: boolean;
 }
@@ -33,11 +38,16 @@ export interface UploadBookAuthor {
   removeImage?: boolean;
 }
 
-export interface BookAuthor extends Omit<UploadBookAuthor, 'image'> {
+export interface BookAuthor {
   id: number;
-  fullName: string;
-  image?: string;
   slug: string;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  website: string;
+  email: string;
+  image?: string;
   isDeleted: string;
 }
 
@@ -51,10 +61,14 @@ export interface UploadBookPublisher {
   removeImage?: boolean;
 }
 
-export interface BookPublisher extends Omit<UploadBookPublisher, 'image'> {
+export interface BookPublisher {
   id: number;
-  image?: string;
   slug: string;
+  image?: string;
+  name: string;
+  address: string;
+  email: string;
+  website: string;
   isDeleted: string;
 }
 
@@ -64,9 +78,10 @@ export interface UploadBookTag {
   removeImage?: boolean;
 }
 
-export interface BookTag extends UploadBookTag {
+export interface BookTag {
   id: number;
   slug: string;
+  name: string;
   isDeleted: boolean;
 }
 
@@ -95,6 +110,31 @@ export interface Book {
   datePublished: string;
   pageCount: number;
   description?: string;
+}
+
+export interface UploadBookOrder {
+  id?: number;
+  firstName?: string;
+  lastName?: string;
+  middleName?: string;
+  phoneNumber?: string;
+  book?: number;
+  quantity?: number;
+}
+
+export interface BookOrder {
+  id: number;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  phoneNumber: string;
+  book: Book;
+  quantity: number;
+  dateCreated: string;
+  userCompleted?: UserProfile;
+  dateCompleted?: string;
+  isDeleted: boolean;
 }
 
 export interface ApiMeta {
@@ -135,7 +175,7 @@ export type FilterType =
   | 'array'
   | 'not_filterable';
 
-export type FilterEntityType = 'book' | 'author' | 'tag' | 'publisher';
+export type FilterEntityType = 'book' | 'author' | 'tag' | 'publisher' | 'user';
 
 export type OrderDirection = 'ASC' | 'DESC';
 
@@ -145,7 +185,7 @@ export interface Order {
 }
 
 export interface Filter {
-  column: string;
+  column?: string;
   operator?: FilterOperator;
   value?: unknown | [unknown, unknown];
 }

@@ -10,7 +10,7 @@
       row-key="id"
     >
       <slot name="expanded"></slot>
-      <el-table-column label="ID" v-if="withMeta">
+      <el-table-column label="№" v-if="withMeta">
         <template #default="props">
           <el-tag :type="props.row.isDeleted ? 'danger' : 'info'">{{ props.row.id ?? -1 }}</el-tag>
         </template>

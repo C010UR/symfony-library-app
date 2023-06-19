@@ -102,3 +102,11 @@ export const loginRules = reactive<FormRules>({
 export const requestPasswordResetRules = reactive<FormRules>({
   email: emailRequiredRule,
 });
+
+export const orderRules = reactive<FormRules>({
+  firstName: textRequiredMinRule,
+  lastName: textRequiredMinRule,
+  middleName: textMinRule,
+  phoneNumber: requiredRule,
+  quantity: requiredRule,
+});

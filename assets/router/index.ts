@@ -18,6 +18,7 @@ import {
   AuthorsCrudView,
   UsersCrudView,
   TagsCrudView,
+  OrdersView,
 } from '@/views';
 import { useGetProfile } from '@/composables';
 import type { UserRole } from '@/composables';
@@ -125,6 +126,15 @@ const router = createRouter({
       meta: {
         title: '[A] Пользователи',
         roles: ['ROLE_ADMIN'],
+      },
+    },
+    {
+      path: '/admin/orders',
+      name: 'OrdersView',
+      component: OrdersView,
+      meta: {
+        title: 'Заказы',
+        roles: ['ROLE_USER'],
       },
     },
     {

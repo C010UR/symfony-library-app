@@ -19,9 +19,9 @@
         </div>
       </div>
     </div>
-    <el-scrollbar class="body" :wrap-style="bodyStyle" noresize>
+    <el-scrollbar class="body" :wrap-style="bodyStyle" noresize ref="scrollbarRef">
       <div>
-        <slot></slot>
+        <slot :scrollbar="scrollbarRef"></slot>
       </div>
     </el-scrollbar>
   </div>
@@ -47,34 +47,35 @@ const route = useRoute();
 const currentTitle = ref<string>(route.meta.title ? (route.meta.title as string) : '');
 const currentName = ref<string>(route.name as string);
 
-function setLinks(profile?: UserProfileType) {
-  const commonLinks = {
-    ...getRouteLink('Main'),
-    ...getRouteLink('AboutUs'),
-  };
+const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>();
 
+function setLinks(profile?: UserProfileType) {
   if (profile === undefined) {
     links.value = {
-      ...commonLinks,
+      ...getRouteLink('Main'),
+      ...getRouteLink('AboutUs'),
     };
 
     return;
   } else if (profile.roles?.includes('ROLE_ADMIN')) {
     links.value = {
-      ...commonLinks,
+      ...getRouteLink('Main'),
       ...getRouteLink('BooksCrud'),
       ...getRouteLink('PublishersCrud'),
       ...getRouteLink('AuthorsCrud'),
       ...getRouteLink('TagsCrud'),
       ...getRouteLink('UsersCrud'),
+      ...getRouteLink('AboutUs'),
     };
   } else if (profile.roles?.includes('ROLE_USER')) {
     links.value = {
-      ...commonLinks,
+      ...getRouteLink('Main'),
+      ...getRouteLink('OrdersView'),
       ...getRouteLink('BooksCrud'),
       ...getRouteLink('PublishersCrud'),
       ...getRouteLink('AuthorsCrud'),
       ...getRouteLink('TagsCrud'),
+      ...getRouteLink('AboutUs'),
     };
   }
 
@@ -177,13 +178,13 @@ function getRouteLink(name: string) {
   margin-left: auto;
 }
 
+.top {
+  margin-bottom: 0.25rem;
+}
+
 @media only screen and (max-width: 768px) {
-  .header .logo {
-    background-size: 400%;
-    background-image: -webkit-linear-gradient(-45deg, var(--el-color-primary), var(--el-color-primary-light-3));
-    background-image: linear-gradient(-45deg, var(--el-color-primary), var(--el-color-primary-light-3));
-    min-width: 5rem;
-    display: flex;
+  .header {
+    flex-direction: column;
   }
 }
 </style>

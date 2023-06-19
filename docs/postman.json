@@ -246,7 +246,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"{{$randomAdjective}}\"\r\n}",
+							"raw": "{\r\n    \"name\": \"{{$randomAdjective}}\"a\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -254,13 +254,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/api/v1/tags",
+							"raw": "{{URL}}/api/v1/books/tags",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"api",
 								"v1",
+								"books",
 								"tags"
 							]
 						}
@@ -1126,25 +1127,24 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "Говно",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\r\n    \"roles\": [\r\n        \"ROLE_USER\",\r\n        \"ROLE_ADMIN\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
-							"raw": "{{URL}}/api/v1/books/{{book_id}}",
+							"raw": "{{URL}}/api/v1/users/{{user_id}}",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"books",
-								"{{book_id}}"
+								"users",
+								"{{user_id}}"
 							]
 						}
 					},
@@ -1156,15 +1156,15 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/api/v1/books/{{book_id}}",
+							"raw": "{{URL}}/api/v1/users/{{user_id}}",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"books",
-								"{{book_id}}"
+								"users",
+								"{{user_id}}"
 							]
 						}
 					},
@@ -1176,17 +1176,117 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{URL}}/api/v1/books/meta",
+							"raw": "{{URL}}/api/v1/users/meta",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"books",
+								"users",
 								"meta"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/orders",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/orders/{{order_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"{{order_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"{{$randomFirstName}}\",\r\n    \"lastName\": \"{{$randomLastName}}\",\r\n    \"middleName\": \"{{$randomFirstName}}\",\r\n    \"phoneNumber\": \"{{$randomPhoneNumber}}\",\r\n    \"book\": \"{{book_id}}\",\r\n    \"quantity\": \"{{$randomInt}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/orders",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Complete",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/orders/{{order_id}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders",
+								"{{order_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get filter meta",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
@@ -1315,6 +1415,11 @@
 		},
 		{
 			"key": "user_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "order_id",
 			"value": "1",
 			"type": "string"
 		}

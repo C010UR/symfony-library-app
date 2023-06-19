@@ -2,19 +2,18 @@
 
 namespace App\Form;
 
-use App\Entity\User;
+use App\Entity\Book;
+use App\Entity\Order;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UserFormType extends AbstractType
+class OrderFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -57,60 +56,32 @@ class UserFormType extends AbstractType
                     ),
                 ],
             ])
-            ->add('email', EmailType::class, [
+            ->add('phoneNumber', TelType::class, [
                 'required' => true,
                 'trim' => true,
-                'invalid_message' => 'Email is not valid.',
-                'constraints' => [new Assert\NotBlank(message: 'Email cannot be empty.')],
+                'invalid_message' => 'Phone number is not valid.',
+                'constraints' => [new Assert\NotBlank(message: 'Phone number cannot be empty.')],
             ])
-            // ->add('roles', CollectionType::class, [
-            //     'entry_type' => ChoiceType::class,
-            //     'entry_options' => [
-            //         'choices' => [
-            //             User::ROLE_ADMIN,
-            //             User::ROLE_USER
-            //         ],
-            //         'multiple' => true,
-            //         'invalid_message' => 'Role {{ value }} is not valid.'
-            //     ],
-            //     'required' => true,
-            //     'allow_add' => false,
-            //     'allow_delete' => true,
-            //     'invalid_message' => 'Roles are not valid.',
-            //     'constraints' => [
-            //         new Assert\NotBlank(message: 'Roles cannot be empty.'),
-            //     ],
-            // ])
-            ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    User::ROLE_ADMIN,
-                    User::ROLE_USER,
-                ],
-                'multiple' => true,
-                'invalid_message' => 'Roles {{ value }} is not valid.',
+            ->add('book', EntityType::class, [
                 'required' => true,
+                'class' => Book::class,
+                'invalid_message' => 'Book is not valid.',
+                'constraints' => [new Assert\NotBlank(message: 'Book is not specified.')],
             ])
-            ->add('image', FileType::class, [
-                'required' => false,
-                'mapped' => false,
+            ->add('quantity', IntegerType::class, [
+                'required' => true,
+                'trim' => true,
                 'constraints' => [
-                    new Assert\Image(
-                        maxSize: '8192k',
-                        maxSizeMessage: 'The image is too large. The max size of the image is {{ limit }}. {{ value }} was provided.'
-                    ),
+                    new Assert\NotBlank(message: 'Quantity cannot be empty.'),
+                    new Assert\GreaterThan(0, message: 'Quantity must be greater than {{ compared_value }}. {{ value }} was provided.'),
                 ],
-            ])
-            ->add('removeImage', CheckboxType::class, [
-                'required' => false,
-                'invalid_message' => 'removeImage flag is not valid.',
-                'mapped' => false,
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => Order::class,
         ]);
     }
 }

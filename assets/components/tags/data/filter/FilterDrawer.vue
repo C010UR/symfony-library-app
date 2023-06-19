@@ -1,35 +1,37 @@
 <template>
   <div class="wrapper">
     <el-button type="primary" :icon="FilterIcon" @click="handleOpen()" :disabled="disabled">
-      Фильтрация & Сортировка
+      Фильтрация и Сортировка
     </el-button>
   </div>
 
   <el-drawer
     v-model="drawer"
-    title="Фильтрация & Сортировка"
+    title="Фильтрация и Сортировка"
     direction="rtl"
     :size="drawerSize"
     @closed="handleClose()"
   >
-    <order-filter
-      :model-value="orders"
-      @update:model-value="
+    <el-scrollbar class="body" :wrap-style="bodyStyle" noresize>
+      <order-filter
+        :model-value="orders"
+        @update:model-value="
       (_orders: Order[] | undefined) =>
       $emit('update:orders', _orders)"
-      :columns="columns"
-    />
-    <data-filter
-      :model-value="filters"
-      @update:model-value="(_filters: Filter[] | undefined) => $emit('update:filters', _filters)"
-      :columns="columns"
-    />
+        :columns="columns"
+      />
+      <data-filter
+        :model-value="filters"
+        @update:model-value="(_filters: Filter[] | undefined) => $emit('update:filters', _filters)"
+        :columns="columns"
+      />
+    </el-scrollbar>
   </el-drawer>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { ElButton, ElDrawer } from 'element-plus';
+import { ElButton, ElDrawer, ElScrollbar } from 'element-plus';
 import { Filter as FilterIcon } from '@element-plus/icons-vue';
 import DataFilter from './DataFilter.vue';
 import OrderFilter from './DataOrder.vue';
@@ -53,8 +55,10 @@ const emit = defineEmits<{
   (e: 'update:filters', filters: Filter[] | undefined): void;
 }>();
 
+const bodyStyle = ref({ padding: '1rem' });
+
 const drawer = ref(false);
-const drawerSize = ref<'100%' | '50%'>('50%');
+const drawerSize = ref<'100%' | '50%' | '65%' | '85%'>('50%');
 
 watch(props, (before, after) => {
   if (before.columns !== after.columns) {
@@ -72,7 +76,15 @@ function handleClose() {
 }
 
 function setDrawerSize() {
-  drawerSize.value = window.innerWidth <= 992 ? '100%' : '50%';
+  if (window.innerWidth <= 768) {
+    drawerSize.value = '100%';
+  } else if (window.innerWidth <= 992) {
+    drawerSize.value = '85%';
+  } else if (window.innerWidth <= 1200) {
+    drawerSize.value = '65%';
+  } else {
+    drawerSize.value = '50%';
+  }
 }
 
 onMounted(() => {
@@ -95,5 +107,10 @@ onUnmounted(() => {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.body {
+  margin: 0;
+  padding: 0;
 }
 </style>

@@ -31,7 +31,7 @@ class AuthorService extends AbstractCrudService implements CrudServiceInterface
         $queryParser->setColumns([
             new Column([
                 'name' => 'id',
-                'label' => 'Дата добавления',
+                'label' => '№',
                 'type' => Column::NOT_FILTERABLE_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => false,

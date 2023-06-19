@@ -22,82 +22,82 @@ help: ## Output this help message
 
 ## —— Docker ———————————————————————————————————————————————————————————————————
 build: ## Build the Docker images
-	@$(DOCKER_COMP) build
+	@ $(DOCKER_COMP) build
 #--pull --no-cache
 
 up: ## Start the docker hub in detached mode (no logs)
-	@$(DOCKER_COMP) up --detach --wait
+	@ $(DOCKER_COMP) up --detach --wait
 
 start: build up ## Build and start the containers for dev
 
 serve: ## Build and start the containers in staging mode
-	@$(DOCKER_COMP) -f docker-compose.yml up --build --detach --wait --no-color
+	@ $(DOCKER_COMP) -f docker-compose.yml up --build --detach --wait --no-color
 
 down: ## Stop the docker hub
-	@$(DOCKER_COMP) down --remove-orphans
+	@ $(DOCKER_COMP) down --remove-orphans
 
 logs: ## Show live logs
-	@$(DOCKER_COMP) logs --tail=0 --follow
+	@ $(DOCKER_COMP) logs --tail=0 --follow
 
 php: ## Connect to the PHP FPM container
-	@$(PHP_CONT) sh
+	@ $(PHP_CONT) sh
 
 clean: ## Remove all volumes from docker
-	- @$(DOCKER) volume rm $(shell $(DOCKER) volume ls -q)
+	-@ $(DOCKER) volume rm $(shell $(DOCKER) volume ls -q)
 
 ## —— Composer —————————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
-	@$(eval c ?=)
-	@$(COMPOSER) $(c)
+	@ $(eval c ?=)
+	@ $(COMPOSER) $(c)
 
 docker-vendor: ## Install vendors according to the current composer.lock file
 docker-vendor: c=install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction
 docker-vendor: composer
 
 vendor: ## Install vendors according to the current composer.lock file
-	$(COMPOSER_LOCAL) install --ignore-platform-reqs
+	@ $(COMPOSER_LOCAL) install --ignore-platform-reqs
 
 ## —— Symfony ——————————————————————————————————————————————————————————————————
 symfony: ## List all Symfony commands or pass the parameter "c=" to run a given command, example: make symfony c=about
-	@$(eval c ?=)
-	@$(SYMFONY) $(c)
+	@ $(eval c ?=)
+	@ $(SYMFONY) $(c)
 
 load-fixtures: ## Load fixutres
-	@$(SYMFONY) doctrine:fixtures:load --no-interaction --group=dev
+	@ $(SYMFONY) doctrine:fixtures:load --no-interaction --group=dev
 
 serve-load-fixtures: load-fixtures  ## Load fixtures and copy them to caddy image
-	"rm" -rf var/temp
-	"mkdir" -p var/temp
-	@$(DOCKER_COMP) cp php:/srv/app/public/uploads var/temp
-	@$(DOCKER_COMP) cp var/temp/uploads caddy:/srv/app/public
+	@ "rm" -rf var/temp
+	@ "mkdir" -p var/temp
+	-@ $(DOCKER_COMP) cp php:/srv/app/public/uploads var/temp
+	-@ $(DOCKER_COMP) cp var/temp/uploads caddy:/srv/app/public
 
 ## —— Lint —————————————————————————————————————————————————————————————————————
 lint: ## Lint the project
-	- $(COMPOSER) run php-cs-fixer-dry
-	- $(COMPOSER) run rector-dry
-	- $(NPM_LOCAL) run type-check
-	- $(NPM_LOCAL) run lint
+	-@ $(COMPOSER) run php-cs-fixer-dry
+	-@ $(COMPOSER) run rector-dry
+	-@ $(NPM_LOCAL) run type-check
+	-@ $(NPM_LOCAL) run lint
 
 format: ## Fix lint issues in the project
-	- $(COMPOSER) run php-cs-fixer
-	- $(COMPOSER) run rector
-	- $(NPM_LOCAL) run format
+	-@ $(COMPOSER) run php-cs-fixer
+	-@ $(COMPOSER) run rector
+	-@ $(NPM_LOCAL) run format
 
 ## —— Test —————————————————————————————————————————————————————————————————————
 test: ## Run tests
-	- @$(SYMFONY) doctrine:database:drop --force --env=test
-	@$(SYMFONY) doctrine:database:create --env=test
-	@$(SYMFONY) doctrine:query:sql "CREATE EXTENSION IF NOT EXISTS citext" --env=test
-	@$(SYMFONY) doctrine:migrations:migrate --no-interaction --env=test
-	@$(SYMFONY) doctrine:fixtures:load --no-interaction --env=test --group=test
-	@$(PHP_CONT) bin/phpunit --coverage-text --coverage-html var/coverage/
+	-@ $(SYMFONY) doctrine:database:drop --force --env=test
+	@ $(SYMFONY) doctrine:database:create --env=test
+	@ $(SYMFONY) doctrine:query:sql "CREATE EXTENSION IF NOT EXISTS citext" --env=test
+	@ $(SYMFONY) doctrine:migrations:migrate --no-interaction --env=test
+	@ $(SYMFONY) doctrine:fixtures:load --no-interaction --env=test --group=test
+	@ $(PHP_CONT) bin/phpunit --coverage-text --coverage-html var/coverage/
 
 ## —— NPM ——————————————————————————————————————————————————————————————————————
 install: ## Install dependencies according to the current composer.lock file
-	$(NPM_LOCAL) install --include-dev
+	@ $(NPM_LOCAL) install --include-dev
 
 dev: ## Run vite dev
-	$(NPM_LOCAL) run dev
+	@ $(NPM_LOCAL) run dev
 
 ## —————————————————————————————————————————————————————————————————————————————
 cc: c=c:c ## Clear the cache

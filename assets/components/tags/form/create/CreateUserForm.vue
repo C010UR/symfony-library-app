@@ -23,9 +23,9 @@
         <el-input v-model="form.email" maxlength="255" show-word-limit clearable :disabled="isLoading" type="email" />
       </el-form-item>
       <el-form-item label="Роли" prop="roles">
-        <el-checkbox-group v-model="form.roles" :min="1">
-          <el-checkbox label="ROLE_ADMIN" border />
-          <el-checkbox label="ROLE_USER" border />
+        <el-checkbox-group v-model="roleFormItem" :min="1">
+          <el-checkbox name="ROLE_USER" label="Администратор" border />
+          <el-checkbox name="ROLE_ADMIN" label="Пользователь" border />
         </el-checkbox-group>
       </el-form-item>
     </el-form>
@@ -42,6 +42,7 @@ import { BaseForm } from '@/components/tags/form';
 import type { UserProfile, UploadUserProfile } from '@/composables';
 import type { FormInstance } from 'element-plus';
 import { userRoles } from '@/components/tags/form/rules';
+import type { UserRoleLabelType } from '../types';
 
 export interface Props {
   modelValue: boolean;
@@ -63,8 +64,10 @@ const form = reactive<UploadUserProfile>({
   lastName: undefined,
   middleName: undefined,
   email: undefined,
-  roles: [],
+  roles: ['ROLE_USER'],
 });
+
+const roleFormItem = ref<UserRoleLabelType[]>(['Пользователь']);
 
 function resetForm() {
   form.image = undefined;
@@ -73,6 +76,7 @@ function resetForm() {
   form.middleName = undefined;
   form.email = undefined;
   form.roles = [];
+  roleFormItem.value = ['Пользователь'];
 }
 
 watch(
@@ -83,6 +87,28 @@ watch(
     }
   },
 );
+
+// transform role radio group to array that backend can understand
+watch(roleFormItem, () => {
+  form.roles = [];
+
+  for (const role of roleFormItem.value) {
+    switch (role) {
+      case 'Пользователь': {
+        form.roles.push('ROLE_USER');
+        break;
+      }
+      case 'Администратор': {
+        form.roles.push('ROLE_ADMIN');
+        break;
+      }
+      default: {
+        const _exhaustiveCheck: never = role;
+        return _exhaustiveCheck;
+      }
+    }
+  }
+});
 
 async function sendData() {
   isLoading.value = true;

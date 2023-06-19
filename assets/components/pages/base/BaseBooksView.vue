@@ -1,7 +1,9 @@
 <template>
-  <filter-drawer :columns="columns" v-model:orders="orders" v-model:filters="filters" />
+  <filter-drawer :columns="columns" v-model:orders="orders" v-model:filters="filters" :disabled="isNoData" />
 
-  <card-list :disabled="data === undefined" :skeletons="pagination.pageSize">
+  <create-order-form v-model="isCreateFormOpen" @submit="submitCreate" :book="createEntity" />
+
+  <card-list :disabled="isNoData" :skeletons="pagination.pageSize">
     <template #skeleton>
       <base-card :disabled="true">
         <template #skeleton>
@@ -73,26 +75,32 @@
             {{ tag.name }}
           </el-tag>
         </div>
+        <div class="order">
+          <el-button type="primary" class="order-button" @click="handleCreate(book)">Заказать</el-button>
+        </div>
       </div>
-      <div class="column description" v-if="book.description">
-        <p class="description-title">Описание:</p>
-        <pre class="description-text">{{ book.description }}</pre>
+      <div class="column" v-if="book.description">
+        <div class="description">
+          <p class="description-title">Описание:</p>
+          <pre class="description-text">{{ book.description }}</pre>
+        </div>
       </div>
     </base-card>
   </card-list>
 
-  <data-pagination v-model="pagination" />
+  <data-pagination v-model="pagination" :disabled="isNoData" />
 </template>
 
 <script setup lang="ts">
 import { FilterDrawer } from '@/components/tags/data/filter';
 import { ApiUrls, useChangeQuery, useGetAll, useGetMeta, useParseApiParams, useParseParams } from '@/composables';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { CardList, DataPagination } from '@/components/tags/data';
 import type { ApiUrl, ApiMeta, Book, Filter, Order, FilterOption, ApiParams, RouteParams } from '@/composables';
 import { useRoute } from 'vue-router';
 import { BaseCard, BaseImage, BaseAvatar } from '@/components/tags/base';
 import { ElTag, ElSkeletonItem, ElLink, ElButton } from 'element-plus';
+import { CreateOrderForm } from '@/components/tags/form';
 
 export interface Props {
   url?: ApiUrl | string;
@@ -103,6 +111,10 @@ const props = withDefaults(defineProps<Props>(), {
   url: ApiUrls.books,
   metaUrl: ApiUrls.books,
 });
+
+const emit = defineEmits<{
+  (e: 'update', isUpdated: true): void;
+}>();
 
 const route = useRoute();
 
@@ -121,6 +133,10 @@ const columns = ref<FilterOption[]>([]);
 const data = ref<Book[] | undefined>();
 const watchDisabled = ref<boolean>(false);
 
+const isNoData = computed(() => {
+  return data.value === undefined;
+});
+
 async function getData() {
   const parsedParams = useParseParams(filters.value, orders.value, {
     offset: pagination.value.offset,
@@ -131,6 +147,8 @@ async function getData() {
 
   data.value = undefined;
   const _data = await useGetAll<Book>(props.url, parsedParams as RouteParams);
+
+  emit('update', true);
 
   if (!_data) {
     data.value = [];
@@ -156,6 +174,19 @@ watch([filters, orders, pagination], async () => {
     watchDisabled.value = false;
   }
 });
+
+const isCreateFormOpen = ref<boolean>(false);
+const createEntity = ref<Book | undefined>();
+
+function handleCreate(book: Book) {
+  createEntity.value = { ...book };
+  isCreateFormOpen.value = true;
+}
+
+async function submitCreate() {
+  isCreateFormOpen.value = false;
+  await getData();
+}
 </script>
 
 <style scoped>
@@ -175,6 +206,7 @@ watch([filters, orders, pagination], async () => {
   flex-direction: column;
   flex-grow: 1;
   padding: 0 0.5rem;
+  margin: 0;
 }
 
 .description-title {
@@ -185,7 +217,7 @@ watch([filters, orders, pagination], async () => {
   margin: 0.5rem 0;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 10;
+  -webkit-line-clamp: 15;
   -webkit-box-orient: vertical;
   text-align: justify;
   text-overflow: ellipsis;
@@ -225,7 +257,17 @@ watch([filters, orders, pagination], async () => {
   margin: 0 0.5rem 0.5rem 0;
 }
 
-@media only screen and (max-width: 768px) {
+.order {
+  margin-top: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.order-button {
+  margin-left: auto;
+}
+
+@media only screen and (max-width: 992px) {
   .column {
     width: 100%;
   }

@@ -28,7 +28,7 @@ class PublisherService extends AbstractCrudService implements CrudServiceInterfa
         $queryParser->setColumns([
             new Column([
                 'name' => 'id',
-                'label' => 'Дата добавления',
+                'label' => '№',
                 'type' => Column::NOT_FILTERABLE_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => false,

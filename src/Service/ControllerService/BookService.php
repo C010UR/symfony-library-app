@@ -32,7 +32,7 @@ class BookService extends AbstractCrudService implements CrudServiceInterface
         $columns = [
             new Column([
                 'name' => 'id',
-                'label' => 'Дата добавления',
+                'label' => '№',
                 'type' => Column::NOT_FILTERABLE_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => false,

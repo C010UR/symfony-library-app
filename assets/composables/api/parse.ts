@@ -85,6 +85,10 @@ function useParseFilters(filters?: Filter[]): ApiParams | undefined {
   const result: ApiParams = {};
 
   for (const filter of filters) {
+    if (!filter.column) {
+      continue;
+    }
+
     let value: string;
 
     if (Array.isArray(filter.value)) {

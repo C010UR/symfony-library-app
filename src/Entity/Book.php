@@ -5,9 +5,9 @@ namespace App\Entity;
 use App\DoctrineExtensions\DBAL\Types\Citext;
 use App\Entity\Interface\EntityInterface;
 use App\Repository\BookRepository;
-use App\Utils\Utils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -159,6 +159,7 @@ class Book implements EntityInterface, \Stringable
         if ($isDeleted) {
             return $this->tags;
         }
+
         return $this->tags->filter(static fn (Tag $tag) => !$tag->isDeleted());
     }
 
@@ -186,6 +187,7 @@ class Book implements EntityInterface, \Stringable
         if ($isDeleted) {
             return $this->authors;
         }
+
         return $this->authors->filter(static fn (Author $author) => !$author->isDeleted());
     }
 
