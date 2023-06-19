@@ -22,7 +22,8 @@ final class Version20230618214003 extends AbstractMigration
             'CREATE TABLE "order" (
                 id INT NOT NULL,
                 user_completed_id INT DEFAULT NULL,
-                book_id INT NOT NULL, first_name citext NOT NULL,
+                book_id INT NOT NULL,
+                first_name citext NOT NULL,
                 last_name citext NOT NULL,
                 middle_name citext DEFAULT NULL,
                 phone_number citext NOT NULL,

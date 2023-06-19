@@ -25,7 +25,7 @@ class Publisher implements EntityInterface, \Stringable
     #[ORM\Column(type: Citext::CITEXT)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(type: Citext::CITEXT)]
     private ?string $email = null;
 
     #[ORM\Column(type: Citext::CITEXT)]
