@@ -65,12 +65,6 @@ symfony: ## List all Symfony commands or pass the parameter "c=" to run a given 
 load-fixtures: ## Load fixutres
 	@ $(SYMFONY) doctrine:fixtures:load --no-interaction --group=dev
 
-serve-load-fixtures: load-fixtures  ## Load fixtures and copy them to caddy image
-	@ "rm" -rf var/temp
-	@ "mkdir" -p var/temp
-	-@ $(DOCKER_COMP) cp php:/srv/app/public/uploads var/temp
-	-@ $(DOCKER_COMP) cp var/temp/uploads caddy:/srv/app/public
-
 ## —— Lint —————————————————————————————————————————————————————————————————————
 lint: ## Lint the project
 	-@ $(COMPOSER) run php-cs-fixer-dry

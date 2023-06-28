@@ -64,6 +64,7 @@ services:
       - database
     volumes:
       - php-socket:/var/run/php
+      - uploads:/srv/app/public/uploads
     restart: unless-stopped
     healthcheck:
       interval: 10s
@@ -90,6 +91,7 @@ services:
       - php-socket:/var/run/php
       - caddy-data:/data
       - caddy-config:/config
+      - uploads:/srv/app/public/uploads
     restart: unless-stopped
     ports:
       # HTTP
@@ -120,6 +122,7 @@ volumes:
   php-public:
   caddy-data:
   caddy-config:
+  uploads:
 
   ###> doctrine/doctrine-bundle ###
   database-data: ###< doctrine/doctrine-bundle ###

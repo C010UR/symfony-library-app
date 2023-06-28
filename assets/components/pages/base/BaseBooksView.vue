@@ -1,9 +1,9 @@
 <template>
-  <filter-drawer :columns="columns" v-model:orders="orders" v-model:filters="filters" :disabled="isNoData" />
+  <filter-drawer :columns="columns" v-model:orders="orders" v-model:filters="filters" :disabled="isNotLoaded" />
 
   <create-order-form v-model="isCreateFormOpen" @submit="submitCreate" :book="createEntity" />
 
-  <card-list :disabled="isNoData" :skeletons="pagination.pageSize">
+  <card-list :skeletons="pagination.pageSize" :empty="isNoData" :loading="isNotLoaded">
     <template #skeleton>
       <base-card :disabled="true">
         <template #skeleton>
@@ -88,7 +88,7 @@
     </base-card>
   </card-list>
 
-  <data-pagination v-model="pagination" :disabled="isNoData" />
+  <data-pagination v-model="pagination" :disabled="isNotLoaded" />
 </template>
 
 <script setup lang="ts">
@@ -132,8 +132,12 @@ const columns = ref<FilterOption[]>([]);
 const data = ref<Book[] | undefined>();
 const watchDisabled = ref<boolean>(false);
 
-const isNoData = computed(() => {
+const isNotLoaded = computed(() => {
   return data.value === undefined;
+});
+
+const isNoData = computed(() => {
+  return Array.isArray(data.value) && data.value.length === 0;
 });
 
 async function getData() {

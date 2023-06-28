@@ -7,8 +7,8 @@
       <div class="content">
         <div class="top">
           <el-breadcrumb class="breadcrumb" separator="·">
-            <el-breadcrumb-item v-for="(label, link) in links" :key="label" :to="{ name: String(link) }">
-              {{ label }}
+            <el-breadcrumb-item v-for="route in routes" :key="route.name" :to="{ name: String(route.name) }">
+              {{ route.label }}
             </el-breadcrumb-item>
           </el-breadcrumb>
           <dark-switch class="theme-switch" />
@@ -34,11 +34,12 @@ import { ElBreadcrumb, ElBreadcrumbItem, ElScrollbar } from 'element-plus';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-interface Links {
-  [index: string]: string;
+interface Link {
+  name: string;
+  label: string;
 }
 
-const links = ref<Links>({});
+const routes = ref<Link[]>([]);
 
 const bodyStyle = ref({ padding: '1rem' });
 
@@ -50,53 +51,50 @@ const currentName = ref<string>(route.name as string);
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>();
 
 function setLinks(profile?: UserProfileType) {
-  if (profile === undefined) {
-    links.value = {
-      ...getRouteLink('Main'),
-      ...getRouteLink('AboutUs'),
-    };
+  resetRouteLinks();
+  addRouteLinks(['Main', 'AboutUs']);
 
-    return;
-  } else if (profile.roles?.includes('ROLE_ADMIN')) {
-    links.value = {
-      ...getRouteLink('Main'),
-      ...getRouteLink('BooksCrud'),
-      ...getRouteLink('PublishersCrud'),
-      ...getRouteLink('AuthorsCrud'),
-      ...getRouteLink('TagsCrud'),
-      ...getRouteLink('UsersCrud'),
-      ...getRouteLink('AboutUs'),
-    };
-  } else if (profile.roles?.includes('ROLE_USER')) {
-    links.value = {
-      ...getRouteLink('Main'),
-      ...getRouteLink('OrdersView'),
-      ...getRouteLink('BooksCrud'),
-      ...getRouteLink('PublishersCrud'),
-      ...getRouteLink('AuthorsCrud'),
-      ...getRouteLink('TagsCrud'),
-      ...getRouteLink('AboutUs'),
-    };
+  if (profile) {
+    addRouteLinks(['BooksCrud', 'PublishersCrud', 'AuthorsCrud', 'TagsCrud']);
   }
 
-  const link = links.value[currentName.value];
-  delete links.value[currentName.value];
-  links.value[currentName.value] = link ? link : currentTitle.value;
+  if (profile && profile.roles?.includes('ROLE_USER')) {
+    addRouteLinks(['OrdersView']);
+  }
+
+  if (profile && profile.roles?.includes('ROLE_USER')) {
+    addRouteLinks(['UsersCrud']);
+  }
+
+  moveCurrentRoute();
 }
 
-function getRouteLink(name: string) {
-  const title = router.getRoutes().find(route => route.name === name)?.meta.title as string;
+function resetRouteLinks() {
+  routes.value.splice(0);
+}
 
-  if (!title) {
-    throw new Error(`Cannot find route '${name}'`);
+function addRouteLinks(names: string[]) {
+  for (const name of names) {
+    const label = router.getRoutes().find(route => route.name === name)?.meta.title as string;
+
+    if (!label) {
+      throw new Error(`Cannot find route '${name}'`);
+    }
+
+    routes.value.push({ name, label });
+  }
+}
+
+function moveCurrentRoute() {
+  const index = routes.value.findIndex(item => item.name === currentName.value);
+
+  if (index === -1) {
+    return;
   }
 
-  const result: {
-    [name: string]: string;
-  } = {};
+  const last = routes.value.splice(index, 1);
 
-  result[name] = title;
-  return result;
+  routes.value.push(last[0]);
 }
 </script>
 

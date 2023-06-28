@@ -1,6 +1,6 @@
 # [MTEC](http://mtec.by/ru/) Library app
 
-This is a diploma for [Mark Laurenchikas](https://vk.com/lemurlaur)
+This is a diploma project for [Mark Laurenchikas](https://vk.com/lemurlaur)
 
 ## Project overview
 
@@ -35,7 +35,7 @@ make dev dev # Run vite dev (Vite dev was not containerised because of performan
 
 ```sh
 make serve # Build and start docker image for staging env
-make serve-load-fixtures # Load mock data (Must be used only when php container is healthy)
+make load-fixtures # Load mock data (Must be used only when php container is healthy)
 ```
 
 ## Stop the project

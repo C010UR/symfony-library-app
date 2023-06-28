@@ -168,7 +168,7 @@ COPY --link docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 RUN rm -f .env.local.php
 
 # Caddy image
-FROM caddy:latest AS app_caddy
+FROM caddy:2-alpine AS app_caddy
 
 WORKDIR /srv/app
 

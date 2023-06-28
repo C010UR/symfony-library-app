@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper">
     <el-table
-      v-loading="data === undefined || data.length === 0"
+      v-if="Array.isArray(data) && data.length > 0"
+      v-loading="data === undefined"
       :data="data"
       stripe
       border
@@ -43,11 +44,13 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-empty v-else description="Пусто" class="no-data" />
   </div>
 </template>
 
 <script setup lang="ts" generic="T extends {id: number, isDeleted: boolean}">
-import { ElButton, ElPopconfirm, ElTable, ElTableColumn, ElTag } from 'element-plus';
+import { ElButton, ElPopconfirm, ElTable, ElTableColumn, ElTag, ElEmpty } from 'element-plus';
 
 export interface Props {
   canCreate?: boolean;
@@ -84,6 +87,10 @@ const handleUpdate = (entity: T) => {
 </script>
 
 <style scoped>
+.no-data {
+  margin: auto;
+}
+
 .wrapper {
   margin: 1rem;
 }
