@@ -53,6 +53,13 @@ class BookService extends AbstractCrudService implements CrudServiceInterface
                 'isSearchable' => false,
             ]),
             new Column([
+                'name' => 'datePublished',
+                'label' => 'Дата издания',
+                'type' => Column::DATE_TYPE,
+                'isOrderable' => true,
+                'isSearchable' => true,
+            ]),
+            new Column([
                 'name' => 'pageCount',
                 'label' => 'Количество страниц',
                 'type' => Column::INTEGER_TYPE,
