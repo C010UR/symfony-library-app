@@ -129,8 +129,7 @@ function moveCurrentRoute() {
 
 .header .logo {
   background-size: 400%;
-  background-image: -webkit-linear-gradient(-45deg, var(--el-color-primary), var(--el-color-primary-light-3));
-  background-image: linear-gradient(-45deg, var(--el-color-primary), var(--el-color-primary-light-3));
+  background-color: var(--el-color-primary);
   min-width: 12rem;
   display: flex;
 }
