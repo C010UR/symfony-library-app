@@ -9,22 +9,22 @@
     @update:model-value="(emit: boolean) => $emit('update:modelValue', emit)"
   >
     <el-form ref="formRef" :model="form" :rules="authorRules" label-position="top">
-      <el-form-item label="Изображение" prop="image">
+      <el-form-item label="Profile Image" prop="image">
         <base-image-upload :isLoading="isLoading" v-model="form.image" />
       </el-form-item>
-      <el-form-item label="Имя" prop="firstName">
+      <el-form-item label="First Name" prop="firstName">
         <el-input v-model="form.firstName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Фамилия" prop="lastName">
+      <el-form-item label="Surname" prop="lastName">
         <el-input v-model="form.lastName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Отчество" prop="middleName">
+      <el-form-item label="Middle Name" prop="middleName">
         <el-input v-model="form.middleName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
       <el-form-item label="Email" prop="email">
         <el-input v-model="form.email" maxlength="255" show-word-limit clearable :disabled="isLoading" type="email" />
       </el-form-item>
-      <el-form-item label="Веб-сайт" prop="website">
+      <el-form-item label="Landing Page" prop="website">
         <el-input v-model="form.website" maxlength="255" show-word-limit clearable :disabled="isLoading" type="url" />
       </el-form-item>
     </el-form>
@@ -131,10 +131,10 @@ async function sendData() {
   );
 
   if (success) {
-    popup('success', 'Автор успешно изменен!');
+    popup('success', 'Author updated!');
     emit('submit', form);
   } else {
-    popup('error', 'Не удалось изменить автора!');
+    popup('error', 'An error occurred during the Author update!');
   }
 
   isLoading.value = false;

@@ -6,7 +6,7 @@ use App\Service\ControllerService\PasswordResetService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/v1/reset-password', name: 'app_api_', format: 'json')]
 class PasswordResetController extends AbstractController

@@ -1,10 +1,10 @@
 <template>
   <div class="order-wrapper" v-if="orderableColumns.length > 0">
     <div class="order-header">
-      <h3>Упорядочить:</h3>
+      <h3>Order:</h3>
       <el-switch v-model="toggle" class="order-toggle" />
     </div>
-    <vue-draggable ghost-class="ghost" class="order-container" animation="150" v-model="orderList" v-if="toggle">
+    <vue-draggable ghost-class="ghost" class="order-container" :animation="150" v-model="orderList" v-if="toggle">
       <div class="order-form" v-for="order in orderList" :key="order.id">
         <p class="order-label">{{ order.label !== undefined ? order.label : order.column }}</p>
         <el-switch

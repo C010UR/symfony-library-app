@@ -1,7 +1,7 @@
 <template>
   <div class="filter-wrapper" v-if="filterableColumns.length > 0">
     <div class="filter-header">
-      <h3>Фильтры:</h3>
+      <h3>Filters:</h3>
     </div>
     <div class="filters">
       <div v-for="column in filterableColumns" :key="column.name" class="filter">

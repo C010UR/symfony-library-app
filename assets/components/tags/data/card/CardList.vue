@@ -4,7 +4,7 @@
       <slot name="skeleton" v-for="index in skeletons" :key="index"></slot>
     </template>
 
-    <el-empty v-if="empty" description="Пусто" class="no-data" />
+    <el-empty v-if="empty" description="Empty!" class="no-data" />
     <slot v-if="!loading && !empty"></slot>
   </div>
 </template>

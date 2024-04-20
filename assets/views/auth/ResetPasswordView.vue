@@ -1,7 +1,7 @@
 <template>
-  <base-card-page header="Сброс пароля">
+  <base-card-page header="Password Reset">
     <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="resetPasswordRules">
-      <el-form-item label="Пароль" prop="password">
+      <el-form-item label="New Password" prop="password">
         <el-input
           v-model="form.password"
           :disabled="disabled"
@@ -13,7 +13,7 @@
           show-password
         ></el-input>
       </el-form-item>
-      <el-form-item label="Подтверждение пароля" prop="passwordConfirm">
+      <el-form-item label="Confirm the new password" prop="passwordConfirm">
         <el-input
           v-model="form.passwordConfirm"
           v-on:keyup.enter="submitForm()"
@@ -29,7 +29,7 @@
       </el-form-item>
       <el-form-item>
         <div style="margin-left: auto; margin-right: 0; margin-top: 1rem">
-          <el-button type="primary" :loading="disabled" @click="submitForm()"> Сбросить Пароль </el-button>
+          <el-button type="primary" :loading="disabled" @click="submitForm()"> Reset the Password </el-button>
         </div>
       </el-form-item>
     </el-form>
@@ -81,9 +81,9 @@ function submitForm() {
   });
 }
 
-const passwordsDontMatchMessage = 'Пароли не совпадают';
-const passwordInsecureMessage = 'Пароль недостаточно надежный';
-const emptyMessage = 'Поле не должно быть пустым';
+const passwordsDontMatchMessage = 'Passwords do not match';
+const passwordInsecureMessage = 'Password is too weak';
+const emptyMessage = 'Field must not be empty';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function validatePass(rule: any, value: any, callback: any) {

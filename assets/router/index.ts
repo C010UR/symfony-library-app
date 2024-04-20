@@ -1,7 +1,6 @@
 import type { UserRole } from '@/composables';
 import { useGetProfile } from '@/composables';
 import {
-  AboutUs,
   AuthorsCrudView,
   AuthorView,
   BooksCrudView,
@@ -32,15 +31,7 @@ const router = createRouter({
       name: 'Main',
       component: BooksView,
       meta: {
-        title: 'Книжный Фонд',
-      },
-    },
-    {
-      path: '/about-us',
-      name: 'AboutUs',
-      component: AboutUs,
-      meta: {
-        title: 'О Нас',
+        title: 'Books',
       },
     },
     {
@@ -48,7 +39,7 @@ const router = createRouter({
       name: 'Login',
       component: LoginView,
       meta: {
-        title: 'Авторизация',
+        title: 'Log In',
         transitionType: 'Auth',
         transitionLevel: 1,
       },
@@ -58,7 +49,7 @@ const router = createRouter({
       name: 'ResetPasswordRequest',
       component: RequestPasswordResetView,
       meta: {
-        title: 'Сброс пароля',
+        title: 'Reset Password',
         transitionType: 'Auth',
         transitionLevel: 2,
       },
@@ -68,7 +59,7 @@ const router = createRouter({
       name: 'ResetPassword',
       component: ResetPasswordView,
       meta: {
-        title: 'Сброс пароля',
+        title: 'Reset Password',
         transitionType: 'Auth',
         transitionLevel: 5,
       },
@@ -78,7 +69,7 @@ const router = createRouter({
       name: 'ResetPasswordConfirm',
       component: RequestPasswordResetConfirmView,
       meta: {
-        title: 'Сброс пароля',
+        title: 'Reset Password',
         transitionType: 'Auth',
         transitionLevel: 3,
       },
@@ -88,7 +79,7 @@ const router = createRouter({
       name: 'BooksCrud',
       component: BooksCrudView,
       meta: {
-        title: '[A] Книги',
+        title: '[Admin] Books',
         roles: ['ROLE_ADMIN', 'ROLE_USER'],
       },
     },
@@ -97,7 +88,7 @@ const router = createRouter({
       name: 'PublishersCrud',
       component: PublishersCrudView,
       meta: {
-        title: '[A] Издатели',
+        title: '[Admin] Publishers',
         roles: ['ROLE_ADMIN', 'ROLE_USER'],
       },
     },
@@ -106,7 +97,7 @@ const router = createRouter({
       name: 'AuthorsCrud',
       component: AuthorsCrudView,
       meta: {
-        title: '[A] Авторы',
+        title: '[Admin] Authors',
         roles: ['ROLE_ADMIN', 'ROLE_USER'],
       },
     },
@@ -115,7 +106,7 @@ const router = createRouter({
       name: 'TagsCrud',
       component: TagsCrudView,
       meta: {
-        title: '[A] Жанры',
+        title: '[Admin] Genres',
         roles: ['ROLE_ADMIN', 'ROLE_USER'],
       },
     },
@@ -124,17 +115,8 @@ const router = createRouter({
       name: 'UsersCrud',
       component: UsersCrudView,
       meta: {
-        title: '[A] Пользователи',
+        title: '[Admin] Users',
         roles: ['ROLE_ADMIN'],
-      },
-    },
-    {
-      path: '/admin/orders',
-      name: 'OrdersView',
-      component: OrdersView,
-      meta: {
-        title: 'Заказы',
-        roles: ['ROLE_USER'],
       },
     },
     {
@@ -142,7 +124,7 @@ const router = createRouter({
       name: 'Book',
       component: BookView,
       meta: {
-        title: 'Книга',
+        title: 'Book',
       },
     },
     {
@@ -150,7 +132,7 @@ const router = createRouter({
       name: 'Publisher',
       component: PublisherView,
       meta: {
-        title: 'Издатель',
+        title: 'Publisher',
       },
     },
     {
@@ -158,7 +140,16 @@ const router = createRouter({
       name: 'Author',
       component: AuthorView,
       meta: {
-        title: 'Автор',
+        title: 'Author',
+      },
+    },
+    {
+      path: '/admin/orders',
+      name: 'OrdersView',
+      component: OrdersView,
+      meta: {
+        title: 'Orders',
+        roles: ['ROLE_USER'],
       },
     },
     {
@@ -166,7 +157,7 @@ const router = createRouter({
       name: 'NotFound',
       component: NotFoundView,
       meta: {
-        title: 'Страница не найдена',
+        title: 'Page Not Found',
       },
     },
   ],
@@ -194,7 +185,7 @@ router.beforeEach(async (to, from) => {
 
 router.afterEach(async to => {
   nextTick(() => {
-    document.title = to.meta.title ? to.meta.title + ' :: МТЭК' : 'МТЭК';
+    document.title = to.meta.title ? to.meta.title + ' :: Gsm' : 'Gsm';
   });
 });
 

@@ -5,7 +5,9 @@ namespace App\Repository;
 use App\Entity\Author;
 use App\Entity\Book;
 use App\Repository\Abstract\AbstractCrudRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\Persistence\ManagerRegistry;
 
 class BookRepository extends AbstractCrudRepository
@@ -52,9 +54,11 @@ class BookRepository extends AbstractCrudRepository
             ->leftJoin('c.authors', 'authors')
             ->leftJoin('c.publisher', 'publisher')
             ->andWhere('authors = :author')
-            ->setParameters([
-                'author' => $author,
-            ]);
+            ->setParameters(
+                new ArrayCollection([
+                    new Parameter('author', $author),
+                ])
+            );
 
         return $this->findMatchingByDeletedWithQueryBuilder($query, $isDeleted, $criteria);
     }

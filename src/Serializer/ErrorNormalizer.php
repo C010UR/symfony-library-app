@@ -44,8 +44,15 @@ class ErrorNormalizer implements NormalizerInterface
         ];
     }
 
-    public function supportsNormalization($data, string $format = null, array $context = []): bool
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof FlattenException;
+    }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            FlattenException::class => __CLASS__ === self::class,
+        ];
     }
 }

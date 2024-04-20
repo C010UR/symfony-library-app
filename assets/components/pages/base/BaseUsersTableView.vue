@@ -15,12 +15,12 @@
     @click:create="handleCreate"
   >
     <template #expanded> </template>
-    <el-table-column label="Изображение">
+    <el-table-column label="Profile Image">
       <template #default="prop">
         <base-avatar :size="32" :src="prop.row.image" class="avatar" />
       </template>
     </el-table-column>
-    <el-table-column label="Ф.И.О.">
+    <el-table-column label="Full Name">
       <template #default="prop">
         <span class="row-text">
           {{ prop.row.fullName }}
@@ -34,13 +34,13 @@
         </span>
       </template>
     </el-table-column>
-    <el-table-column label="Роли">
+    <el-table-column label="Roles">
       <template #default="prop">
         <el-tag v-for="role in prop.row.roles" :key="role" class="tag">
           @{{ role.toLocaleLowerCase().replace('role_', '') }}
         </el-tag>
-        <el-tag v-if="prop.row.isActive" type="success" class="tag">Активный</el-tag>
-        <el-tag v-else type="danger" class="tag">Неактивный</el-tag>
+        <el-tag v-if="prop.row.isActive" type="success" class="tag">Active</el-tag>
+        <el-tag v-else type="danger" class="tag">Not Active</el-tag>
       </template>
     </el-table-column>
   </table-list>
@@ -157,14 +157,16 @@ async function handleDelete(user: UserProfile) {
     return;
   }
 
-  ElMessageBox.alert(`Вы уверены, что хотите удалить пользователя '${user.fullName}'?`, `Удаление пользователя`, {
-    confirmButtonText: 'Да',
-    cancelButtonText: 'Нет',
+  ElMessageBox.alert(`Are you sure you want to delete '${user.fullName}'?`, `Delete User`, {
+    confirmButtonText: 'Yes',
+    cancelButtonText: 'No',
     type: 'warning',
     async callback(action: string) {
       if (action === 'confirm') {
         if (await useDelete(props.url, user)) {
-          popup('success', 'Пользователь успешно удален!');
+          popup('success', 'User deleted successfully!');
+        } else {
+          popup('error', 'An error occurred during the User deletion');
         }
 
         await getData();

@@ -9,7 +9,7 @@
     @update:model-value="(emit: boolean) => $emit('update:modelValue', emit)"
   >
     <el-form ref="formRef" :model="form" :rules="tagRules" label-position="top">
-      <el-form-item label="Название" prop="name">
+      <el-form-item label="Name" prop="name">
         <el-input v-model="form.name" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
     </el-form>
@@ -75,10 +75,10 @@ async function sendData() {
   );
 
   if (success) {
-    popup('success', 'Жанр успешно изменен!');
+    popup('success', 'Genre updated successfully!');
     emit('submit', form);
   } else {
-    popup('error', 'Не удалось изменить жанр!');
+    popup('error', 'An error occurred during the Genre update!');
   }
 
   isLoading.value = false;

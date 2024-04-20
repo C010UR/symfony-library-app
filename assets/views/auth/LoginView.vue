@@ -1,5 +1,5 @@
 <template>
-  <base-card-page header="Авторизация">
+  <base-card-page header="Login">
     <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="loginRules">
       <el-form-item label="Email" prop="email">
         <el-input
@@ -11,7 +11,7 @@
           style="max-width: 132ch"
         ></el-input>
       </el-form-item>
-      <el-form-item label="Пароль" prop="password">
+      <el-form-item label="Password" prop="password">
         <el-input
           v-model="form.password"
           v-on:keyup.enter="submitForm()"
@@ -25,7 +25,7 @@
       <el-form-item>
         <div style="margin-left: auto; margin-right: 0; margin-top: 1rem">
           <el-link type="primary" :underline="false" style="margin-right: 1rem" @click="$router.push({ name: 'Main' })">
-            На Главную
+            Go to main
           </el-link>
           <el-link
             type="primary"
@@ -33,9 +33,9 @@
             style="margin-right: 1rem"
             @click="$router.push({ name: 'ResetPasswordRequest' })"
           >
-            Забыли пароль?
+            Forgot the password?
           </el-link>
-          <el-button type="primary" :loading="disabled" @click="submitForm()"> Войти </el-button>
+          <el-button type="primary" :loading="disabled" @click="submitForm()"> Log in </el-button>
         </div>
       </el-form-item>
     </el-form>
@@ -68,7 +68,7 @@ async function fetch() {
     form.value.password = '';
     disabled.value = false;
   } else {
-    popup('success', `Успешно авторизованы как ${data.fullName}`);
+    popup('success', `Logged in as ${data.fullName}`);
     router.push({ name: 'Main' });
   }
 }

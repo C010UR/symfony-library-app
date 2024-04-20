@@ -18,16 +18,16 @@
           </div>
           <span class="text">
             <el-icon><Clock /></el-icon>
-            <p>Издана:</p>
+            <p>Published:</p>
             <p>{{ new Date(book.datePublished).toLocaleDateString() }}</p>
           </span>
           <span class="text">
             <el-icon><Document /></el-icon>
-            <p>Количество страниц:</p>
+            <p>Number of Pages:</p>
             <p>{{ book.pageCount }}</p>
           </span>
           <div class="list">
-            <p class="list-title">{{ book.authors.length > 1 ? 'Авторы' : 'Автор' }}:</p>
+            <p class="list-title">{{ book.authors.length > 1 ? 'Authors' : 'Author' }}:</p>
 
             <el-button
               v-for="author in book.authors"
@@ -41,7 +41,7 @@
             </el-button>
           </div>
           <div class="list">
-            <p class="list-title">{{ book.tags.length > 1 ? 'Жанры' : 'Жанр' }}:</p>
+            <p class="list-title">{{ book.tags.length > 1 ? 'Genres' : 'Genre' }}:</p>
             <el-tag v-for="tag in book.tags" :key="tag.id" class="list-item" size="large">
               {{ tag.name }}
             </el-tag>

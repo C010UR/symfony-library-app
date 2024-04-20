@@ -14,11 +14,13 @@
     :limit="1"
     :on-exceed="onExceed"
   >
-    <el-icon :size="40"><UploadFilled /></el-icon>
+    <el-icon :size="40">
+      <UploadFilled />
+    </el-icon>
     <div v-if="!isLoading">
-      <div>Перетащите файл сюда или <em>нажмите, чтобы загрузить</em></div>
+      <div>Drag & Drop <em>or browse</em> the file</div>
     </div>
-    <template #tip> Изображения размером меньше, чем 8MB </template>
+    <template #tip> Images smaller than 8MB</template>
   </el-upload>
 </template>
 
@@ -67,7 +69,7 @@ const onChange: UploadProps['onChange'] = file => {
   }
 
   if (file.raw.size / 1024 / 1024 > 8) {
-    popup('error', 'Размер изображения не может превышать 8MB');
+    popup('error', 'Image is too large! Max size is 8MB');
     fileList.value = [];
     return false;
   }

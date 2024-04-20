@@ -11,12 +11,12 @@
         </template>
       </el-table-column>
     </template>
-    <el-table-column label="Заказчик">
+    <el-table-column label="Customer">
       <template #default="prop">
         <span class="row-text"> {{ prop.row.fullName }} </span>
       </template>
     </el-table-column>
-    <el-table-column label="Телефон" width="120">
+    <el-table-column label="Phone Number" width="120">
       <template #default="prop">
         <span> {{ prop.row.phoneNumber }} </span>
       </template>
@@ -33,17 +33,17 @@
         </el-link>
       </template>
     </el-table-column>
-    <el-table-column label="Количество" width="110">
+    <el-table-column label="Quantity" width="110">
       <template #default="prop">
         <span> {{ prop.row.quantity }} </span>
       </template>
     </el-table-column>
-    <el-table-column label="Дата создания">
+    <el-table-column label="Creation Date">
       <template #default="prop">
         <span> {{ new Date(prop.row.dateCreated).toLocaleString() }} </span>
       </template>
     </el-table-column>
-    <el-table-column label="Выполнен">
+    <el-table-column label="Completed">
       <template #default="prop">
         <div class="completed" v-if="prop.row.dateCompleted">
           <base-profile :user="prop.row.userCompleted" class="completed-user" />
@@ -58,20 +58,20 @@
       <template #default="scope">
         <el-popconfirm
           v-if="!scope.row.dateCompleted"
-          title="Вы уверены, что хотите выполнить этот заказ?"
+          title="Are you sure you want to complete the order?"
           @confirm="handleComplete(scope.row)"
         >
           <template #reference>
-            <el-button link type="success" size="small"> Выполнить </el-button>
+            <el-button link type="success" size="small"> Complete </el-button>
           </template>
         </el-popconfirm>
         <el-popconfirm
           v-else
-          title="Вы уверены, что хотите отменить выполнение этого заказ?"
+          title="Are you sure you want to cancel the order?"
           @confirm="handleComplete(scope.row)"
         >
           <template #reference>
-            <el-button link type="danger" size="small"> Отменить </el-button>
+            <el-button link type="danger" size="small"> Cancel </el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -173,18 +173,20 @@ watch([filters, orders, pagination], async () => {
 
 async function handleComplete(order: BookOrder) {
   ElMessageBox.alert(
-    `Вы уверены, что хотите '${order.dateCompleted ? 'отменить выполнение заказа' : 'выполнить заказ'}' книги '${
+    `Are you sure you want to '${order.dateCompleted ? 'cancel' : 'complete'}' the order for the  '${
       order.book.name
-    }' в количестве ${order.quantity} штук${order.quantity === 1 ? 'а' : ''} для ${order.fullName}?`,
-    `Выполнение заказа`,
+    }' with amount ${order.quantity} for ${order.fullName}?`,
+    `Order Completion`,
     {
-      confirmButtonText: 'Да',
-      cancelButtonText: 'Нет',
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
       type: 'warning',
       async callback(action: string) {
         if (action === 'confirm') {
           if (await useUpdate(props.url, order.id, {})) {
-            popup('success', `Заказ успешно ${order.dateCompleted ? 'отменен' : 'выполнен'}!`);
+            popup('success', `Order ${order.dateCompleted ? 'cancelled' : 'completed'} successfully!`);
+          } else {
+            popup('error', `An error occurred during the order ${order.dateCompleted ? 'completion' : 'cancellation'}`);
           }
           await getData();
         }

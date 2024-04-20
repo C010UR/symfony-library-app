@@ -143,7 +143,7 @@ class Order implements EntityInterface, \Stringable
 
     public function setDateCreated(): static
     {
-        $this->dateCreated = new \DateTimeImmutable();
+        $this->dateCreated = new \DateTime();
 
         return $this;
     }
@@ -157,7 +157,7 @@ class Order implements EntityInterface, \Stringable
     {
         $this->userCompleted = $userCompleted;
 
-        $this->dateCompleted = $userCompleted instanceof \App\Entity\User ? new \DateTimeImmutable() : null;
+        $this->dateCompleted = $userCompleted instanceof \App\Entity\User ? new \DateTime() : null;
 
         return $this;
     }
@@ -190,9 +190,9 @@ class Order implements EntityInterface, \Stringable
             'middleName' => $this->getMiddleName(),
             'phoneNumber' => $this->getPhoneNumber(),
             'quantity' => $this->getQuantity(),
-            'dateCreated' => $this->getDateCreated()->format(\DateTimeImmutable::ATOM),
-            'userCompleted' => $this->getUserCompleted() instanceof \App\Entity\User ? $this->getUserCompleted()->format() : null,
-            'dateCompleted' => $this->getDateCompleted() instanceof \DateTimeInterface ? $this->getDateCompleted()->format(\DateTimeImmutable::ATOM) : null,
+            'dateCreated' => $this->getDateCreated()->format(\DateTime::ATOM),
+            'userCompleted' => $this->getUserCompleted() instanceof User ? $this->getUserCompleted()->format() : null,
+            'dateCompleted' => $this->getDateCompleted() instanceof \DateTimeInterface ? $this->getDateCompleted()->format(\DateTime::ATOM) : null,
             'isDeleted' => $this->isDeleted(),
         ];
     }

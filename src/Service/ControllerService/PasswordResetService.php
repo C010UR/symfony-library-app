@@ -50,9 +50,9 @@ class PasswordResetService
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('library@mtec.by', 'Бот сброса пароля МТЭК Библиотеки'))
+            ->from(new Address('library@gismauas.edu', 'GismaUAS Library Password Reset'))
             ->to($user->getEmail())
-            ->subject('Сброс пароля')
+            ->subject('Password Reset')
             ->htmlTemplate('emails/password-reset.html.twig')
             ->embed(fopen(sprintf('%s/public/images/logo.png', $this->projectDir), 'r'), 'logo')
             ->context([

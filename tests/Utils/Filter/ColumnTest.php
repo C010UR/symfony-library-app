@@ -92,8 +92,8 @@ class ColumnTest extends TestCase
             ];
         }
 
-        $dateString = (new \DateTimeImmutable())->format(\DateTimeImmutable::ATOM);
-        $date = new \DateTimeImmutable($dateString);
+        $dateString = (new \DateTime())->format(\DateTime::ATOM);
+        $date = new \DateTime($dateString);
 
         yield 'Date not array' => [
             new Column([

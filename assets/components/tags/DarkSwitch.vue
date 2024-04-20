@@ -3,8 +3,8 @@
     size="large"
     v-model="isDark"
     inline-prompt
-    active-text="Темная тема"
-    inactive-text="Светлая тепа"
+    active-text="Dark"
+    inactive-text="Light"
     :active-icon="Moon"
     :inactive-icon="Sunny"
   />

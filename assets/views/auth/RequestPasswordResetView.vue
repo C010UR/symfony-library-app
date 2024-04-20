@@ -1,9 +1,8 @@
 <template>
-  <base-card-page header="Сбросить пароль">
+  <base-card-page header="Change password">
     <el-form ref="formRef" class="form" label-position="top" :model="form" :rules="requestPasswordResetRules">
       <p>
-        Введите адрес электронной почты, которую вы использовали для данного сайта и мы отправим пам письмо с
-        инструкциями по сбросу пароля.
+        Enter the email address you used for this site and we will send pam an email with instructions on how to reset your password.
       </p>
       <el-form-item label="Email" prop="email">
         <el-input
@@ -24,9 +23,9 @@
             style="margin-right: 1rem"
             @click="$router.push({ name: 'Login' })"
           >
-            Вернуться
+            Go back
           </el-link>
-          <el-button type="primary" :loading="disabled" @click="submitForm()"> Отправить письмо </el-button>
+          <el-button type="primary" :loading="disabled" @click="submitForm()"> Send Email </el-button>
         </div>
       </el-form-item>
     </el-form>

@@ -9,19 +9,19 @@
     @update:model-value="(emit: boolean) => $emit('update:modelValue', emit)"
   >
     <el-form ref="formRef" :model="form" :rules="bookRules" label-position="top">
-      <el-form-item label="Обложка" prop="image">
+      <el-form-item label="Cover" prop="image">
         <base-image-upload :isLoading="isLoading" v-model="form.image" />
       </el-form-item>
-      <el-form-item label="Название" prop="name">
+      <el-form-item label="Name" prop="name">
         <el-input v-model="form.name" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Количество страниц" prop="pageCount">
+      <el-form-item label="Number of Pages" prop="pageCount">
         <el-input-number v-model="form.pageCount" :min="0" :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Дата публикации" prop="datePublished">
+      <el-form-item label="Publication Date" prop="datePublished">
         <el-date-picker v-model="form.datePublished" :disabled="isLoading" format="MMM D, YYYY" />
       </el-form-item>
-      <el-form-item label="Издатель" prop="publisher">
+      <el-form-item label="Publisher" prop="publisher">
         <el-select
           v-model="form.publisher"
           :disabled="isLoading"
@@ -32,7 +32,7 @@
           <publisher-option v-for="publisher in publishers" :key="publisher.id" :value="publisher" />
         </el-select>
       </el-form-item>
-      <el-form-item label="Авторы" prop="authors">
+      <el-form-item label="Authors" prop="authors">
         <el-select
           v-model="form.authors"
           :disabled="isLoading"
@@ -44,7 +44,7 @@
           <author-option v-for="author in authors" :key="author.id" :value="author" />
         </el-select>
       </el-form-item>
-      <el-form-item label="Жанры" prop="tags">
+      <el-form-item label="Genres" prop="tags">
         <el-select
           v-model="form.tags"
           :disabled="isLoading"
@@ -56,7 +56,7 @@
           <tag-option v-for="tag in tags" :key="tag.id" :value="tag" />
         </el-select>
       </el-form-item>
-      <el-form-item label="Описание" prop="description">
+      <el-form-item label="Description" prop="description">
         <el-input
           v-model="form.description"
           autosize
@@ -230,10 +230,10 @@ async function sendData() {
   );
 
   if (success) {
-    popup('success', 'Книга успешно изменена!');
+    popup('success', 'Book updated successfully!');
     emit('submit', form);
   } else {
-    popup('error', 'Не удалось изменить книгу!');
+    popup('error', 'An error occurred during the Book update!');
   }
 
   isLoading.value = false;

@@ -7,7 +7,7 @@
     @update:model-value="(emit: boolean) => $emit('update:modelValue', emit)"
   >
     <el-form ref="formRef" :model="form" :rules="tagRules" label-position="top">
-      <el-form-item label="Название" prop="name">
+      <el-form-item label="Name" prop="name">
         <el-input v-model="form.name" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
     </el-form>
@@ -63,10 +63,10 @@ async function sendData() {
   const success = await useCreate<BookTag, UploadBookTag>(ApiUrls.tags, updateData, false);
 
   if (success) {
-    popup('success', 'Жанр успешно создан!');
+    popup('success', 'Genre created successfully!');
     emit('submit', form);
   } else {
-    popup('error', 'Не удалось создать жанр!');
+    popup('error', 'An error occurred during the Genre creation!');
   }
 
   isLoading.value = false;

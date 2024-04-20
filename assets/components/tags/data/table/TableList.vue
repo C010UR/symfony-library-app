@@ -2,7 +2,7 @@
   <div class="wrapper">
     <el-table
       v-if="Array.isArray(data) && data.length > 0"
-      v-loading="data === undefined"
+      v-loading="!data"
       :data="data"
       stripe
       border
@@ -11,7 +11,7 @@
       row-key="id"
     >
       <slot name="expanded"></slot>
-      <el-table-column label="№" v-if="withMeta">
+      <el-table-column label="ID" v-if="withMeta">
         <template #default="props">
           <el-tag :type="props.row.isDeleted ? 'danger' : 'info'">{{ props.row.id ?? -1 }}</el-tag>
         </template>
@@ -20,24 +20,24 @@
       <el-table-column fixed="right" label="Действия" width="180" v-if="canCreate || canUpdate || canDelete">
         <template #header v-if="canCreate">
           <div style="display: flex; justify-content: center">
-            <el-button type="primary" @click="handleAdd()"> Создать </el-button>
+            <el-button type="primary" @click="handleAdd()"> Create </el-button>
           </div>
         </template>
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="handleUpdate(scope.row)"> Изменить </el-button>
+          <el-button link type="primary" size="small" @click="handleUpdate(scope.row)"> Update </el-button>
           <template v-if="canDelete">
             <el-popconfirm
               v-if="!scope.row.isDeleted"
-              title="Вы уверены, что хотите удалить это?"
+              title="Are you sure you want to delete this?"
               @confirm="handleDelete(scope.row)"
             >
               <template #reference>
-                <el-button link type="danger" size="small"> Удалить </el-button>
+                <el-button link type="danger" size="small"> Delete </el-button>
               </template>
             </el-popconfirm>
-            <el-popconfirm v-else title="Вы уверены, что хотите восстановить это?" @confirm="handleDelete(scope.row)">
+            <el-popconfirm v-else title="Are your sure you want to restore this?" @confirm="handleDelete(scope.row)">
               <template #reference>
-                <el-button link type="success" size="small"> Восстановить </el-button>
+                <el-button link type="success" size="small"> Restore </el-button>
               </template>
             </el-popconfirm>
           </template>
@@ -45,7 +45,7 @@
       </el-table-column>
     </el-table>
 
-    <el-empty v-else description="Пусто" class="no-data" />
+    <el-empty v-else description="Empty" class="no-data" />
   </div>
 </template>
 

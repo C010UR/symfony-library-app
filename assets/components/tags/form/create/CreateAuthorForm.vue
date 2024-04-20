@@ -7,26 +7,23 @@
     @update:model-value="(emit: boolean) => $emit('update:modelValue', emit)"
   >
     <el-form ref="formRef" :model="form" :rules="authorRules" label-position="top">
-      <el-form-item label="Изображение" prop="image">
+      <el-form-item label="Profile Image" prop="image">
         <base-image-upload :isLoading="isLoading" v-model="form.image" />
       </el-form-item>
-      <el-form-item label="Имя" prop="firstName">
+      <el-form-item label="First Name" prop="firstName">
         <el-input v-model="form.firstName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Фамилия" prop="lastName">
+      <el-form-item label="Last Name" prop="lastName">
         <el-input v-model="form.lastName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Отчество" prop="middleName">
+      <el-form-item label="Middle Name" prop="middleName">
         <el-input v-model="form.middleName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
       <el-form-item label="Email" prop="email">
         <el-input v-model="form.email" maxlength="255" show-word-limit clearable :disabled="isLoading" type="email" />
       </el-form-item>
-      <el-form-item label="Роли" prop="roles">
-        <el-checkbox-group v-model="form.roles" :min="1">
-          <el-checkbox true-label="ROLE_ADMIN" label="Администратор" border />
-          <el-checkbox true-label="ROLE_USER" label="Пользователь" border />
-        </el-checkbox-group>
+      <el-form-item label="Landing Page" prop="website">
+        <el-input v-model="form.website" maxlength="255" show-word-limit clearable :disable="isLoading" type="url" />
       </el-form-item>
     </el-form>
   </base-form>
@@ -37,7 +34,7 @@ import { popup } from '@/components/tags';
 import { BaseImageUpload } from '@/components/tags/base';
 import { BaseForm } from '@/components/tags/form';
 import { authorRules } from '@/components/tags/form/rules';
-import type { UploadUserProfile, UserProfile } from '@/composables';
+import type { BookAuthor, UploadBookAuthor, UploadUserProfile, UserProfile } from '@/composables';
 import { ApiUrls, useCreate } from '@/composables';
 import type { FormInstance } from 'element-plus';
 import { ElCheckbox, ElCheckboxGroup, ElForm, ElFormItem, ElInput } from 'element-plus';
@@ -57,13 +54,13 @@ const emit = defineEmits<{
 const isLoading = ref(false);
 
 const formRef = ref<FormInstance>();
-const form = reactive<UploadUserProfile>({
+const form = reactive<UploadBookAuthor>({
   image: undefined,
   firstName: undefined,
   lastName: undefined,
   middleName: undefined,
   email: undefined,
-  roles: [],
+  website: '',
 });
 
 function resetForm() {
@@ -72,7 +69,7 @@ function resetForm() {
   form.lastName = undefined;
   form.middleName = undefined;
   form.email = undefined;
-  form.roles = [];
+  form.website = '';
 }
 
 watch(
@@ -87,7 +84,7 @@ watch(
 async function sendData() {
   isLoading.value = true;
 
-  const updateData: UploadUserProfile = { ...form };
+  const updateData: UploadBookAuthor = { ...form };
 
   if (!form.image) {
     updateData.removeImage = true;
@@ -95,8 +92,8 @@ async function sendData() {
     updateData.image = form.image.raw;
   }
 
-  const success = await useCreate<UserProfile, UploadUserProfile>(
-    ApiUrls.users,
+  const success = await useCreate<BookAuthor, UploadBookAuthor>(
+    ApiUrls.authors,
     updateData,
     updateData.image !== undefined,
   );
@@ -104,11 +101,11 @@ async function sendData() {
   if (success) {
     popup(
       'success',
-      'Пользователь успешно создан! Пользователю на почту пришло сообщение с инструкциями по установке пароля.',
+      'Author created successfully.',
     );
     emit('submit', form);
   } else {
-    popup('error', 'Не удалось создать пользователя!');
+    popup('error', 'An error occurred during the Author creation!');
   }
 
   isLoading.value = false;

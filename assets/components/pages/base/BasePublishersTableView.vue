@@ -20,7 +20,7 @@
           <div class="expanded-container">
             <span class="text">
               <el-icon><Location /></el-icon>
-              <p>Адрес:</p>
+              <p>Address:</p>
               <p>{{ props.row.address }}</p>
             </span>
             <span class="text">
@@ -30,19 +30,19 @@
             </span>
             <span class="text">
               <el-icon><ChromeFilled /></el-icon>
-              <p>Веб-Страница:</p>
+              <p>Landing Page:</p>
               <el-link class="link" type="primary" :href="props.row.website">{{ props.row.website }}</el-link>
             </span>
           </div>
         </template>
       </el-table-column>
     </template>
-    <el-table-column label="Логотип">
+    <el-table-column label="Logo">
       <template #default="prop">
         <base-avatar :size="32" :src="prop.row.image" class="avatar" />
       </template>
     </el-table-column>
-    <el-table-column label="Название">
+    <el-table-column label="Name">
       <template #default="prop">
         <el-link
           class="row-text"
@@ -178,9 +178,9 @@ async function handleDelete(publisher: BookPublisher) {
     return;
   }
 
-  ElMessageBox.alert(`Вы уверены, что хотите удалить издателя '${publisher.name}'?`, `Удаление издателя`, {
-    confirmButtonText: 'Да',
-    cancelButtonText: 'Нет',
+  ElMessageBox.alert(`Are you sure you want to delete '${publisher.name}'?`, `Delete Publisher`, {
+    confirmButtonText: 'Yes',
+    cancelButtonText: 'No',
     type: 'warning',
     async callback(action: string) {
       if (action === 'confirm') {

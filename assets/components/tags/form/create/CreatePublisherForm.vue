@@ -7,19 +7,19 @@
     @update:model-value="(emit: boolean) => $emit('update:modelValue', emit)"
   >
     <el-form ref="formRef" :model="form" :rules="publisherRules" label-position="top">
-      <el-form-item label="Логотип" prop="image">
+      <el-form-item label="Logo" prop="image">
         <base-image-upload :isLoading="isLoading" v-model="form.image" />
       </el-form-item>
-      <el-form-item label="Название" prop="name">
+      <el-form-item label="Name" prop="name">
         <el-input v-model="form.name" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
       <el-form-item label="Email" prop="email">
         <el-input v-model="form.email" maxlength="255" show-word-limit clearable :disabled="isLoading" type="email" />
       </el-form-item>
-      <el-form-item label="Адрес" prop="address">
+      <el-form-item label="Address" prop="address">
         <el-input v-model="form.address" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Веб-сайт" prop="website">
+      <el-form-item label="Landing Page" prop="website">
         <el-input v-model="form.website" maxlength="255" show-word-limit clearable :disabled="isLoading" type="url" />
       </el-form-item>
     </el-form>
@@ -94,10 +94,10 @@ async function sendData() {
   );
 
   if (success) {
-    popup('success', 'Издатель успешно создан!');
+    popup('success', 'Publisher Created Successfully!');
     emit('submit', form);
   } else {
-    popup('error', 'Не удалось создать издателя!');
+    popup('error', 'An error occurred during the Publisher creation!');
   }
 
   isLoading.value = false;

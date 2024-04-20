@@ -172,8 +172,8 @@ class Column
 
         if ($isNullable) {
             $this->data['null'] = [
-                'true' => 'Пустое',
-                'false' => 'Не Пустое',
+                'true' => 'Yes',
+                'false' => 'No',
             ];
         }
 
@@ -313,7 +313,7 @@ class Column
             self::BOOLEAN_TYPE => (bool) $data,
             self::INTEGER_TYPE, self::ENTITY_TYPE, self::ENTITIES_TYPE => (int) $data,
             self::FLOAT_TYPE => (float) $data,
-            self::DATE_TYPE => new \DateTimeImmutable($data),
+            self::DATE_TYPE => new \DateTime($data),
             default => $data,
         };
     }

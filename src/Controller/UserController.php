@@ -7,7 +7,7 @@ use App\Service\ControllerService\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('api/v1/users', name: 'app_api_user_', format: 'json')]
 class UserController extends AbstractController implements CrudControllerInterface

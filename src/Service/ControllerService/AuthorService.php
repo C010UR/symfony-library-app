@@ -31,28 +31,28 @@ class AuthorService extends AbstractCrudService implements CrudServiceInterface
         $queryParser->setColumns([
             new Column([
                 'name' => 'id',
-                'label' => '№',
+                'label' => 'ID',
                 'type' => Column::NOT_FILTERABLE_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => false,
             ]),
             new Column([
                 'name' => 'firstName',
-                'label' => 'Имя',
+                'label' => 'First Name',
                 'type' => Column::STRING_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => true,
             ]),
             new Column([
                 'name' => 'lastName',
-                'label' => 'Фамилия',
+                'label' => 'Surname',
                 'type' => Column::STRING_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => true,
             ]),
             new Column([
                 'name' => 'middleName',
-                'label' => 'Отчество',
+                'label' => 'Middle Name',
                 'type' => Column::STRING_TYPE,
                 'isNullable' => true,
                 'isOrderable' => true,
@@ -60,7 +60,7 @@ class AuthorService extends AbstractCrudService implements CrudServiceInterface
             ]),
             new Column([
                 'name' => 'books',
-                'label' => 'Книги',
+                'label' => 'Books',
                 'type' => Column::ENTITIES_TYPE,
                 'isOrderable' => false,
                 'isSearchable' => false,

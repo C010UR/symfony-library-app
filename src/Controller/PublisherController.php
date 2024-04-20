@@ -7,7 +7,7 @@ use App\Service\ControllerService\PublisherService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('api/v1/publishers', name: 'app_api_publisher_', format: 'json')]
 class PublisherController extends AbstractController implements CrudControllerInterface

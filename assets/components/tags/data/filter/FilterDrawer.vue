@@ -1,13 +1,13 @@
 <template>
   <div class="wrapper">
     <el-button type="primary" :icon="FilterIcon" @click="handleOpen()" :disabled="disabled">
-      Фильтрация и Сортировка
+      Filter & Order
     </el-button>
   </div>
 
   <el-drawer
     v-model="drawer"
-    title="Фильтрация и Сортировка"
+    title="Filter & Order"
     direction="rtl"
     :size="drawerSize"
     @closed="handleClose()"

@@ -8,16 +8,16 @@
   >
     <book-short-info :book="book" />
     <el-form ref="formRef" :model="form" :rules="orderRules" label-position="top">
-      <el-form-item label="Имя" prop="firstName">
+      <el-form-item label="First Name" prop="firstName">
         <el-input v-model="form.firstName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Фамилия" prop="lastName">
+      <el-form-item label="Surname" prop="lastName">
         <el-input v-model="form.lastName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Отчество" prop="middleName">
+      <el-form-item label="Middle Name" prop="middleName">
         <el-input v-model="form.middleName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Телефон" prop="phoneNumber">
+      <el-form-item label="Phone Number" prop="phoneNumber">
         <el-input
           v-model="form.phoneNumber"
           clearable
@@ -28,7 +28,7 @@
           <template #prepend>+375</template>
         </el-input>
       </el-form-item>
-      <el-form-item label="Количество" prop="quantity">
+      <el-form-item label="Quantity" prop="quantity">
         <el-input-number v-model="form.quantity" :min="0" :disabled="isLoading" />
       </el-form-item>
     </el-form>
@@ -96,10 +96,10 @@ async function sendData() {
   const success = await useCreate<BookOrder, UploadBookOrder>(ApiUrls.orders, updateData);
 
   if (success) {
-    popup('success', 'Заказ успешно создан! Ожидайте его в библиотеке.');
+    popup('success', 'Order placed! An email will be sent when the order arrives.');
     emit('submit', form);
   } else {
-    popup('error', 'Не удалось создать заказ!');
+    popup('error', 'An error occurred during the Order placement!');
   }
 
   isLoading.value = false;

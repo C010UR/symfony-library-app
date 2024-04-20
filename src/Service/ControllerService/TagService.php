@@ -25,14 +25,14 @@ class TagService extends AbstractCrudService implements CrudServiceInterface
         $queryParser->setColumns([
             new Column([
                 'name' => 'id',
-                'label' => '№',
+                'label' => 'ID',
                 'type' => Column::NOT_FILTERABLE_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => false,
             ]),
             new Column([
                 'name' => 'name',
-                'label' => 'Название',
+                'label' => 'Name',
                 'type' => Column::STRING_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => true,

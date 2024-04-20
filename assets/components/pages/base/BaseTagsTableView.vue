@@ -14,7 +14,7 @@
     @click:update="handleUpdate"
     @click:create="handleCreate"
   >
-    <el-table-column label="Название">
+    <el-table-column label="Name">
       <template #default="prop">
         <span class="row-text"> {{ prop.row.name }} </span>
       </template>
@@ -132,14 +132,16 @@ async function handleDelete(tag: BookTag) {
     return;
   }
 
-  ElMessageBox.alert(`Вы уверены, что хотите удалить жанр '${tag.name}'?`, `Удаление жанра`, {
-    confirmButtonText: 'Да',
-    cancelButtonText: 'Нет',
+  ElMessageBox.alert(`Are you sure you want to delete '${tag.name}'?`, `Delete Genre`, {
+    confirmButtonText: 'Yes',
+    cancelButtonText: 'No',
     type: 'warning',
     async callback(action: string) {
       if (action === 'confirm') {
         if (await useDelete(props.url, tag)) {
-          popup('success', 'Жанр успешно удален!');
+          popup('success', 'Genre deleted successfully!');
+        } else {
+          popup('error', 'An error occurred during the Genre deletion');
         }
 
         await getData();

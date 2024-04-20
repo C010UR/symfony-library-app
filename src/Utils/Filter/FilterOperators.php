@@ -205,19 +205,19 @@ class FilterOperators
     public static function format(array $operators): array
     {
         $labels = [
-            self::OPERATOR_EQUALS_TO => 'Равняется',
-            self::OPERATOR_NOT_EQUALS_TO => 'Не равняется',
-            self::OPERATOR_GREATER_THAN => 'Больше',
-            self::OPERATOR_LESS_THAN => 'Меньше',
-            self::OPERATOR_GREATER_OR_EQUAL_TO => 'Больше либо равно',
-            self::OPERATOR_LESS_OR_EQUAL_TO => 'Меньше либо равно',
-            self::OPERATOR_IS_NULL => 'Пустое',
-            self::OPERATOR_IN => 'Включает',
-            self::OPERATOR_NOT_IN => 'Не Включает',
-            self::OPERATOR_CONTAINS => 'Содержит',
-            self::OPERATOR_STARTS_WITH => 'Начинается на',
-            self::OPERATOR_ENDS_WITH => 'Заканчивается на',
-            self::OPERATOR_BETWEEN => 'Между',
+            self::OPERATOR_EQUALS_TO => '=',
+            self::OPERATOR_NOT_EQUALS_TO => '<>',
+            self::OPERATOR_GREATER_THAN => '>',
+            self::OPERATOR_LESS_THAN => '<',
+            self::OPERATOR_GREATER_OR_EQUAL_TO => '>=',
+            self::OPERATOR_LESS_OR_EQUAL_TO => '<=',
+            self::OPERATOR_IS_NULL => 'Empty',
+            self::OPERATOR_IN => 'Includes',
+            self::OPERATOR_NOT_IN => 'Does not include',
+            self::OPERATOR_CONTAINS => 'Contains',
+            self::OPERATOR_STARTS_WITH => 'Starts With',
+            self::OPERATOR_ENDS_WITH => 'Ends With',
+            self::OPERATOR_BETWEEN => 'Between',
         ];
 
         $result = [];

@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="header">
       <div class="logo">
-        <img src="/images/logo.png" />
+        <img :src="image" alt="Logo" />
       </div>
       <div class="content">
         <div class="top">
@@ -31,13 +31,26 @@
 import { DarkSwitch, UserProfile } from '@/components/tags';
 import type { UserProfile as UserProfileType } from '@/composables';
 import { ElBreadcrumb, ElBreadcrumbItem, ElScrollbar } from 'element-plus';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useDark } from '@vueuse/core';
 
 interface Link {
   name: string;
   label: string;
 }
+
+let image = ref<string>('/images/logo-light.png');
+
+const isDark = useDark();
+
+watch(isDark, (newValue) => {
+  if (newValue) {
+    image.value = '/images/logo.png';
+  } else {
+    image.value = '/images/logo-light.png';
+  }
+});
 
 const routes = ref<Link[]>([]);
 
@@ -52,7 +65,7 @@ const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>();
 
 function setLinks(profile?: UserProfileType) {
   resetRouteLinks();
-  addRouteLinks(['Main', 'AboutUs']);
+  addRouteLinks(['Main']);
 
   if (profile) {
     addRouteLinks(['BooksCrud', 'PublishersCrud', 'AuthorsCrud', 'TagsCrud']);
@@ -118,12 +131,11 @@ function moveCurrentRoute() {
   background-size: 400%;
   background-image: -webkit-linear-gradient(-45deg, var(--el-color-primary), var(--el-color-primary-light-3));
   background-image: linear-gradient(-45deg, var(--el-color-primary), var(--el-color-primary-light-3));
-  min-width: 8rem;
+  min-width: 12rem;
   display: flex;
 }
 
 .header .logo img {
-  filter: brightness(0) invert(1);
   margin: auto;
   height: 4rem;
 }

@@ -1,1 +1,1 @@
-export type UserRoleLabelType = 'Пользователь' | 'Администратор';
+export type UserRoleLabelType = 'User' | 'Admin';

@@ -228,7 +228,7 @@ class Book implements EntityInterface, \Stringable
             'slug' => $this->getSlug(),
             'isDeleted' => $this->isDeleted(),
             'publisher' => $this->getPublisher()->format(),
-            'datePublished' => $this->getDatePublished()->format(\DateTimeImmutable::ATOM),
+            'datePublished' => $this->getDatePublished()->format(\DateTime::ATOM),
             'pageCount' => $this->getPageCount(),
             'description' => $this->getDescription(),
         ];

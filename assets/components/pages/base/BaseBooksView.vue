@@ -15,18 +15,18 @@
               <el-skeleton-item variant="h3" class="publisher-name" />
             </div>
             <div class="list">
-              <p class="list-title">Авторы:</p>
+              <p class="list-title">Authors:</p>
               <el-button v-for="item in 3" :key="item" class="list-item" type="primary" plain size="small" disabled>
                 Автор
               </el-button>
             </div>
             <div class="list">
-              <p class="list-title">Жанры:</p>
+              <p class="list-title">Genres:</p>
               <el-tag v-for="item in 5" :key="item" class="list-item">Жанр</el-tag>
             </div>
           </div>
           <div class="column description">
-            <p class="desc-title">Описание:</p>
+            <p class="desc-title">Description:</p>
             <el-skeleton-item variant="p" class="desc" v-for="index in 10" :key="index" />
           </div>
         </template>
@@ -55,7 +55,7 @@
           </el-link>
         </div>
         <div class="list" v-if="book.authors && book.authors.length > 0">
-          <p class="list-title">{{ book.authors.length > 1 ? 'Авторы' : 'Автор' }}:</p>
+          <p class="list-title">{{ book.authors.length > 1 ? 'Authors' : 'Author' }}:</p>
 
           <el-button
             v-for="author in book.authors"
@@ -70,18 +70,18 @@
           </el-button>
         </div>
         <div class="list" v-if="book.tags && book.tags.length > 0">
-          <p class="list-title">{{ book.tags.length > 1 ? 'Жанры' : 'Жанр' }}:</p>
+          <p class="list-title">{{ book.tags.length > 1 ? 'Genres' : 'Genre' }}:</p>
           <el-tag v-for="tag in book.tags" :key="tag.id" class="list-item">
             {{ tag.name }}
           </el-tag>
         </div>
         <div class="order">
-          <el-button type="primary" class="order-button" @click="handleCreate(book)">Заказать</el-button>
+          <el-button type="primary" class="order-button" @click="handleCreate(book)">Order</el-button>
         </div>
       </div>
       <div class="column" v-if="book.description">
         <div class="description">
-          <p class="description-title">Описание:</p>
+          <p class="description-title">Description:</p>
           <pre class="description-text">{{ book.description }}</pre>
         </div>
       </div>

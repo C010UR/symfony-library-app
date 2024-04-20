@@ -18,7 +18,7 @@
           :inactive-text="column.data?.null?.false"
         />
       </template>
-      <template v-else> Оператор '{{ operator }}' для '{{ column.name }}' не реализован. </template>
+      <template v-else> Operation '{{ operator }}' for '{{ column.name }}' is not implemented!</template>
     </template>
     <template v-else-if="column.type === 'integer' || column.type === 'float'">
       <template v-if="operator === undefined"></template>
@@ -61,7 +61,7 @@
           :inactive-text="column.data?.null?.false"
         />
       </template>
-      <template v-else> Оператор '{{ operator }}' для '{{ column.name }}' не реализован. </template>
+      <template v-else> Operation '{{ operator }}' for '{{ column.name }}' is not implemented!</template>
     </template>
     <template v-else-if="column.type === 'string'">
       <template v-if="operator === undefined"></template>
@@ -87,7 +87,7 @@
           :inactive-text="column.data?.null?.false"
         />
       </template>
-      <template v-else> Оператор '{{ operator }}' для '{{ column.name }}' не реализован. </template>
+      <template v-else> Operation '{{ operator }}' for '{{ column.name }}' is not implemented!</template>
     </template>
     <template v-else-if="column.type === 'date'">
       <template v-if="operator === undefined"></template>
@@ -110,7 +110,7 @@
           :inactive-text="column.data?.null?.false"
         />
       </template>
-      <template v-else> Оператор '{{ operator }}' для '{{ column.name }}' не реализован. </template>
+      <template v-else> Operation '{{ operator }}' for '{{ column.name }}' is not implemented!</template>
     </template>
     <template v-else-if="column.type === 'entity' || column.type === 'entities'">
       <template v-if="operator === undefined"></template>
@@ -180,7 +180,7 @@
             <user-option v-for="user in users" :key="user.id" :value="user" />
           </el-select>
         </template>
-        <template v-else> Тип поля '{{ column.data.entity }}' не реализован. </template>
+        <template v-else> Field filter '{{ column.data.entity }}' is not implemented! </template>
       </template>
       <template v-else-if="operator === 'null'">
         <el-switch
@@ -190,9 +190,9 @@
           :inactive-text="column.data?.null?.false"
         />
       </template>
-      <template v-else> Оператор '{{ operator }}' для '{{ column.name }}' не реализован. </template>
+      <template v-else> Operation '{{ operator }}' for '{{ column.name }}' is not implemented!. </template>
     </template>
-    <template v-else> Поле '{{ column.name }}' не реализовано. </template>
+    <template v-else> Field '{{ column.name }}' is not implemented! </template>
   </div>
 </template>
 

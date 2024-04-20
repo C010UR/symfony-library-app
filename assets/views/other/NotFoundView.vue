@@ -1,8 +1,8 @@
 <template>
   <base-card-page :header="path">
-    <el-empty description="Страница не была найдена!" />
+    <el-empty description="Page Not Found!" />
     <el-button type="primary" @click="$router.push({ name: 'Main' })" style="float: right; margin-bottom: 2.31rem">
-      Вернуться на Главную страницу
+      Go Back to The Main Page
     </el-button>
   </base-card-page>
 </template>

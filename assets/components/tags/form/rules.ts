@@ -1,9 +1,9 @@
 import type { FormItemRule, FormRules } from 'element-plus';
 import { reactive } from 'vue';
 
-const invalidFieldMessage = 'Поле не действительно';
-const emptyMessage = 'Поле не должно быть пустым';
-const lengthTooSmallMessage = 'Для поля не должна быть больше 3';
+const invalidFieldMessage = 'Field is not valid';
+const emptyMessage = 'Field must not be empty';
+const lengthTooSmallMessage = 'Value is too short';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function validateTextMinLength(rule: any, value: any, callback: any) {

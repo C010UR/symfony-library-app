@@ -66,3 +66,9 @@ public/uploads
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+.idea/
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

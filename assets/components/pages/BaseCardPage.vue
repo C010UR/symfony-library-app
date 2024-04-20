@@ -3,7 +3,7 @@
     <el-card class="container" shadow="hover">
       <div v-if="header" class="header">
         <h1 style="text">
-          <img src="/images/logo.png" alt="Logo" class="logo" />
+          <img :src="image" alt="Logo" class="logo" />
           {{ header }}
         </h1>
         <dark-switch class="theme-switch" />
@@ -17,14 +17,29 @@
 <script setup lang="ts">
 import { DarkSwitch } from '@/components/tags';
 import { ElCard, ElDivider } from 'element-plus';
+import { ref, watch } from 'vue';
+import { useDark } from '@vueuse/core';
 
 export interface Props {
   header?: string;
 }
 
 withDefaults(defineProps<Props>(), {
-  header: 'Заголовок',
+  header: 'Header',
 });
+
+let image = ref<string>('/images/logo.png');
+
+const isDark = useDark();
+
+watch(isDark, (newValue) => {
+  if (newValue) {
+    image.value = '/images/logo-light.png';
+  } else {
+    image.value = '/images/logo.png';
+  }
+});
+
 </script>
 
 <style scoped>
@@ -35,6 +50,7 @@ withDefaults(defineProps<Props>(), {
   align-items: center;
   justify-content: center;
 }
+
 .container {
   margin: 0;
   padding: 0rem 1rem;
@@ -49,6 +65,7 @@ withDefaults(defineProps<Props>(), {
   display: flex;
   flex-direction: row;
 }
+
 .header h1 {
   color: var(--el-text-color-primary);
   margin: 0;
@@ -82,9 +99,5 @@ withDefaults(defineProps<Props>(), {
   .container {
     width: 95%;
   }
-}
-
-.dark .logo {
-  filter: brightness(0) invert(1);
 }
 </style>

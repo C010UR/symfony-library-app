@@ -142,7 +142,7 @@ RUN set -eux; \
 	fi
 
 RUN set -eux; \
-	mkdir -p public/uploads
+	mkdir -p public/uploads#
 
 # Development php image
 FROM app_php AS app_php_dev

@@ -7,7 +7,7 @@
         <h1 class="name">{{ publisher.name }}</h1>
         <span class="text">
           <el-icon><Location /></el-icon>
-          <p>Адрес:</p>
+          <p>Address:</p>
           <p>{{ publisher.address }}</p>
         </span>
         <span class="text">
@@ -17,7 +17,7 @@
         </span>
         <span class="text">
           <el-icon><ChromeFilled /></el-icon>
-          <p>Веб-Страница:</p>
+          <p>Landing Page:</p>
           <el-link class="link" type="primary" :href="publisher.website">{{ publisher.website }}</el-link>
         </span>
       </div>

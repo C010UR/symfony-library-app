@@ -12,11 +12,8 @@
         </span>
         <span class="text" v-if="author.website">
           <el-icon><ChromeFilled /></el-icon>
-          <p>Веб-Страница:</p>
+          <p>Landing Page:</p>
           <el-link class="link" type="primary" :href="author.website">{{ author.website }}</el-link>
-        </span>
-        <span class="text">
-          <p>Написанные работы:</p>
         </span>
       </div>
     </div>

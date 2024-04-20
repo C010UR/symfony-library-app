@@ -28,7 +28,7 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
         $queryParser->setColumns([
             new Column([
                 'name' => 'id',
-                'label' => '№',
+                'label' => 'ID',
                 'type' => Column::NOT_FILTERABLE_TYPE,
                 'isOrderable' => true,
                 'isFilterable' => false,
@@ -36,21 +36,21 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
             ]),
             new Column([
                 'name' => 'firstName',
-                'label' => 'Имя',
+                'label' => 'First Name',
                 'type' => Column::STRING_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => true,
             ]),
             new Column([
                 'name' => 'lastName',
-                'label' => 'Фамилия',
+                'label' => 'Last Name',
                 'type' => Column::STRING_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => true,
             ]),
             new Column([
                 'name' => 'middleName',
-                'label' => 'Отчество',
+                'label' => 'Middle Name',
                 'type' => Column::STRING_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => true,
@@ -64,7 +64,7 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
             ]),
             new Column([
                 'name' => 'isActive',
-                'label' => 'Активен',
+                'label' => 'Active  ',
                 'type' => Column::BOOLEAN_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => false,

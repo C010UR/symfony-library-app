@@ -21,7 +21,7 @@
         </el-link>
       </div>
       <div class="list" v-if="book.authors && book.authors.length > 0">
-        <p class="list-title">{{ book.authors.length > 1 ? 'Авторы' : 'Автор' }}:</p>
+        <p class="list-title">{{ book.authors.length > 1 ? 'Authors' : 'Author' }}:</p>
 
         <el-button
           v-for="author in book.authors"
@@ -36,7 +36,7 @@
         </el-button>
       </div>
       <div class="list" v-if="book.tags && book.tags.length > 0">
-        <p class="list-title">{{ book.tags.length > 1 ? 'Жанры' : 'Жанр' }}:</p>
+        <p class="list-title">{{ book.tags.length > 1 ? 'Genres' : 'Genre' }}:</p>
         <el-tag v-for="tag in book.tags" :key="tag.id" class="list-item">
           {{ tag.name }}
         </el-tag>

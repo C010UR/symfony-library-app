@@ -8,22 +8,22 @@
   >
     <template #header>
       <template v-if="type === 'create'">
-        <h4 class="title">Создание</h4>
+        <h4 class="title">Create</h4>
       </template>
       <template v-else>
         <h4 class="title">
-          Изменение <el-tag>№ {{ id ? id : -1 }}</el-tag>
+          Update <el-tag>ID {{ id ? id : -1 }}</el-tag>
         </h4>
       </template>
     </template>
     <slot></slot>
     <div class="buttons">
-      <el-button @click="clickCancel()" type="danger" plain :disabled="isLoading"> Отмена </el-button>
+      <el-button @click="clickCancel()" type="danger" plain :disabled="isLoading"> Cancel </el-button>
       <template v-if="type === 'create'">
-        <el-button type="success" plain @click="$emit('submit')" :loading="isLoading"> Создать </el-button>
+        <el-button type="success" plain @click="$emit('submit')" :loading="isLoading"> Create </el-button>
       </template>
       <template v-else>
-        <el-button type="warning" plain @click="$emit('submit')" :loading="isLoading"> Изменить </el-button>
+        <el-button type="warning" plain @click="$emit('submit')" :loading="isLoading"> Update </el-button>
       </template>
     </div>
   </el-dialog>

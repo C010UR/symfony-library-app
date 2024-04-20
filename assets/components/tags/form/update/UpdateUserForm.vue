@@ -9,25 +9,25 @@
     @update:model-value="(emit: boolean) => $emit('update:modelValue', emit)"
   >
     <el-form ref="formRef" :model="form" :rules="userRoles" label-position="top">
-      <el-form-item label="Изображение" prop="image">
+      <el-form-item label="Profile Image" prop="image">
         <base-image-upload :isLoading="isLoading" v-model="form.image" />
       </el-form-item>
-      <el-form-item label="Имя" prop="firstName">
+      <el-form-item label="Firsd Name" prop="firstName">
         <el-input v-model="form.firstName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Фамилия" prop="lastName">
+      <el-form-item label="Surname" prop="lastName">
         <el-input v-model="form.lastName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
-      <el-form-item label="Отчество" prop="middleName">
+      <el-form-item label="Middle Name" prop="middleName">
         <el-input v-model="form.middleName" maxlength="255" show-word-limit clearable :disabled="isLoading" />
       </el-form-item>
       <el-form-item label="Email" prop="email">
         <el-input v-model="form.email" maxlength="255" show-word-limit clearable :disabled="isLoading" type="email" />
       </el-form-item>
-      <el-form-item label="Роли" prop="roles">
+      <el-form-item label="Roles" prop="roles">
         <el-checkbox-group v-model="roleFormItem" :min="1">
-          <el-checkbox name="ROLE_USER" label="Администратор" border />
-          <el-checkbox name="ROLE_ADMIN" label="Пользователь" border />
+          <el-checkbox name="ROLE_USER" label="Admin" border />
+          <el-checkbox name="ROLE_ADMIN" label="User" border />
         </el-checkbox-group>
       </el-form-item>
     </el-form>
@@ -96,17 +96,16 @@ function resetForm() {
       switch (role) {
         case 'ROLE_USER': {
           console.log('user');
-          roleFormItem.value.push('Пользователь');
+          roleFormItem.value.push('User');
           break;
         }
         case 'ROLE_ADMIN': {
           console.log('admin');
-          roleFormItem.value.push('Администратор');
+          roleFormItem.value.push('Admin');
           break;
         }
         default: {
-          const _exhaustiveCheck: never = role;
-          return _exhaustiveCheck;
+          return role;
         }
       }
     }
@@ -128,17 +127,16 @@ watch(roleFormItem, () => {
 
   for (const role of roleFormItem.value) {
     switch (role) {
-      case 'Пользователь': {
+      case 'User': {
         form.roles.push('ROLE_USER');
         break;
       }
-      case 'Администратор': {
+      case 'Admin': {
         form.roles.push('ROLE_ADMIN');
         break;
       }
       default: {
-        const _exhaustiveCheck: never = role;
-        return _exhaustiveCheck;
+        return role;
       }
     }
   }
@@ -185,11 +183,11 @@ async function sendData() {
   if (success) {
     popup(
       'success',
-      'Пользователь успешно изменен! Пользователю на почту пришло сообщение с инструкциями по смене пароля.',
+      'User updated successfully! User password was reset and password reset email was sent.',
     );
     emit('submit', form);
   } else {
-    popup('error', 'Не удалось изменить пользователя!');
+    popup('error', 'An error occurred during the User update!');
   }
 
   isLoading.value = false;

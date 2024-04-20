@@ -121,19 +121,19 @@ class FilterOperatorsTest extends TestCase
     public static function getFormattedOperators(): iterable
     {
         $labels = [
-            FilterOperators::OPERATOR_EQUALS_TO => 'Равняется',
-            FilterOperators::OPERATOR_NOT_EQUALS_TO => 'Не равняется',
-            FilterOperators::OPERATOR_GREATER_THAN => 'Больше',
-            FilterOperators::OPERATOR_LESS_THAN => 'Меньше',
-            FilterOperators::OPERATOR_GREATER_OR_EQUAL_TO => 'Больше либо равно',
-            FilterOperators::OPERATOR_LESS_OR_EQUAL_TO => 'Меньше либо равно',
-            FilterOperators::OPERATOR_IS_NULL => 'Пустое',
-            FilterOperators::OPERATOR_IN => 'Включает',
-            FilterOperators::OPERATOR_NOT_IN => 'Не Включает',
-            FilterOperators::OPERATOR_CONTAINS => 'Содержит',
-            FilterOperators::OPERATOR_STARTS_WITH => 'Начинается на',
-            FilterOperators::OPERATOR_ENDS_WITH => 'Заканчивается на',
-            FilterOperators::OPERATOR_BETWEEN => 'Между',
+            FilterOperators::OPERATOR_EQUALS_TO => '=',
+            FilterOperators::OPERATOR_NOT_EQUALS_TO => '<>',
+            FilterOperators::OPERATOR_GREATER_THAN => '>',
+            FilterOperators::OPERATOR_LESS_THAN => '<',
+            FilterOperators::OPERATOR_GREATER_OR_EQUAL_TO => '>=',
+            FilterOperators::OPERATOR_LESS_OR_EQUAL_TO => '<=',
+            FilterOperators::OPERATOR_IS_NULL => 'Empty',
+            FilterOperators::OPERATOR_IN => 'Includes',
+            FilterOperators::OPERATOR_NOT_IN => 'Does not include',
+            FilterOperators::OPERATOR_CONTAINS => 'Contains',
+            FilterOperators::OPERATOR_STARTS_WITH => 'Starts With',
+            FilterOperators::OPERATOR_ENDS_WITH => 'Ends With',
+            FilterOperators::OPERATOR_BETWEEN => 'Between',
         ];
 
         $result = [];

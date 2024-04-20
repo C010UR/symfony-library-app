@@ -1,5 +1,5 @@
 <template>
-  <el-popover :width="350" title="Профиль" trigger="click">
+  <el-popover :width="350" title="Profile" trigger="click">
     <template #reference>
       <base-avatar :src="profile !== undefined && profile.image ? profile.image : ''" style="cursor: pointer" />
     </template>
@@ -22,16 +22,16 @@
       <div v-else class="container">
         <base-avatar :size="60" class="avatar" />
         <div>
-          <p class="text-main">Авторизоваться</p>
+          <p class="text-main">Log In</p>
           <p class="text">
-            <i>Для получения доступа к большему количеству возможностей, авторизуйтесь.</i>
+            <i>Log In to get access to more features</i>
           </p>
         </div>
       </div>
 
       <div class="buttons">
-        <el-button v-if="profile !== undefined" @click="btnLogout">Выйти</el-button>
-        <el-button v-else @click="btnLogin">Войти</el-button>
+        <el-button v-if="profile !== undefined" @click="btnLogout">Log Out</el-button>
+        <el-button v-else @click="btnLogin">Log In</el-button>
       </div>
     </div>
   </el-popover>

@@ -25,19 +25,19 @@
             </span>
             <span class="text" v-if="props.row.website">
               <el-icon><ChromeFilled /></el-icon>
-              <p>Веб-Страница:</p>
+              <p>Landing Page:</p>
               <el-link class="link" type="primary" :href="props.row.website">{{ props.row.website }}</el-link>
             </span>
           </div>
         </template>
       </el-table-column>
     </template>
-    <el-table-column label="Изображение">
+    <el-table-column label="Profile Image">
       <template #default="prop">
         <base-avatar :size="32" :src="prop.row.image" class="avatar" />
       </template>
     </el-table-column>
-    <el-table-column label="Ф.И.О.">
+    <el-table-column label="Full Name">
       <template #default="prop">
         <el-link
           class="row-text"
@@ -164,14 +164,16 @@ async function handleDelete(author: BookAuthor) {
     return;
   }
 
-  ElMessageBox.alert(`Вы уверены, что хотите удалить автора '${author.fullName}'?`, `Удаление автора`, {
+  ElMessageBox.alert(`Are you sure you want to delete '${author.fullName}'?`, `Delete Author`, {
     confirmButtonText: 'Да',
     cancelButtonText: 'Нет',
     type: 'warning',
     async callback(action: string) {
       if (action === 'confirm') {
         if (await useDelete(props.url, author)) {
-          popup('success', 'Автор успешно удален!');
+          popup('success', 'Author deleted successfully!');
+        } else {
+          popup('error', 'An error occurred during the Author deletion!');
         }
 
         await getData();

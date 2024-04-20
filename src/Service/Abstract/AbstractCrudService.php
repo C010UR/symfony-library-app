@@ -28,7 +28,7 @@ abstract class AbstractCrudService
         if ($this->isAdmin()) {
             $queryParser->addColumns(new Column([
                 'name' => 'isDeleted',
-                'label' => 'Удалено ли',
+                'label' => 'Deleted',
                 'type' => Column::BOOLEAN_TYPE,
                 'isOrderable' => true,
                 'isSearchable' => false,

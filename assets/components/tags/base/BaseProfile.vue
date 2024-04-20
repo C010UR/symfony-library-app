@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-popover :width="350" title="Профиль" trigger="click">
+    <el-popover :width="350" title="Profile" trigger="click">
       <template #reference>
         <base-avatar :src="user !== undefined && user.image ? user.image : ''" style="cursor: pointer" :size="size" />
       </template>
