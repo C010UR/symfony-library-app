@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -103,6 +104,14 @@ class UserFormType extends AbstractType
             ->add('removeImage', CheckboxType::class, [
                 'required' => false,
                 'invalid_message' => 'removeImage flag is not valid.',
+                'mapped' => false,
+            ])
+            ->add('link', UrlType::class, [
+                'required' => true,
+                'invalid_message' => 'Link is not valid.',
+                'empty_data' => null,
+                'trim' => true,
+                'constraints' => [new Assert\NotBlank(message: 'Link is not specified.')],
                 'mapped' => false,
             ]);
     }

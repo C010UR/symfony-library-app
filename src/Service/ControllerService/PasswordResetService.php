@@ -35,8 +35,16 @@ class PasswordResetService
         $form = $this->formFactory->create(ResetPasswordRequestFormType::class);
         RequestUtils::submitForm($request, $form, true);
 
+        $this->sendPasswordResetEmail(
+            $form->get('email')->getData(),
+            $form->get('link')->getData(),
+        );
+    }
+
+    public function sendPasswordResetEmail(string $email, string $link): void
+    {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
-            'email' => $form->get('email')->getData(),
+            'email' => $email,
         ]);
 
         if (!$user || $user->isDeleted()) {
@@ -50,14 +58,14 @@ class PasswordResetService
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('library@gismauas.edu', 'GismaUAS Library Password Reset'))
+            ->from(new Address('library@gsm.edu', 'GSM Library Password Reset'))
             ->to($user->getEmail())
             ->subject('Password Reset')
             ->htmlTemplate('emails/password-reset.html.twig')
             ->embed(fopen(sprintf('%s/public/images/logo.png', $this->projectDir), 'r'), 'logo')
             ->context([
                 'resetToken' => $resetToken,
-                'link' => $form->get('link')->getData(),
+                'link' => $link,
             ]);
 
         $this->mailer->send($email);

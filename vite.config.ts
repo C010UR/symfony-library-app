@@ -22,7 +22,7 @@ export default defineConfig({
     }),
     elementPlus({
       useSource: true,
-      defaultLocale: 'ru',
+      defaultLocale: 'en',
     }),
     // basicSsl(),
     symfonyPlugin({

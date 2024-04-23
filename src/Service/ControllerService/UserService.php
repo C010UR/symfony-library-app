@@ -19,6 +19,7 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
 {
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
+        private readonly PasswordResetService $passwordResetService,
         private readonly string $dirPublic,
         private readonly string $dirUserUploads,
         UserRepository $repository,
@@ -93,6 +94,11 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
 
         $this->getRepository()->save($user, true);
 
+        $this->passwordResetService->sendPasswordResetEmail(
+            $form->get('email')->getData(),
+            $form->get('link')->getData(),
+        );
+
         return $user->format();
     }
 
@@ -123,6 +129,11 @@ class UserService extends AbstractCrudService implements CrudServiceInterface
 
         $user->setIsActive(false);
         $this->getRepository()->save($user, true);
+
+        $this->passwordResetService->sendPasswordResetEmail(
+            $form->get('email')->getData(),
+            $form->get('link')->getData(),
+        );
 
         return $user->format();
     }

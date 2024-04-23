@@ -25,7 +25,7 @@
       <el-form-item>
         <div style="margin-left: auto; margin-right: 0; margin-top: 1rem">
           <el-link type="primary" :underline="false" style="margin-right: 1rem" @click="$router.push({ name: 'Main' })">
-            Go to main
+            Go to Main Page
           </el-link>
           <el-link
             type="primary"

@@ -11,6 +11,7 @@ export interface UploadUserProfile {
   roles: UserRole[];
   image?: UploadUserFile;
   removeImage?: boolean;
+  url: string,
 }
 
 export interface UserProfile {

@@ -43,6 +43,7 @@ import type { FormInstance } from 'element-plus';
 import { ElCheckbox, ElCheckboxGroup, ElForm, ElFormItem, ElInput } from 'element-plus';
 import { reactive, ref, watch } from 'vue';
 import type { UserRoleLabelType } from '../types';
+import router from '@/router';
 
 export interface Props {
   modelValue: boolean;
@@ -65,6 +66,12 @@ const form = reactive<UploadUserProfile>({
   middleName: undefined,
   email: undefined,
   roles: ['ROLE_USER'],
+  link: new URL(
+    router.resolve({
+      name: 'ResetPasswordRequest',
+    }).href,
+    window.location.origin,
+  ).href,
 });
 
 const roleFormItem = ref<UserRoleLabelType[]>(['User']);

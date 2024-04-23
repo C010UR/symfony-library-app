@@ -17,7 +17,7 @@
     <el-icon :size="40">
       <UploadFilled />
     </el-icon>
-    <div v-if="!isLoading">
+    <div>
       <div>Drag & Drop <em>or browse</em> the file</div>
     </div>
     <template #tip> Images smaller than 8MB</template>
